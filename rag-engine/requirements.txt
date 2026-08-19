@@ -1,0 +1,22 @@
+# RAG Engine — Python dependencies (PLACEHOLDER)
+#
+# NOTE: This file is intentionally minimal. The RAG engine implementation and
+# its full dependency set (document loaders, embedding client, vector store
+# client, etc.) will be determined during manual development.
+#
+# The engine talks to PostgreSQL + pgvector. Add the libraries actually used
+# when implementing the engine.
+
+# --- Core ---
+# fastapi            # HTTP API server
+# uvicorn[standard]  # ASGI server
+
+# --- Database ---
+# psycopg[binary]    # PostgreSQL driver
+# pgvector           # pgvector client support
+
+# --- Retrieval ---
+# google-generativeai # Gemini embeddings + generation
+
+# --- Text / parsing ---
+# pypdf              # PDF parsing for Law_files sources

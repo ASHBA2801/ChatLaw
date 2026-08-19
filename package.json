@@ -1,26 +1,24 @@
 {
-  "name": "foundation",
+  "name": "chatlaw",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "web",
+    "database"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.3.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.1",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "dev": "npm run dev --workspace @chatlaw/web",
+    "build": "npm run build --workspace @chatlaw/web",
+    "start": "npm run start --workspace @chatlaw/web",
+    "lint": "npm run lint --workspace @chatlaw/web",
+    "typecheck": "npm run typecheck --workspace @chatlaw/web",
+    "db:generate": "npm run db:generate --workspace @chatlaw/database",
+    "db:migrate": "npm run db:migrate --workspace @chatlaw/database",
+    "db:deploy": "npm run db:deploy --workspace @chatlaw/database",
+    "db:studio": "npm run db:studio --workspace @chatlaw/database",
+    "db:init": "npm run db:init --workspace @chatlaw/database",
+    "db:reset": "npm run db:reset --workspace @chatlaw/database",
+    "db:check": "npm run db:check --workspace @chatlaw/database",
+    "db:test:vector": "npm run db:test:vector --workspace @chatlaw/database"
   }
 }

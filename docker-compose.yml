@@ -1,0 +1,30 @@
+# ChatLaw development stack.
+#
+# Orchestrates the shared infrastructure used by the web application and the
+# RAG Engine: PostgreSQL with pgvector, and (optionally) Redis.
+#
+# Each service is defined in its own compose file under docker/ so it can be
+# run standalone:
+#
+#   docker compose -f docker/postgres/compose.yml up -d
+#   docker compose -f docker/redis/compose.yml up -d
+#
+# Or start everything with:
+#
+#   docker compose up -d
+#
+# NOTE: PostgreSQL exposes host port 5433 to avoid conflicting with a locally
+# installed PostgreSQL on 5432.
+
+name: chatlaw
+
+services:
+  postgres:
+    extends:
+      file: docker/postgres/compose.yml
+      service: db
+
+  redis:
+    extends:
+      file: docker/redis/compose.yml
+      service: redis

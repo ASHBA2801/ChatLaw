@@ -1,0 +1,37 @@
+# ChatLaw local development database
+#
+# Runs a PostgreSQL container with the pgvector extension pre-installed.
+# This is the recommended way to run the database locally so that the
+# `vector` type is available for embeddings.
+#
+# NOTE: The host port is 5433 to avoid conflicting with a locally installed
+# PostgreSQL service that may already occupy 5432.
+#
+# Usage:
+#   docker compose -f docker/postgres/compose.yml up -d
+#   (or use the root docker-compose.yml to start everything)
+#
+# The container maps to localhost:5433 and uses the credentials in
+# database/.env (defaults: postgres / postgres, database chatlaw).
+
+services:
+  db:
+    image: pgvector/pgvector:pg18
+    container_name: chatlaw-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chatlaw
+    ports:
+      - "5433:5432"
+    volumes:
+      - chatlaw_pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d chatlaw"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  chatlaw_pgdata:

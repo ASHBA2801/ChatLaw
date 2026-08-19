@@ -1,0 +1,23 @@
+# ChatLaw local development Redis (optional).
+#
+# Reserved for future use (e.g. caching, rate limiting, or async job queues
+# for the RAG Engine). Not required for the current foundation phase.
+#
+# Usage:
+#   docker compose -f docker/redis/compose.yml up -d
+#
+# The container maps to localhost:6379 (default Redis port).
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: chatlaw-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - chatlaw_redisdata:/data
+
+volumes:
+  chatlaw_redisdata:

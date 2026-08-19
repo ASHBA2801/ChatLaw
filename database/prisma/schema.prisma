@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client"
+  // Generated client is consumed by the Next.js app (web/), which imports it
+  // via `@/lib/generated/prisma/client`. Relative to this file's directory.
+  output   = "../../web/lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// ChatLaw database schema
+//
+// Legal documents preserve their hierarchical structure (Act -> Chapter ->
+// Section -> Subsection -> Clause) rather than being flattened into anonymous
+// text chunks. Chunks carry the hierarchical coordinates of the source text so
+// retrieval can reconstruct context and cite precise locations.
+//
+// pgvector is used for embeddings. The `vector` column type is exposed through
+// Prisma's `Unsupported("vector(N)")` type, which means it is not queryable via
+// the typed client — vector operations are performed through the dedicated
+// vector-search abstraction in lib/rag/vector-search.ts.
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+// legal_documents — a single legal instrument (Act, Rule, Regulation, etc.)
+// ---------------------------------------------------------------------------
+model LegalDocument {
+  id              String   @id @default(cuid())
+  title           String
+  documentType    String // e.g. "act", "rule", "regulation", "notification"
+  authority       String? // issuing body, e.g. "Parliament of India"
+  sourceUrl       String?
+  publicationDate DateTime?
+  effectiveDate   DateTime?
+  version         String?
+  language        String   @default("en")
+  contentHash     String? // integrity check of the source content
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  chunks  LegalChunk[]
+  sources LegalSource[]
+
+  @@index([documentType])
+  @@index([language])
+  @@index([title])
+  @@map("legal_documents")
+}
+
+// ---------------------------------------------------------------------------
+// legal_chunks — a hierarchical slice of a legal document
+// ---------------------------------------------------------------------------
+model LegalChunk {
+  id            String   @id @default(cuid())
+  documentId    String
+  content       String
+  sectionNumber String?
+  subsection    String?
+  chapter       String?
+  clause        String?
+  pageNumber    Int?
+  chunkIndex    Int
+  embedding     Unsupported("vector(768)")?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  document LegalDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([chunkIndex])
+  @@map("legal_chunks")
+}
+
+// ---------------------------------------------------------------------------
+// legal_sources — provenance / citation info for a legal document
+// ---------------------------------------------------------------------------
+model LegalSource {
+  id             String    @id @default(cuid())
+  documentId     String
+  name           String
+  authority      String?
+  url            String?
+  sourceType     String // e.g. "official_gazette", "legislative_body", "court"
+  isOfficial     Boolean   @default(false)
+  lastVerifiedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  document LegalDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([sourceType])
+  @@map("legal_sources")
+}
+
+// ---------------------------------------------------------------------------
+// conversations — a chat session
+// ---------------------------------------------------------------------------
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages Message[]
+
+  @@map("conversations")
+}
+
+// ---------------------------------------------------------------------------
+// messages — a single message within a conversation
+// ---------------------------------------------------------------------------
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String // "user" | "assistant" | "system"
+  content        String
+  language       String   @default("en")
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([createdAt])
+  @@map("messages")
+}
