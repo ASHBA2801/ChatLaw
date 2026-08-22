@@ -66,3 +66,53 @@ export type Conversation = Prisma.ConversationModel
  * 
  */
 export type Message = Prisma.MessageModel
+/**
+ * Model User
+ * 
+ */
+export type User = Prisma.UserModel
+/**
+ * Model Case
+ * 
+ */
+export type Case = Prisma.CaseModel
+/**
+ * Model CaseDocument
+ * 
+ */
+export type CaseDocument = Prisma.CaseDocumentModel
+/**
+ * Model CaseTimelineEvent
+ * 
+ */
+export type CaseTimelineEvent = Prisma.CaseTimelineEventModel
+/**
+ * Model CaseImportantDate
+ * 
+ */
+export type CaseImportantDate = Prisma.CaseImportantDateModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model VerificationToken
+ * 
+ */
+export type VerificationToken = Prisma.VerificationTokenModel
+/**
+ * Model UserDocument
+ * 
+ */
+export type UserDocument = Prisma.UserDocumentModel
+/**
+ * Model UserDocumentVersion
+ * 
+ */
+export type UserDocumentVersion = Prisma.UserDocumentVersionModel

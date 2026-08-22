@@ -32,6 +32,10 @@ def load_embedding_info() -> EmbeddingProviderInfo:
         raise EmbeddingConfigurationError("EMBEDDING_DIMENSION must be positive")
     if batch_size <= 0:
         raise EmbeddingConfigurationError("EMBEDDING_BATCH_SIZE must be positive")
+    if provider == "gemini" and model != _required_env("GEMINI_EMBEDDING_MODEL"):
+        raise EmbeddingConfigurationError("EMBEDDING_MODEL must match GEMINI_EMBEDDING_MODEL")
+    if dimension != 768:
+        raise EmbeddingConfigurationError("EMBEDDING_DIMENSION must be 768 for vector(768)")
     return EmbeddingProviderInfo(provider, model, dimension, batch_size)
 
 

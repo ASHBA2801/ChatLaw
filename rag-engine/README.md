@@ -1,23 +1,29 @@
-# RAG Engine
+# RAG Engine - Phase 21
 
-This is the **RAG Engine** component of ChatLaw — a multilingual legal-information
-assistant for Indian citizens.
+This is the **RAG Engine** component of ChatLaw — a multilingual legal-information assistant.
 
-> **Status: RAG-01, RAG-02, and safe RAG-03 tooling implemented.**
->
-> Embedding/database ingestion is opt-in and is never run automatically.
+The RAG Engine provides grounded legal information retrieval and document-based reasoning. In Phase 21, it supports integrated retrieval from the Case Workspace's stored document corpus.
 
 ## Ownership boundary
 
-The RAG Engine is a **separate, independent component** from the Next.js web
-application. It is never embedded inside `web/`.
-
-The two components communicate only through an **HTTP API contract** (see
-`docs/api/`). The eventual runtime topology is:
+The RAG Engine is an independent service communicating only through an **HTTP API contract** (see `docs/api/`).
 
 ```
 Next.js  ── HTTP API ──►  RAG Engine  ──►  PostgreSQL + pgvector
 ```
+
+## Key Modules
+
+- `api/`       — FastAPI implementation of RAG endpoints
+- `ingestion/` — Document processing pipeline
+- `retrieval/` — Contextual vector search and reranking
+- `generation/`— Context-aware legal answer generation
+
+## Status
+
+**Implemented: Phases 1–21.**
+
+Retrieval/Embedding ingestion is triggered via `scripts/`. It is never run as an side effect of user interaction.
 
 ## Responsibilities
 
@@ -135,6 +141,22 @@ Explicit real ingestion command (developer-run only):
 ```text
 python scripts/embed_chunks.py --input data/chunks --execute
 ```
+
+## RAG-05 semantic retrieval
+
+Retrieval embeds the original query with the same configured Gemini provider
+and 768-dimensional contract, then performs parameterized pgvector cosine
+search against the existing `legal_chunks` table. It returns source content,
+legal hierarchy, metadata, and a similarity score. The search CLI creates the
+optional HNSW cosine index if it is absent; it does not modify chunk rows.
+
+```text
+python scripts/search.py "What is the punishment for theft?" --top-k 8 --min-similarity 0.70
+```
+
+Use `--json` for structured `RetrievalResponse` output. When no row meets the
+threshold, the response sets `no_relevant_context` to `true` and contains no
+fabricated context. RAG-06 answer generation is intentionally not included.
 
 For a controlled first diagnostic, process exactly one selected chunk and
 measure embedding request/response plus database connection/insert timing:

@@ -1,10 +1,15 @@
-# Database
+# Database - Phase 21
 
-Shared PostgreSQL + pgvector infrastructure for ChatLaw.
+Shared PostgreSQL + pgvector infrastructure for ChatLaw, supporting the Phase 21 Case Workspace.
 
-This database is used by **both** the RAG Engine (`rag-engine/`) and the
-Next.js application (`web/`). The schema is defined **once** here and never
-duplicated.
+This database is used by **both** the RAG Engine (`rag-engine/`) and the Next.js application (`web/`). The schema is defined **once** here and never duplicated.
+
+## Phase 21 Schema Updates
+
+The database now manages:
+- **Case Workspaces** (cases, timeline events, important dates)
+- **Document Management** (case-associated documents, metadata, and status)
+- **User Authentication** (NextAuth sessions and identity)
 
 ## Stack
 
@@ -12,12 +17,13 @@ duplicated.
 - Prisma 7 (driver adapters: `@prisma/adapter-pg` + `pg`)
 - Local DB runs in Docker (`docker/postgres/compose.yml`), host port **5433**
 
-## Layout
+## Commands
 
-| Path | Purpose |
-| --- | --- |
-| `prisma/schema.prisma` | Single source of truth for the schema |
-| `prisma/migrations/` | Prisma migrations |
+```bash
+npm run db:migrate  # Run pending migrations
+npm run db:generate # Generate Prisma client
+npm run db:studio   # Inspect data
+```
 | `scripts/db/` | DB init / reset / check / vector-search test scripts |
 | `lib/vector-search.ts` | pgvector search primitive (raw SQL) |
 | `seeds/` | Seed scripts (empty until needed) |
@@ -31,6 +37,10 @@ duplicated.
 - `legal_sources`
 - `conversations`
 - `messages`
+- `users`, `accounts`, `sessions`, `verification_tokens` (Auth.js)
+- `user_documents`, `user_document_versions` (user-owned generated drafts)
+- `cases`, `case_documents`, `case_timeline_events`, `case_important_dates` (Phase 21)
+- `conversations.userId` (optional owner binding for case ask)
 
 `legal_chunks.embedding` is a pgvector `vector(768)` column, exposed via
 Prisma's `Unsupported` type. Vector operations go through raw SQL in

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "bci-find-advocate",
+    "name": "Bar Council of India — official advocate information",
+    "practice_areas": ["General", "Civil", "Criminal", "Constitutional"],
+    "address": "New Delhi",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6139,
+    "longitude": 77.209,
+    "phone": null,
+    "official_url": "https://www.barcouncilofindia.org/",
+    "profile_url": "https://www.barcouncilofindia.org/",
+    "source": {
+      "source_url": "https://www.barcouncilofindia.org/",
+      "source_type": "official_bar_council_directory",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "bc-tamil-nadu",
+    "name": "Bar Council of Tamil Nadu and Puducherry — find enrolled advocates",
+    "practice_areas": ["General", "Civil", "Criminal", "Property", "Family"],
+    "address": "Chennai",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "latitude": 13.0827,
+    "longitude": 80.2707,
+    "phone": null,
+    "official_url": "https://www.bctnp.in/",
+    "profile_url": "https://www.bctnp.in/",
+    "source": {
+      "source_url": "https://www.bctnp.in/",
+      "source_type": "official_bar_council_directory",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "bc-maharashtra-goa",
+    "name": "Bar Council of Maharashtra and Goa — advocate directory",
+    "practice_areas": ["General", "Civil", "Criminal", "Commercial"],
+    "address": "Mumbai",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "latitude": 18.9582,
+    "longitude": 72.8321,
+    "phone": null,
+    "official_url": "https://barcouncilmahgoa.org/",
+    "profile_url": "https://barcouncilmahgoa.org/",
+    "source": {
+      "source_url": "https://barcouncilmahgoa.org/",
+      "source_type": "official_bar_council_directory",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "bc-karnataka",
+    "name": "Karnataka State Bar Council — enrolled advocate information",
+    "practice_areas": ["General", "Civil", "Criminal", "Property"],
+    "address": "Bengaluru",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "latitude": 12.9716,
+    "longitude": 77.5946,
+    "phone": null,
+    "official_url": "https://ksbc.org.in/",
+    "profile_url": "https://ksbc.org.in/",
+    "source": {
+      "source_url": "https://ksbc.org.in/",
+      "source_type": "official_bar_council_directory",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "bc-delhi",
+    "name": "Bar Council of Delhi — advocate enrolment information",
+    "practice_areas": ["General", "Civil", "Criminal", "Commercial"],
+    "address": "New Delhi",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6139,
+    "longitude": 77.209,
+    "phone": null,
+    "official_url": "https://delhibarcouncil.com/",
+    "profile_url": "https://delhibarcouncil.com/",
+    "source": {
+      "source_url": "https://delhibarcouncil.com/",
+      "source_type": "official_bar_council_directory",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "bc-kerala",
+    "name": "Bar Council of Kerala — find enrolled advocates",
+    "practice_areas": ["General", "Civil", "Criminal", "Family"],
+    "address": "Ernakulam",
+    "city": "Kochi",
+    "state": "Kerala",
+    "latitude": 9.9816,
+    "longitude": 76.2999,
+    "phone": null,
+    "official_url": "https://barcouncilkerala.org/",
+    "profile_url": "https://barcouncilkerala.org/",
+    "source": {
+      "source_url": "https://barcouncilkerala.org/",
+      "source_type": "official_bar_council_directory",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "nalsa-legal-aid",
+    "name": "NALSA — free legal aid services (official)",
+    "practice_areas": ["Legal Aid", "Criminal", "Civil", "Family"],
+    "address": "New Delhi",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6139,
+    "longitude": 77.209,
+    "phone": null,
+    "official_url": "https://nalsa.gov.in/",
+    "profile_url": "https://nalsa.gov.in/",
+    "source": {
+      "source_url": "https://nalsa.gov.in/",
+      "source_type": "official_legal_aid",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "ecourts-advocate-search",
+    "name": "eCourts — cause list and advocate case search (official)",
+    "practice_areas": ["General"],
+    "address": "India",
+    "city": null,
+    "state": null,
+    "latitude": null,
+    "longitude": null,
+    "phone": null,
+    "official_url": "https://ecourts.gov.in/ecourts_home/",
+    "profile_url": "https://ecourts.gov.in/ecourts_home/",
+    "source": {
+      "source_url": "https://ecourts.gov.in/ecourts_home/",
+      "source_type": "official_directory",
+      "verification_status": "verified"
+    }
+  }
+]

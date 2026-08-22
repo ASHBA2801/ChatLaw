@@ -8,17 +8,16 @@ tqdm>=4.65.0
 pytest>=7.0.0
 
 # --- Core API (Future Phases) ---
-# fastapi            # HTTP API server
-# uvicorn[standard]  # ASGI server
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
 
 # --- Database (Future Phases) ---
-# psycopg[binary]    # PostgreSQL driver
+psycopg[binary,pool]>=3.1
 # pgvector           # pgvector client support
 
 # --- Retrieval & Generation (Future Phases) ---
-# google-generativeai # Gemini embeddings + generation
-# google-genai        # Optional: install manually for explicit Gemini ingestion
-# psycopg[binary]     # Optional: install manually for explicit database ingestion
+# google-generativeai # Legacy SDK; not used
+google-genai         # Gemini embeddings + grounded generation
 
 # --- Text / parsing ---
 # pypdf              # PDF parsing for Law_files sources

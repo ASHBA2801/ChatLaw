@@ -1,0 +1,1006 @@
+{
+  "api_calls_made": 0,
+  "offline_only": true,
+  "source_artifacts": [
+    "retrieval_baseline.json",
+    "retrieval_reranked.json",
+    "retrieval_rag10c_A.json",
+    "retrieval_rag10c_B.json",
+    "retrieval_rag10c_C.json",
+    "retrieval_rag10c_D.json"
+  ],
+  "baseline": {
+    "recall_at_1": 0.5,
+    "recall_at_3": 0.6785714285714286,
+    "recall_at_5": 0.8571428571428571,
+    "recall_at_8": 0.8928571428571429,
+    "mrr": 0.6226190476190476,
+    "irrelevant_accuracy": 0.9333333333333333
+  },
+  "rag10b": {
+    "recall_at_1": 0.5357142857142857,
+    "recall_at_3": 0.75,
+    "recall_at_5": 0.7857142857142857,
+    "recall_at_8": 0.8214285714285714,
+    "mrr": 0.650297619047619,
+    "irrelevant_accuracy": 0.9333333333333333
+  },
+  "configurations": {
+    "A": {
+      "weights": {
+        "vector": 0.8,
+        "keyword": 0.1,
+        "section": 0.07,
+        "document": 0.03
+      },
+      "metrics": {
+        "recall_at_1": 0.6428571428571429,
+        "recall_at_3": 0.75,
+        "recall_at_5": 0.8214285714285714,
+        "recall_at_8": 0.8571428571428571,
+        "mrr": 0.7116496598639456,
+        "irrelevant_accuracy": 0.9333333333333333,
+        "failed_at_8": [
+          "RAG10-001",
+          "RAG10-012",
+          "RAG10-017",
+          "RAG10-018"
+        ]
+      }
+    },
+    "B": {
+      "weights": {
+        "vector": 0.75,
+        "keyword": 0.12,
+        "section": 0.08,
+        "document": 0.05
+      },
+      "metrics": {
+        "recall_at_1": 0.6071428571428571,
+        "recall_at_3": 0.75,
+        "recall_at_5": 0.8214285714285714,
+        "recall_at_8": 0.8571428571428571,
+        "mrr": 0.6937925170068027,
+        "irrelevant_accuracy": 0.9333333333333333,
+        "failed_at_8": [
+          "RAG10-001",
+          "RAG10-012",
+          "RAG10-017",
+          "RAG10-018"
+        ]
+      }
+    },
+    "C": {
+      "weights": {
+        "vector": 0.7,
+        "keyword": 0.1,
+        "section": 0.15,
+        "document": 0.05
+      },
+      "metrics": {
+        "recall_at_1": 0.6071428571428571,
+        "recall_at_3": 0.75,
+        "recall_at_5": 0.8214285714285714,
+        "recall_at_8": 0.8571428571428571,
+        "mrr": 0.6937925170068027,
+        "irrelevant_accuracy": 0.9333333333333333,
+        "failed_at_8": [
+          "RAG10-001",
+          "RAG10-012",
+          "RAG10-017",
+          "RAG10-018"
+        ]
+      }
+    },
+    "D": {
+      "weights": {
+        "vector": 0.85,
+        "keyword": 0.08,
+        "section": 0.05,
+        "document": 0.02
+      },
+      "metrics": {
+        "recall_at_1": 0.6428571428571429,
+        "recall_at_3": 0.7142857142857143,
+        "recall_at_5": 0.8571428571428571,
+        "recall_at_8": 0.8571428571428571,
+        "mrr": 0.7047619047619048,
+        "irrelevant_accuracy": 0.9333333333333333,
+        "failed_at_8": [
+          "RAG10-001",
+          "RAG10-012",
+          "RAG10-017",
+          "RAG10-018"
+        ]
+      }
+    }
+  },
+  "failure_diagnostics": [
+    {
+      "id": "RAG10-001",
+      "question": "What is the punishment for theft under the Bharatiya Nyaya Sanhita?",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "303"
+        }
+      ],
+      "candidate_rank": 19,
+      "final_rank": null,
+      "cause": "reranking_or_selection",
+      "top_candidates": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.7196840643882751,
+          "vector_score": 0.7196840643882751,
+          "keyword_score": 1.0,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6917314547300338
+        },
+        {
+          "document": "BNS2023",
+          "section": null,
+          "similarity": 0.6824590563774109,
+          "vector_score": 0.6824590563774109,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 1.0,
+          "rerank_score": 0.6480901979207992
+        },
+        {
+          "document": "BNS2023",
+          "section": "1",
+          "similarity": 0.6572553115265167,
+          "vector_score": 0.6572553115265167,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 1.0,
+          "rerank_score": 0.6426670147975393
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.676656564374464,
+          "vector_score": 0.676656564374464,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6391580797182943
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.671141584447529,
+          "vector_score": 0.671141584447529,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6344703467803996
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6885461211204529,
+          "vector_score": 0.6885461211204529,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.633264202952385
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6691837310791016,
+          "vector_score": 0.6691837310791016,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6328061714172364
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.668446958065033,
+          "vector_score": 0.668446958065033,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.632179914355278
+        }
+      ],
+      "final_results": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.7196840643882751,
+          "vector_score": 0.7196840643882751,
+          "keyword_score": 1.0,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6917314547300338
+        },
+        {
+          "document": "BNS2023",
+          "section": null,
+          "similarity": 0.6824590563774109,
+          "vector_score": 0.6824590563774109,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 1.0,
+          "rerank_score": 0.6480901979207992
+        },
+        {
+          "document": "BNS2023",
+          "section": "1",
+          "similarity": 0.6572553115265167,
+          "vector_score": 0.6572553115265167,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 1.0,
+          "rerank_score": 0.6426670147975393
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.676656564374464,
+          "vector_score": 0.676656564374464,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6391580797182943
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.671141584447529,
+          "vector_score": 0.671141584447529,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6344703467803996
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6885461211204529,
+          "vector_score": 0.6885461211204529,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.633264202952385
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6691837310791016,
+          "vector_score": 0.6691837310791016,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6328061714172364
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.668446958065033,
+          "vector_score": 0.668446958065033,
+          "keyword_score": 0.8,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.632179914355278
+        }
+      ]
+    },
+    {
+      "id": "RAG10-007",
+      "question": "If someone attempts to commit murder, which provision is relevant?",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "109"
+        }
+      ],
+      "candidate_rank": 5,
+      "final_rank": 5,
+      "cause": "reranking_or_selection",
+      "top_candidates": [
+        {
+          "document": "BNS2023",
+          "section": "62",
+          "similarity": 0.6739849253883925,
+          "vector_score": 0.6739849253883925,
+          "keyword_score": 0.5,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6128871865801336
+        },
+        {
+          "document": "BSA",
+          "section": "12",
+          "similarity": 0.6669549147459826,
+          "vector_score": 0.6669549147459826,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5935783442007517
+        },
+        {
+          "document": "BNS2023",
+          "section": "55",
+          "similarity": 0.6612539291381883,
+          "vector_score": 0.6612539291381883,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5887325064341267
+        },
+        {
+          "document": "BNS2023",
+          "section": "3",
+          "similarity": 0.6609552896592206,
+          "vector_score": 0.6609552896592206,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5884786628770041
+        },
+        {
+          "document": "BNS2023",
+          "section": "109",
+          "similarity": 0.6751959323883104,
+          "vector_score": 0.6751959323883104,
+          "keyword_score": 0.16666666666666666,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5872498758633972
+        },
+        {
+          "document": "BNS2023",
+          "section": "310",
+          "similarity": 0.6579623614527215,
+          "vector_score": 0.6579623614527215,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5859346739014798
+        },
+        {
+          "document": "BNS2023",
+          "section": "40",
+          "similarity": 0.673594952249076,
+          "vector_score": 0.673594952249076,
+          "keyword_score": 0.16666666666666666,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5858890427450478
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6571228895856684,
+          "vector_score": 0.6571228895856684,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5852211228144848
+        }
+      ],
+      "final_results": [
+        {
+          "document": "BNS2023",
+          "section": "62",
+          "similarity": 0.6739849253883925,
+          "vector_score": 0.6739849253883925,
+          "keyword_score": 0.5,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6128871865801336
+        },
+        {
+          "document": "BSA",
+          "section": "12",
+          "similarity": 0.6669549147459826,
+          "vector_score": 0.6669549147459826,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5935783442007517
+        },
+        {
+          "document": "BNS2023",
+          "section": "55",
+          "similarity": 0.6612539291381883,
+          "vector_score": 0.6612539291381883,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5887325064341267
+        },
+        {
+          "document": "BNS2023",
+          "section": "3",
+          "similarity": 0.6609552896592206,
+          "vector_score": 0.6609552896592206,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5884786628770041
+        },
+        {
+          "document": "BNS2023",
+          "section": "109",
+          "similarity": 0.6751959323883104,
+          "vector_score": 0.6751959323883104,
+          "keyword_score": 0.16666666666666666,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5872498758633972
+        },
+        {
+          "document": "BNS2023",
+          "section": "310",
+          "similarity": 0.6579623614527215,
+          "vector_score": 0.6579623614527215,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5859346739014798
+        },
+        {
+          "document": "BNS2023",
+          "section": "40",
+          "similarity": 0.673594952249076,
+          "vector_score": 0.673594952249076,
+          "keyword_score": 0.16666666666666666,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5858890427450478
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6571228895856684,
+          "vector_score": 0.6571228895856684,
+          "keyword_score": 0.3333333333333333,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5852211228144848
+        }
+      ]
+    },
+    {
+      "id": "RAG10-012",
+      "question": "Which BSA section concerns admissions?",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "15"
+        }
+      ],
+      "candidate_rank": 10,
+      "final_rank": null,
+      "cause": "reranking_or_selection",
+      "top_candidates": [
+        {
+          "document": "BSA",
+          "section": "19",
+          "similarity": 0.5906929969787598,
+          "vector_score": 0.5906929969787598,
+          "keyword_score": 0.5,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5420890474319459
+        },
+        {
+          "document": "BSA",
+          "section": "25",
+          "similarity": 0.6067823533286077,
+          "vector_score": 0.6067823533286077,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5357650003293166
+        },
+        {
+          "document": "BSA",
+          "section": "18",
+          "similarity": 0.5925794839859009,
+          "vector_score": 0.5925794839859009,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5236925613880158
+        },
+        {
+          "document": "BSA",
+          "section": "14",
+          "similarity": 0.5884295877346276,
+          "vector_score": 0.5884295877346276,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5201651495744335
+        },
+        {
+          "document": "BSA",
+          "section": "16",
+          "similarity": 0.5830655445495583,
+          "vector_score": 0.5830655445495583,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5156057128671245
+        },
+        {
+          "document": "BSA",
+          "section": "20",
+          "similarity": 0.5816683769226074,
+          "vector_score": 0.5816683769226074,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5144181203842163
+        },
+        {
+          "document": "BSA",
+          "section": "21",
+          "similarity": 0.5682523589284644,
+          "vector_score": 0.5682523589284644,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5030145050891947
+        },
+        {
+          "document": "BSA",
+          "section": "17",
+          "similarity": 0.56619836587305,
+          "vector_score": 0.56619836587305,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5012686109920924
+        }
+      ],
+      "final_results": [
+        {
+          "document": "BSA",
+          "section": "19",
+          "similarity": 0.5906929969787598,
+          "vector_score": 0.5906929969787598,
+          "keyword_score": 0.5,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5420890474319459
+        },
+        {
+          "document": "BSA",
+          "section": "25",
+          "similarity": 0.6067823533286077,
+          "vector_score": 0.6067823533286077,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5357650003293166
+        },
+        {
+          "document": "BSA",
+          "section": "18",
+          "similarity": 0.5925794839859009,
+          "vector_score": 0.5925794839859009,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5236925613880158
+        },
+        {
+          "document": "BSA",
+          "section": "14",
+          "similarity": 0.5884295877346276,
+          "vector_score": 0.5884295877346276,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5201651495744335
+        },
+        {
+          "document": "BSA",
+          "section": "16",
+          "similarity": 0.5830655445495583,
+          "vector_score": 0.5830655445495583,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5156057128671245
+        },
+        {
+          "document": "BSA",
+          "section": "20",
+          "similarity": 0.5816683769226074,
+          "vector_score": 0.5816683769226074,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5144181203842163
+        },
+        {
+          "document": "BSA",
+          "section": "21",
+          "similarity": 0.5682523589284644,
+          "vector_score": 0.5682523589284644,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5030145050891947
+        },
+        {
+          "document": "BSA",
+          "section": "17",
+          "similarity": 0.56619836587305,
+          "vector_score": 0.56619836587305,
+          "keyword_score": 0.25,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5012686109920924
+        }
+      ]
+    },
+    {
+      "id": "RAG10-017",
+      "question": "What is the rule about evidence of a witness's character?",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "48"
+        }
+      ],
+      "candidate_rank": 21,
+      "final_rank": null,
+      "cause": "reranking_or_selection",
+      "top_candidates": [
+        {
+          "document": "BSA",
+          "section": "145",
+          "similarity": 0.7259711623191833,
+          "vector_score": 0.7259711623191833,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6330754879713059
+        },
+        {
+          "document": "BSA",
+          "section": "156",
+          "similarity": 0.6717374529525629,
+          "vector_score": 0.6717374529525629,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6189768350096785
+        },
+        {
+          "document": "BSA",
+          "section": "46",
+          "similarity": 0.7005891234209378,
+          "vector_score": 0.7005891234209378,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6115007549077971
+        },
+        {
+          "document": "BSA",
+          "section": "151",
+          "similarity": 0.6509310603141785,
+          "vector_score": 0.6509310603141785,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6012914012670517
+        },
+        {
+          "document": "BSA",
+          "section": "158",
+          "similarity": 0.6607998609542847,
+          "vector_score": 0.6607998609542847,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.593679881811142
+        },
+        {
+          "document": "BSA",
+          "section": "47",
+          "similarity": 0.6777496741860923,
+          "vector_score": 0.6777496741860923,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5920872230581785
+        },
+        {
+          "document": "BSA",
+          "section": "159",
+          "similarity": 0.6359309554100037,
+          "vector_score": 0.6359309554100037,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5725413120985031
+        },
+        {
+          "document": "BSA",
+          "section": "147",
+          "similarity": 0.6136047426940426,
+          "vector_score": 0.6136047426940426,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5695640312899363
+        }
+      ],
+      "final_results": [
+        {
+          "document": "BSA",
+          "section": "145",
+          "similarity": 0.7259711623191833,
+          "vector_score": 0.7259711623191833,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6330754879713059
+        },
+        {
+          "document": "BSA",
+          "section": "156",
+          "similarity": 0.6717374529525629,
+          "vector_score": 0.6717374529525629,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6189768350096785
+        },
+        {
+          "document": "BSA",
+          "section": "46",
+          "similarity": 0.7005891234209378,
+          "vector_score": 0.7005891234209378,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6115007549077971
+        },
+        {
+          "document": "BSA",
+          "section": "151",
+          "similarity": 0.6509310603141785,
+          "vector_score": 0.6509310603141785,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.6012914012670517
+        },
+        {
+          "document": "BSA",
+          "section": "158",
+          "similarity": 0.6607998609542847,
+          "vector_score": 0.6607998609542847,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.593679881811142
+        },
+        {
+          "document": "BSA",
+          "section": "47",
+          "similarity": 0.6777496741860923,
+          "vector_score": 0.6777496741860923,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5920872230581785
+        },
+        {
+          "document": "BSA",
+          "section": "159",
+          "similarity": 0.6359309554100037,
+          "vector_score": 0.6359309554100037,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5725413120985031
+        },
+        {
+          "document": "BSA",
+          "section": "147",
+          "similarity": 0.6136047426940426,
+          "vector_score": 0.6136047426940426,
+          "keyword_score": 0.6,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5695640312899363
+        }
+      ]
+    },
+    {
+      "id": "RAG10-018",
+      "question": "Which BSA provision covers the examination of witnesses?",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "142"
+        }
+      ],
+      "candidate_rank": null,
+      "final_rank": null,
+      "cause": "candidate_generation",
+      "top_candidates": [
+        {
+          "document": "BSA",
+          "section": "139",
+          "similarity": 0.665513177678382,
+          "vector_score": 0.665513177678382,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5976862010266247
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6541504458829897,
+          "vector_score": 0.6541504458829897,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5880278790005412
+        },
+        {
+          "document": "BSA",
+          "section": "143",
+          "similarity": 0.6467725020741676,
+          "vector_score": 0.6467725020741676,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5817566267630425
+        },
+        {
+          "document": "BSA",
+          "section": "140",
+          "similarity": 0.6635973055242692,
+          "vector_score": 0.6635973055242692,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5800577096956289
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6461851981988668,
+          "vector_score": 0.6461851981988668,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5652574184690368
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6269327588955393,
+          "vector_score": 0.6269327588955393,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5648928450612084
+        },
+        {
+          "document": "BSA",
+          "section": "145",
+          "similarity": 0.6407456588967344,
+          "vector_score": 0.6407456588967344,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5606338100622242
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6215197033142957,
+          "vector_score": 0.6215197033142957,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5602917478171514
+        }
+      ],
+      "final_results": [
+        {
+          "document": "BSA",
+          "section": "139",
+          "similarity": 0.665513177678382,
+          "vector_score": 0.665513177678382,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5976862010266247
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6541504458829897,
+          "vector_score": 0.6541504458829897,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5880278790005412
+        },
+        {
+          "document": "BSA",
+          "section": "143",
+          "similarity": 0.6467725020741676,
+          "vector_score": 0.6467725020741676,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5817566267630425
+        },
+        {
+          "document": "BSA",
+          "section": "140",
+          "similarity": 0.6635973055242692,
+          "vector_score": 0.6635973055242692,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5800577096956289
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6461851981988668,
+          "vector_score": 0.6461851981988668,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5652574184690368
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6269327588955393,
+          "vector_score": 0.6269327588955393,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5648928450612084
+        },
+        {
+          "document": "BSA",
+          "section": "145",
+          "similarity": 0.6407456588967344,
+          "vector_score": 0.6407456588967344,
+          "keyword_score": 0.2,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5606338100622242
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6215197033142957,
+          "vector_score": 0.6215197033142957,
+          "keyword_score": 0.4,
+          "section_score": 0.0,
+          "document_score": 0.0,
+          "rerank_score": 0.5602917478171514
+        }
+      ]
+    }
+  ],
+  "note": "All calculations used stored candidate scores; no embeddings, database, or external services were accessed."
+}

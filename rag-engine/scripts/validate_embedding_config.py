@@ -33,6 +33,7 @@ def validate_configuration() -> dict[str, object]:
             f"Unsupported EMBEDDING_PROVIDER={info.provider!r}; supported providers: gemini"
         )
     api_key = _require("GEMINI_API_KEY")
+    _require("GEMINI_GENERATION_MODEL")
     gemini_model = _require("GEMINI_EMBEDDING_MODEL")
     if gemini_model != info.model:
         raise EmbeddingConfigurationError(

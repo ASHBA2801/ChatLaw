@@ -1,0 +1,306 @@
+[
+  {
+    "id": "sci-delhi",
+    "name": "Supreme Court of India",
+    "court_type": "Supreme Court",
+    "address": "Tilak Marg, New Delhi",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6229,
+    "longitude": 77.2404,
+    "phone": null,
+    "official_url": "https://www.sci.gov.in/",
+    "profile_url": null,
+    "practice_areas": ["Constitutional", "Civil", "Criminal", "Appeals"],
+    "source": {
+      "source_url": "https://www.sci.gov.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-madras",
+    "name": "Madras High Court",
+    "court_type": "High Court",
+    "address": "High Court Buildings, Chennai",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "latitude": 13.0878,
+    "longitude": 80.2785,
+    "phone": null,
+    "official_url": "https://www.hcmadras.tn.gov.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ", "Constitutional"],
+    "source": {
+      "source_url": "https://www.hcmadras.tn.gov.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-bombay",
+    "name": "Bombay High Court",
+    "court_type": "High Court",
+    "address": "Fort, Mumbai",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "latitude": 18.9318,
+    "longitude": 72.8331,
+    "phone": null,
+    "official_url": "https://bombayhighcourt.nic.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Commercial", "Writ"],
+    "source": {
+      "source_url": "https://bombayhighcourt.nic.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-delhi",
+    "name": "Delhi High Court",
+    "court_type": "High Court",
+    "address": "Sher Shah Road, New Delhi",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6091,
+    "longitude": 77.2346,
+    "phone": null,
+    "official_url": "https://delhihighcourt.nic.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ", "Commercial"],
+    "source": {
+      "source_url": "https://delhihighcourt.nic.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-karnataka",
+    "name": "High Court of Karnataka",
+    "court_type": "High Court",
+    "address": "Ambedkar Veedhi, Bengaluru",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "latitude": 12.9784,
+    "longitude": 77.5906,
+    "phone": null,
+    "official_url": "https://karnatakajudiciary.kar.nic.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ"],
+    "source": {
+      "source_url": "https://karnatakajudiciary.kar.nic.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-kerala",
+    "name": "High Court of Kerala",
+    "court_type": "High Court",
+    "address": "Kochi",
+    "city": "Kochi",
+    "state": "Kerala",
+    "latitude": 9.9669,
+    "longitude": 76.2425,
+    "phone": null,
+    "official_url": "https://hckerala.gov.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ"],
+    "source": {
+      "source_url": "https://hckerala.gov.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-calcutta",
+    "name": "Calcutta High Court",
+    "court_type": "High Court",
+    "address": "Esplanade Row West, Kolkata",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "latitude": 22.5675,
+    "longitude": 88.3489,
+    "phone": null,
+    "official_url": "https://www.calcuttahighcourt.gov.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ"],
+    "source": {
+      "source_url": "https://www.calcuttahighcourt.gov.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-gujarat",
+    "name": "High Court of Gujarat",
+    "court_type": "High Court",
+    "address": "Sola, Ahmedabad",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "latitude": 23.0707,
+    "longitude": 72.5213,
+    "phone": null,
+    "official_url": "https://gujarathighcourt.nic.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ"],
+    "source": {
+      "source_url": "https://gujarathighcourt.nic.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "hc-telangana",
+    "name": "High Court for the State of Telangana",
+    "court_type": "High Court",
+    "address": "Hyderabad",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "latitude": 17.3985,
+    "longitude": 78.4724,
+    "phone": null,
+    "official_url": "https://tshc.gov.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Writ"],
+    "source": {
+      "source_url": "https://tshc.gov.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "dc-coimbatore",
+    "name": "District Court, Coimbatore",
+    "court_type": "District Court",
+    "address": "Coimbatore District Court Complex",
+    "city": "Coimbatore",
+    "state": "Tamil Nadu",
+    "latitude": 11.0168,
+    "longitude": 76.9558,
+    "phone": null,
+    "official_url": "https://districts.ecourts.gov.in/coimbatore",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Family"],
+    "source": {
+      "source_url": "https://districts.ecourts.gov.in/coimbatore",
+      "source_type": "ecourts_district",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "dc-chennai",
+    "name": "City Civil Court / District Judiciary, Chennai",
+    "court_type": "District Court",
+    "address": "Chennai",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "latitude": 13.0827,
+    "longitude": 80.2707,
+    "phone": null,
+    "official_url": "https://districts.ecourts.gov.in/chennai",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Family"],
+    "source": {
+      "source_url": "https://districts.ecourts.gov.in/chennai",
+      "source_type": "ecourts_district",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "dc-bengaluru",
+    "name": "District Court, Bengaluru Urban",
+    "court_type": "District Court",
+    "address": "Bengaluru",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "latitude": 12.9716,
+    "longitude": 77.5946,
+    "phone": null,
+    "official_url": "https://districts.ecourts.gov.in/bengaluru",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Family"],
+    "source": {
+      "source_url": "https://districts.ecourts.gov.in/bengaluru",
+      "source_type": "ecourts_district",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "dc-mumbai",
+    "name": "City Civil & Sessions Court, Mumbai",
+    "court_type": "District Court",
+    "address": "Mumbai",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "latitude": 18.9388,
+    "longitude": 72.8354,
+    "phone": null,
+    "official_url": "https://districts.ecourts.gov.in/mumbai",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal"],
+    "source": {
+      "source_url": "https://districts.ecourts.gov.in/mumbai",
+      "source_type": "ecourts_district",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "dc-delhi",
+    "name": "District Courts, Delhi",
+    "court_type": "District Court",
+    "address": "Tis Hazari / Saket / Karkardooma / Patiala House / Rohini / Dwarka",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6667,
+    "longitude": 77.2167,
+    "phone": null,
+    "official_url": "https://delhi.dcourts.gov.in/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Family"],
+    "source": {
+      "source_url": "https://delhi.dcourts.gov.in/",
+      "source_type": "official_court_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "ncdrc-delhi",
+    "name": "National Consumer Disputes Redressal Commission",
+    "court_type": "Consumer Forum",
+    "address": "New Delhi",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "latitude": 28.6139,
+    "longitude": 77.209,
+    "phone": null,
+    "official_url": "https://ncdrc.nic.in/",
+    "profile_url": null,
+    "practice_areas": ["Consumer"],
+    "source": {
+      "source_url": "https://ncdrc.nic.in/",
+      "source_type": "official_forum_website",
+      "verification_status": "verified"
+    }
+  },
+  {
+    "id": "ecourts-services",
+    "name": "eCourts Services (find district and subordinate courts)",
+    "court_type": "National portal",
+    "address": "India",
+    "city": null,
+    "state": null,
+    "latitude": null,
+    "longitude": null,
+    "phone": null,
+    "official_url": "https://ecourts.gov.in/ecourts_home/",
+    "profile_url": null,
+    "practice_areas": ["Civil", "Criminal", "Family", "Consumer"],
+    "source": {
+      "source_url": "https://ecourts.gov.in/ecourts_home/",
+      "source_type": "official_directory",
+      "verification_status": "verified"
+    }
+  }
+]
