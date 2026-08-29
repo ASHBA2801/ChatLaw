@@ -3,11 +3,12 @@
 import { useState } from "react";
 import type { CaseIntelligence, LocationInput, ResourceResult } from "@/lib/case-intelligence/types";
 import { requestCaseIntelligence } from "@/lib/api/case-intelligence";
+import { isSafeExternalUrl } from "@/lib/urls/safeUrl";
 
 function ResourceList({ results, type }: { results: ResourceResult[]; type: "court" | "advocate" }) {
   if (!results.length) {
     return (
-      <p className="rounded-xl border border-dashed border-[var(--line)] bg-[var(--background)] p-4 text-sm text-[var(--ink-muted)]">
+      <p className="rounded-sm border border-dashed border-[var(--line)] bg-[var(--background)] p-4 text-sm text-[var(--ink-muted)]">
         No verified {type === "court" ? "court information" : "advocate directories"} matched. Try another city/state or a wider radius.
       </p>
     );
@@ -24,7 +25,7 @@ function ResourceList({ results, type }: { results: ResourceResult[]; type: "cou
         </p>
       )}
       {results.map((result) => (
-        <article key={result.id} className="rounded-xl border border-[var(--line)] bg-white p-4">
+        <article key={result.id} className="rounded-sm border border-[var(--line)] bg-white p-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h4 className="font-semibold">{result.name}</h4>
@@ -43,25 +44,28 @@ function ResourceList({ results, type }: { results: ResourceResult[]; type: "cou
           </p>
           <div className="mt-3 flex flex-wrap gap-2 text-xs">
             {result.source_type ? (
-              <span className="rounded-full bg-[#eef5d0] px-2 py-1 text-[var(--forest)]">Source: {result.source_type}</span>
+              <span className="rounded-sm bg-[var(--signal-soft)] px-2 py-1 text-[var(--forest)]">Source: {result.source_type}</span>
             ) : null}
             {result.verification_status === "verified" ? (
-              <span className="rounded-full border border-[var(--line)] px-2 py-1">Verified official directory</span>
+              <span className="rounded-sm border border-[var(--line)] px-2 py-1">Verified official directory</span>
             ) : null}
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
-            {(result.profile_url || result.official_url) && (
-              <a
-                href={result.profile_url || result.official_url || "#"}
-                target="_blank"
-                rel="noreferrer"
-                className="min-h-10 rounded-lg border border-[var(--line)] px-3 py-2 text-sm font-medium text-[var(--forest)]"
-              >
-                {type === "court" ? "Official website" : "Open directory"}
-              </a>
-            )}
+            {(() => {
+              const linkUrl = isSafeExternalUrl(result.profile_url) ?? isSafeExternalUrl(result.official_url);
+              return linkUrl ? (
+                <a
+                  href={linkUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="min-h-10 rounded-sm border border-[var(--line)] px-3 py-2 text-sm font-medium text-[var(--forest)]"
+                >
+                  {type === "court" ? "Official website" : "Open directory"}
+                </a>
+              ) : null;
+            })()}
             {result.phone ? (
-              <a href={`tel:${result.phone}`} className="min-h-10 rounded-lg border border-[var(--line)] px-3 py-2 text-sm">
+              <a href={`tel:${result.phone}`} className="min-h-10 rounded-sm border border-[var(--line)] px-3 py-2 text-sm">
                 Contact
               </a>
             ) : null}
@@ -99,5 +103,5 @@ export default function CaseIntelligencePanel({
     try { const response = await requestCaseIntelligence({ query, resourceType: nextType, location, practiceArea: practiceArea || undefined, radiusKm }); setIntelligence(response.intelligence); setResults(response.results); setStatus(response.providerStatus); } catch (error) { setResults([]); setStatus(error instanceof Error ? error.message : "Provider unavailable"); } finally { setLoading(false); }
   }
 
-  return <section className="mt-5 rounded-2xl border border-[var(--line)] bg-[#fbfcf8] p-4 sm:p-5" aria-label="Case intelligence"><div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="text-base font-semibold">Case intelligence</h3><p className="mt-1 text-sm text-[var(--ink-muted)]">A practical orientation layered on top of ChatLaw’s grounded answer.</p></div>{intelligence?.urgency === "potentially_urgent" && <span className="rounded-full bg-[#fff1df] px-3 py-1 text-xs font-semibold text-[#7b4b17]">May require prompt assistance</span>}</div>{intelligence && <div className="mt-4 grid gap-4 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Legal area</p><p className="mt-1 font-medium">{intelligence.case_category}</p></div><div><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Jurisdiction</p><p className="mt-1 font-medium">{intelligence.jurisdiction || "Not specified"}</p></div><div className="sm:col-span-2"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Potentially useful documents</p><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-[var(--ink-muted)]">{intelligence.required_documents.map((item) => <li key={item}>{item}</li>)}</ul></div></div>}<div className="mt-5 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"><label className="text-sm"><span className="mb-1 block font-medium">City and state</span><input value={locationText} onChange={(event) => setLocationText(event.target.value)} placeholder="e.g. Coimbatore, Tamil Nadu" className="h-11 w-full rounded-lg border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]" /></label><label className="text-sm"><span className="mb-1 block font-medium">Practice area</span><input value={practiceArea} onChange={(event) => setPracticeArea(event.target.value)} placeholder="Optional for advocates" className="h-11 w-full rounded-lg border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]" /></label><label className="text-sm"><span className="mb-1 block font-medium">Radius</span><select value={radiusKm} onChange={(event) => setRadiusKm(Number(event.target.value))} className="h-11 w-full rounded-lg border border-[var(--line)] bg-white px-3"><option value={10}>10 km</option><option value={25}>25 km</option><option value={50}>50 km</option><option value={100}>100 km</option></select></label></div><div className="mt-3 flex flex-wrap gap-2"><button type="button" onClick={() => void load("court")} disabled={loading} className="min-h-11 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50">Find relevant courts</button><button type="button" onClick={() => void load("advocate")} disabled={loading} className="min-h-11 rounded-lg border border-[var(--forest)] px-4 text-sm font-semibold text-[var(--forest)] disabled:opacity-50">Find nearby advocates</button></div>{loading && <p className="mt-4 text-sm text-[var(--ink-muted)]" role="status">Checking provider information…</p>}{status === "location_required" && <p className="mt-4 text-sm text-[#7b4b17]">Add your city and state to search nearby resources.</p>}{status === "unavailable" && <p className="mt-4 text-sm text-[#7b4b17]">Location services are temporarily unavailable. Your legal answer remains available.</p>}{resourceType && !loading && status === "ok" && <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h4 className="font-semibold">{resourceType === "court" ? "Potentially relevant courts" : "Nearby advocates"}</h4><span className="text-xs text-[var(--ink-muted)]">List view · map provider not configured</span></div><ResourceList results={results} type={resourceType} /></div>}{intelligence && <p className="mt-5 text-xs leading-5 text-[var(--ink-muted)]">{intelligence.limitations.join(" ")}</p>}</section>;
+  return <section className="mt-5 rounded-sm border border-[var(--line)] bg-[var(--surface)] p-4 sm:p-5" aria-label="Case intelligence"><div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="text-base font-semibold">Case intelligence</h3><p className="mt-1 text-sm text-[var(--ink-muted)]">A practical orientation layered on top of ChatLaw’s grounded answer.</p></div>{intelligence?.urgency === "potentially_urgent" && <span className="rounded-sm bg-[#fff1df] px-3 py-1 text-xs font-semibold text-[#7b4b17]">May require prompt assistance</span>}</div>{intelligence && <div className="mt-4 grid gap-4 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Legal area</p><p className="mt-1 font-medium">{intelligence.case_category}</p></div><div><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Jurisdiction</p><p className="mt-1 font-medium">{intelligence.jurisdiction || "Not specified"}</p></div><div className="sm:col-span-2"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Potentially useful documents</p><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-[var(--ink-muted)]">{intelligence.required_documents.map((item) => <li key={item}>{item}</li>)}</ul></div></div>}<div className="mt-5 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"><label className="text-sm"><span className="mb-1 block font-medium">City and state</span><input value={locationText} onChange={(event) => setLocationText(event.target.value)} placeholder="e.g. Coimbatore, Tamil Nadu" className="h-11 w-full rounded-sm border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]" /></label><label className="text-sm"><span className="mb-1 block font-medium">Practice area</span><input value={practiceArea} onChange={(event) => setPracticeArea(event.target.value)} placeholder="Optional for advocates" className="h-11 w-full rounded-sm border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]" /></label><label className="text-sm"><span className="mb-1 block font-medium">Radius</span><select value={radiusKm} onChange={(event) => setRadiusKm(Number(event.target.value))} className="h-11 w-full rounded-sm border border-[var(--line)] bg-white px-3"><option value={10}>10 km</option><option value={25}>25 km</option><option value={50}>50 km</option><option value={100}>100 km</option></select></label></div><div className="mt-3 flex flex-wrap gap-2"><button type="button" onClick={() => void load("court")} disabled={loading} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50">Find relevant courts</button><button type="button" onClick={() => void load("advocate")} disabled={loading} className="min-h-11 rounded-sm border border-[var(--forest)] px-4 text-sm font-semibold text-[var(--forest)] disabled:opacity-50">Find nearby advocates</button></div>{loading && <p className="mt-4 text-sm text-[var(--ink-muted)]" role="status">Checking provider information…</p>}{status === "location_required" && <p className="mt-4 text-sm text-[#7b4b17]">Add your city and state to search nearby resources.</p>}{status === "unavailable" && <p className="mt-4 text-sm text-[#7b4b17]">Location services are temporarily unavailable. Your legal answer remains available.</p>}{resourceType && !loading && status === "ok" && <div className="mt-5"><h4 className="mb-3 font-semibold">{resourceType === "court" ? "Potentially relevant courts" : "Nearby advocates"}</h4><ResourceList results={results} type={resourceType} /></div>}{intelligence && <p className="mt-5 text-xs leading-5 text-[var(--ink-muted)]">{intelligence.limitations.join(" ")}</p>}</section>;
 }

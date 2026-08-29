@@ -20,6 +20,8 @@ DEFAULT_KEYWORD_WEIGHT = float(os.getenv("KEYWORD_WEIGHT", "0.10"))
 DEFAULT_SECTION_WEIGHT = float(os.getenv("SECTION_WEIGHT", "0.07"))
 DEFAULT_DOCUMENT_WEIGHT = float(os.getenv("DOCUMENT_WEIGHT", "0.03"))
 _pool = None
+_query_embedding_cache: dict[str, list[float]] = {}
+_MAX_CACHE_SIZE = 1024
 
 
 class Cursor(Protocol):
@@ -92,33 +94,87 @@ class VectorSearcher:
         if resolved_candidate_top_k < resolved_top_k:
             raise ValueError("candidate_top_k must be at least top_k")
 
+    def _get_embedding(self, text: str) -> list[float]:
+        normalized = text.strip()
+        if normalized in _query_embedding_cache:
+            return _query_embedding_cache[normalized]
+        vector = self.embedding_provider.embed(normalized)
+        validated = validate_embedding(vector, expected_dimension=768,
+                                       provider=self.embedding_provider.info.provider,
+                                       model=self.embedding_provider.info.model)
+        if len(_query_embedding_cache) >= _MAX_CACHE_SIZE:
+            _query_embedding_cache.clear()
+        _query_embedding_cache[normalized] = validated
+        return validated
+
+    def search(self, query: str, *, top_k: int | None = None,
+               min_similarity: float | None = None, candidate_top_k: int | None = None,
+               debug: bool = False, weights: RerankWeights | None = None) -> RetrievalResponse:
+        normalized_query = query.strip()
+        if not normalized_query:
+            raise ValueError("query must not be empty")
+        resolved_top_k = self.default_top_k if top_k is None else top_k
+        if resolved_top_k <= 0:
+            raise ValueError("top_k must be positive")
+        threshold = self.default_min_similarity if min_similarity is None else min_similarity
+        if threshold is None:
+            threshold = -1.0
+        if not -1.0 <= threshold <= 1.0:
+            raise ValueError("min_similarity must be between -1 and 1")
+        resolved_candidate_top_k = candidate_top_k or max(DEFAULT_CANDIDATE_TOP_K, resolved_top_k)
+        if resolved_candidate_top_k < resolved_top_k:
+            raise ValueError("candidate_top_k must be at least top_k")
+
+        # Deterministic scenario analysis and query expansion
+        try:
+            from scenario.expansion import expand_query
+            expanded = expand_query(normalized_query)
+        except ImportError:
+            expanded = None
+
+        query_to_embed = expanded.expanded_query if (expanded and expanded.is_scenario) else normalized_query
+
         print("[RETRIEVAL] Embedding query", flush=True)
         embedding_started = time.perf_counter()
-        vector = self.embedding_provider.embed(normalized_query)
-        vector = validate_embedding(vector, expected_dimension=768,
-                                    provider=self.embedding_provider.info.provider,
-                                    model=self.embedding_provider.info.model)
+        vector = self._get_embedding(query_to_embed)
         print(f"[RETRIEVAL] Query embedding received ({time.perf_counter() - embedding_started:.2f}s)", flush=True)
 
         vector_text = "[" + ",".join(repr(float(value)) for value in vector) + "]"
         print("[RETRIEVAL] Searching pgvector", flush=True)
         database_started = time.perf_counter()
         cursor = self.connection.cursor()
-        # Retrieve the full candidate pool first. The configured threshold is
-        # applied after metadata-aware reranking so explicit legal references
-        # can remain eligible even when their vector score is slightly lower.
+        # Retrieve candidate pool
         cursor.execute(SEARCH_SQL, (vector_text, vector_text, -1.0, vector_text, resolved_candidate_top_k))
         rows = cursor.fetchall()
         candidates = [RetrievalResult.from_row(_row_to_mapping(row)) for row in rows]
+
+        # Multi-query candidate merge if scenario query produced sparse candidates
+        if expanded and expanded.is_scenario and len(candidates) < resolved_top_k:
+            orig_vector = self._get_embedding(normalized_query)
+            if orig_vector != vector:
+                orig_vector_text = "[" + ",".join(repr(float(value)) for value in orig_vector) + "]"
+                cursor.execute(SEARCH_SQL, (orig_vector_text, orig_vector_text, -1.0, orig_vector_text, resolved_candidate_top_k))
+                seen_ids = {c.chunk_id for c in candidates}
+                for row in cursor.fetchall():
+                    c_res = RetrievalResult.from_row(_row_to_mapping(row))
+                    if c_res.chunk_id not in seen_ids:
+                        seen_ids.add(c_res.chunk_id)
+                        candidates.append(c_res)
+
         resolved_weights = weights or RerankWeights(DEFAULT_VECTOR_WEIGHT, DEFAULT_KEYWORD_WEIGHT,
                                 DEFAULT_SECTION_WEIGHT, DEFAULT_DOCUMENT_WEIGHT)
         ranked = rerank(candidates, normalized_query, resolved_weights)
         signals = extract_query_signals(normalized_query)
+        is_scenario = bool(expanded and expanded.is_scenario)
+
         ranked = [
             result for result in ranked
             if result.similarity >= threshold
             or section_score(signals, result) >= 1.0
             or document_score(signals, result) >= 1.0
+            or (is_scenario and (result.keyword_score or 0.0) >= 0.15 and result.similarity >= (threshold * 0.70 if threshold > 0 else 0.40))
+            or (is_scenario and (result.concept_score or 0.0) >= 0.40 and result.similarity >= (threshold * 0.65 if threshold > 0 else 0.35))
+            or (result.rerank_score is not None and result.rerank_score >= (threshold if threshold > 0 else 0.55))
         ]
         results = tuple(ranked[:resolved_top_k])
         if debug:

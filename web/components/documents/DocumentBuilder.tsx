@@ -92,7 +92,7 @@ export default function DocumentBuilder() {
 
   return (
     <form onSubmit={generate} className="grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)]">
-      <aside className="rounded-2xl border border-[var(--line)] bg-white p-4">
+      <aside className="rounded-sm border border-[var(--line)] bg-white p-4">
         <h2 className="text-sm font-semibold">Build steps</h2>
         <nav aria-label="Document build steps">
           <ol className="mt-4 space-y-1">
@@ -102,10 +102,10 @@ export default function DocumentBuilder() {
                   type="button"
                   onClick={() => setStepIndex(index)}
                   aria-current={index === stepIndex ? "step" : undefined}
-                  className={`flex min-h-11 w-full items-center justify-between rounded-xl px-3 text-left text-sm ${index === stepIndex ? "bg-[var(--forest)] text-white" : "text-[var(--foreground)] hover:bg-[#edf2ec]"}`}
+                  className={`flex min-h-11 w-full items-center justify-between rounded-sm px-3 text-left text-sm ${index === stepIndex ? "bg-[var(--forest)] text-white" : "text-[var(--foreground)] hover:bg-[var(--module-fill)]"}`}
                 >
                   <span>{item.title}</span>
-                  <span className={`text-xs ${index === stepIndex ? "text-[var(--lime)]" : "text-[var(--ink-muted)]"}`}>{index + 1}/{steps.length}</span>
+                  <span className={`text-xs ${index === stepIndex ? "text-white" : "text-[var(--ink-muted)]"}`}>{index + 1}/{steps.length}</span>
                 </button>
               </li>
             ))}
@@ -114,7 +114,7 @@ export default function DocumentBuilder() {
       </aside>
 
       <div className="space-y-6">
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5 sm:p-6">
           <h1 className="text-2xl font-semibold tracking-tight">New legal document</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-muted)]">
             Choose a supported template and complete only the details that apply. ChatLaw will not invent missing parties, dates, or amounts.
@@ -128,7 +128,7 @@ export default function DocumentBuilder() {
                   type="button"
                   onClick={() => selectTemplate(item)}
                   aria-pressed={selected}
-                  className={`min-h-24 rounded-2xl border px-4 py-3 text-left ${selected ? "border-[var(--forest)] bg-[#eef5d0]" : "border-[var(--line)] bg-[var(--background)]"}`}
+                  className={`min-h-24 rounded-sm border px-4 py-3 text-left ${selected ? "border-[var(--forest)] bg-[var(--signal-soft)]" : "border-[var(--line)] bg-[var(--background)]"}`}
                 >
                   <span className="block font-semibold">{item.title}</span>
                   <span className="mt-1 block text-xs leading-5 text-[var(--ink-muted)]">{item.description}</span>
@@ -138,7 +138,7 @@ export default function DocumentBuilder() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5 sm:p-6">
           <h2 className="text-xl font-semibold">{step.title}</h2>
           <p className="mt-1 text-sm text-[var(--ink-muted)]">{step.description}</p>
           <div className="mt-6 space-y-5">
@@ -184,7 +184,7 @@ export default function DocumentBuilder() {
             type="button"
             disabled={stepIndex === 0}
             onClick={() => setStepIndex((index) => Math.max(0, index - 1))}
-            className="min-h-11 rounded-full border border-[var(--line)] bg-white px-5 text-sm font-medium disabled:opacity-50"
+            className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-5 text-sm font-medium disabled:opacity-50"
           >
             Back
           </button>
@@ -192,7 +192,7 @@ export default function DocumentBuilder() {
             <button
               type="button"
               onClick={() => setStepIndex((index) => Math.min(steps.length - 1, index + 1))}
-              className="min-h-11 rounded-full bg-[var(--forest)] px-5 text-sm font-semibold text-white"
+              className="min-h-11 rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white"
             >
               Continue
             </button>
@@ -201,7 +201,7 @@ export default function DocumentBuilder() {
               type="submit"
               disabled={busy}
               aria-busy={busy}
-              className="min-h-11 rounded-full bg-[var(--forest)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+              className="min-h-11 rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white disabled:opacity-60"
             >
               {busy ? "Generating draft…" : "Generate draft"}
             </button>

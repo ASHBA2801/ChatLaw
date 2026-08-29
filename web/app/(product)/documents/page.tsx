@@ -24,7 +24,7 @@ export default async function DocumentsPage() {
         </div>
         <Link
           href="/documents/new"
-          className="inline-flex min-h-11 items-center rounded-full bg-[var(--forest)] px-5 text-sm font-semibold text-white"
+          className="inline-flex min-h-11 items-center rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white"
         >
           New document
         </Link>

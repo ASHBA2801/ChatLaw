@@ -16,39 +16,43 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
-      <div className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-16">
-        <Link href="/" className="flex items-center gap-3 font-semibold">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--forest)] text-xs text-[var(--lime)]">CL</span>
+      <div className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-4 py-16 sm:px-6">
+        <Link href="/" className="flex items-center gap-2 text-sm font-bold">
+          <span className="flex h-7 w-7 items-center justify-center bg-[var(--signal)] text-[10px] text-white">CL</span>
           ChatLaw
         </Link>
-        <p className="mt-10 text-xs font-bold uppercase tracking-[0.18em] text-[var(--forest)]">Secure legal workspace</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">Sign in to your workspace</h1>
-        <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
-          Document drafts are stored against your signed-in account. Research chat remains available without signing in.
-        </p>
-        {hasAuthError ? (
-          <div role="alert" className="mt-8 rounded-2xl border border-[#e8c9a5] bg-[#fff8ed] p-4 text-sm leading-6 text-[#704616]">
-            <p className="font-semibold">We couldn&apos;t complete Google sign-in.</p>
-            <p className="mt-1">The sign-in session may have expired, or this local environment may need its OAuth settings checked. Start a fresh attempt below.</p>
-            <Link href={`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="mt-3 inline-flex min-h-11 items-center rounded-full border border-[#c99b5e] px-4 font-semibold hover:bg-[#fff0d7]">Try again</Link>
+        <div className="mt-8 border border-[var(--line)] bg-[var(--surface)]">
+          <div className="module-tab">Secure legal workspace</div>
+          <div className="p-5">
+            <h1 className="text-2xl font-bold tracking-tight">Sign in to your workspace</h1>
+            <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
+              Document drafts are stored against your signed-in account. Research chat remains available without signing in.
+            </p>
+            {hasAuthError ? (
+              <div role="alert" className="mt-6 border border-[var(--warn-line)] bg-[var(--warn-bg)] p-4 text-sm leading-6 text-[var(--warn)]">
+                <p className="font-semibold">We couldn&apos;t complete Google sign-in.</p>
+                <p className="mt-1">The sign-in session may have expired, or this local environment may need its OAuth settings checked. Start a fresh attempt below.</p>
+                <Link href={`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="mt-3 inline-flex min-h-11 items-center border border-[var(--warn)] px-4 font-semibold hover:bg-[var(--signal-soft)]">Try again</Link>
+              </div>
+            ) : authConfigurationStatus.googleConfigured ? (
+              <form
+                className="mt-6"
+                action={async () => {
+                  "use server";
+                  await signIn("google", { redirectTo: callbackUrl });
+                }}
+              >
+                <button type="submit" className="min-h-12 w-full bg-[var(--signal)] text-sm font-bold uppercase tracking-wide text-white transition hover:bg-[#a01010] focus-visible:ring-2 focus-visible:ring-[var(--focus)]">
+                  Continue with Google
+                </button>
+              </form>
+            ) : (
+              <p role="status" className="mt-6 border border-[var(--line)] bg-[var(--module-fill)] p-4 text-sm leading-6">
+                Google sign-in is not ready on this server. {authConfigurationStatus.issues.join(" ")} Restart the app after updating `web/.env`.
+              </p>
+            )}
           </div>
-        ) : authConfigurationStatus.googleConfigured ? (
-          <form
-            className="mt-8"
-            action={async () => {
-              "use server";
-              await signIn("google", { redirectTo: callbackUrl });
-            }}
-          >
-              <button type="submit" className="min-h-12 w-full rounded-full bg-[var(--forest)] text-sm font-semibold text-white transition hover:bg-[#0f3929] focus-visible:ring-2 focus-visible:ring-[var(--warm)]">
-              Continue with Google
-            </button>
-          </form>
-        ) : (
-          <p role="status" className="mt-8 rounded-xl border border-[var(--line)] bg-white p-4 text-sm leading-6">
-            Google sign-in is not ready on this server. {authConfigurationStatus.issues.join(" ")} Restart the app after updating `web/.env`.
-          </p>
-        )}
+        </div>
       </div>
     </main>
   );

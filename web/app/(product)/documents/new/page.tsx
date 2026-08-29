@@ -12,7 +12,7 @@ export default async function NewDocumentPage() {
 
   return (
     <section className="mx-auto w-full max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
-      <Suspense fallback={<div className="h-40 animate-pulse rounded-2xl border border-[var(--line)] bg-white" />}>
+      <Suspense fallback={<div className="h-40 animate-pulse rounded-sm border border-[var(--line)] bg-white" />}>
         <DocumentBuilder />
       </Suspense>
     </section>

@@ -76,6 +76,7 @@ def _empty_state(
     asked: list[str] | None = None,
     round_n: int = 0,
     assumptions: list[str] | None = None,
+    pending: bool = False,
 ) -> dict[str, Any]:
     return {
         "domain": domain,
@@ -85,12 +86,14 @@ def _empty_state(
         "asked": list(asked or []),
         "assumptions": list(assumptions or []),
         "original_query": original_query,
+        "pending": pending,
     }
 
 
 def _normalize_prior(prior: dict[str, Any] | None) -> dict[str, Any] | None:
     if not prior or not isinstance(prior, dict):
         return None
+    pending = prior.get("pending")
     return {
         "domain": prior.get("domain"),
         "round": int(prior.get("round") or 0),
@@ -99,7 +102,21 @@ def _normalize_prior(prior: dict[str, Any] | None) -> dict[str, Any] | None:
         "asked": list(prior.get("asked") or []),
         "assumptions": list(prior.get("assumptions") or []),
         "original_query": str(prior.get("original_query") or ""),
+        "pending": pending if isinstance(pending, bool) else None,
     }
+
+
+def _is_lookup_question(message: str) -> bool:
+    return any(pattern.search(message or "") for pattern in _LOOKUP_PATTERNS)
+
+
+def active_interview_from_metadata(metadata: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Resume an interview only when the last assistant turn asked a clarification."""
+    if not metadata or not isinstance(metadata, dict):
+        return None
+    if metadata.get("kind") != "clarification":
+        return None
+    return interview_state_from_metadata(metadata)
 
 
 class InterviewManager:
@@ -138,7 +155,7 @@ class InterviewManager:
         lowered = text.lower()
         if any(phrase in lowered for phrase in _PROCEED_PHRASES):
             return True
-        if any(pattern.search(text) for pattern in _LOOKUP_PATTERNS):
+        if _is_lookup_question(text):
             return True
         if confidence is not None and confidence < 0.5:
             return True
@@ -255,6 +272,30 @@ class InterviewManager:
             parts.append("Assumptions: " + " ".join(assumptions))
         return " ".join(parts).strip() or (original_query or "").strip()
 
+    def _is_topic_change(self, text: str, prior_domain: str | None) -> bool:
+        if _is_lookup_question(text):
+            return True
+        new_domain_id, confidence = self.detect_domain(text)
+        return bool(
+            new_domain_id
+            and prior_domain
+            and new_domain_id != prior_domain
+            and confidence >= 0.5
+        )
+
+    def _should_continue(self, prior: dict[str, Any], text: str) -> bool:
+        if not prior.get("domain"):
+            return False
+        if self._is_topic_change(text, str(prior.get("domain") or "") or None):
+            return False
+        pending = prior.get("pending")
+        if pending is False:
+            return False
+        if pending is True:
+            return True
+        # Legacy rows: only resume when a clarification was actually asked.
+        return bool(prior.get("asked"))
+
     def process_turn(
         self,
         message: str,
@@ -265,8 +306,8 @@ class InterviewManager:
         text = (message or "").strip()
         prior = _normalize_prior(prior_interview_state)
 
-        # Continuing an in-progress interview (including the reply after the final round).
-        if prior and prior.get("domain") and (prior.get("asked") or prior.get("original_query")):
+        # Continue only while a clarification is still awaiting a reply.
+        if prior and self._should_continue(prior, text):
             domain = get_domain(str(prior["domain"]))
             if domain is not None:
                 asked = list(prior.get("asked") or [])
@@ -327,6 +368,7 @@ class InterviewManager:
                     slots=slots,
                     asked=new_asked,
                     round_n=new_round,
+                    pending=True,
                 )
                 return InterviewResult(
                     action="clarify",
@@ -382,6 +424,7 @@ class InterviewManager:
             slots=slots,
             asked=[slot_id],
             round_n=1,
+            pending=True,
         )
         return InterviewResult(
             action="clarify",
@@ -410,5 +453,6 @@ def interview_state_from_metadata(metadata: dict[str, Any] | None) -> dict[str, 
             "asked": metadata.get("asked") or [],
             "assumptions": metadata.get("assumptions") or [],
             "original_query": metadata.get("original_query"),
+            "pending": True,
         }
     return None

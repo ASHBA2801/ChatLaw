@@ -22,6 +22,7 @@ class RetrievalResult:
     keyword_score: float | None = None
     section_score: float | None = None
     document_score: float | None = None
+    concept_score: float | None = None
     rerank_score: float | None = None
     source_name: str | None = None
     source_url: str | None = None

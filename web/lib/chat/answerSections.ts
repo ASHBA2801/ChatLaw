@@ -53,7 +53,7 @@ export function domainToDocumentTemplate(domain: string | null | undefined): str
     case "tenancy":
       return "rent_lease";
     case "employment":
-      return "employment_agreement";
+      return "service_agreement";
     case "contract":
       return "nda";
     case "consumer":
@@ -63,6 +63,6 @@ export function domainToDocumentTemplate(domain: string | null | undefined): str
     case "family":
       return "affidavit";
     default:
-      return "legal_notice";
+      return null;
   }
 }

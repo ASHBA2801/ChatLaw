@@ -7,6 +7,7 @@ import {
   getPinnedLanguages,
   isLanguageCode,
   LANGUAGES,
+  resolveActiveLanguage,
 } from "@/lib/i18n/languages";
 import {
   domainToDocumentTemplate,
@@ -31,6 +32,26 @@ describe("language catalog", () => {
     expect(formatLanguageLabel(getLanguage("ta"))).toBe("தமிழ் — Tamil");
     expect(formatLanguageLabel(getLanguage("en"))).toBe("English");
   });
+
+  it("applies a newly selected language before the session preference updates", () => {
+    expect(
+      resolveActiveLanguage({
+        override: "ta",
+        stored: "ta",
+        sessionLanguage: "hi",
+        initialLanguage: "en",
+      }),
+    ).toBe("ta");
+    expect(
+      resolveActiveLanguage({
+        stored: "ml",
+        sessionLanguage: "hi",
+      }),
+    ).toBe("hi");
+    expect(resolveActiveLanguage({ stored: "ml" })).toBe("ml");
+    expect(resolveActiveLanguage({ sessionLanguage: "hi" })).toBe("hi");
+    expect(resolveActiveLanguage({})).toBe("en");
+  });
 });
 
 describe("answer sections", () => {
@@ -48,7 +69,8 @@ describe("answer sections", () => {
     expect(domainToDocumentTemplate("contract")).toBe("nda");
     expect(domainToDocumentTemplate("consumer")).toBe("consumer_complaint");
     expect(domainToDocumentTemplate("criminal")).toBe("complaint");
-    expect(domainToDocumentTemplate("unknown")).toBe("legal_notice");
+    expect(domainToDocumentTemplate("unknown")).toBeNull();
+    expect(domainToDocumentTemplate(null)).toBeNull();
   });
 });
 

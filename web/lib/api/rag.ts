@@ -22,6 +22,7 @@ export interface InterviewState {
   asked: string[];
   assumptions: string[];
   original_query?: string | null;
+  pending?: boolean;
 }
 
 export interface DocumentDraftState {
@@ -168,7 +169,9 @@ function mapStatusMessage(status: number, fallback: string): string {
 }
 
 function getApiUrl(): string {
-  return process.env.NEXT_PUBLIC_RAG_API_URL?.replace(/\/$/, "") || DEFAULT_API_URL;
+  // Keep browser traffic on the same-origin proxy. The backend URL and
+  // service secret are server-only configuration.
+  return DEFAULT_API_URL;
 }
 
 export async function askLegalQuestion(

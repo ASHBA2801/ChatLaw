@@ -17,13 +17,13 @@ export type LandmarkCase = {
 
 export const LANDMARK_CASES = catalog as LandmarkCase[];
 
-export function searchLandmarkCases(query: string, limit = 12): LandmarkCase[] {
+export function searchLandmarkCases(query: string, limit = 12, minScore = 2): LandmarkCase[] {
   const tokens = query
     .toLowerCase()
     .split(/[^a-z0-9]+/i)
     .map((token) => token.trim())
     .filter((token) => token.length > 2);
-  if (tokens.length === 0) return LANDMARK_CASES.slice(0, limit);
+  if (tokens.length === 0) return [];
 
   const scored = LANDMARK_CASES.map((item) => {
     const haystack = [
@@ -40,7 +40,7 @@ export function searchLandmarkCases(query: string, limit = 12): LandmarkCase[] {
     const score = tokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
     return { item, score };
   })
-    .filter((row) => row.score > 0)
+    .filter((row) => row.score >= minScore)
     .sort((a, b) => b.score - a.score || b.item.year - a.item.year);
 
   return scored.slice(0, limit).map((row) => row.item);

@@ -16,9 +16,11 @@ class RagService:
         return self.searcher.search(query, top_k=top_k, min_similarity=min_similarity)
 
     def chat(self, message: str, top_k: int, min_similarity: float, history: str = "",
-             case_context: list | None = None, *, language: str = "en"):
+             case_context: list | None = None, *, language: str = "en",
+             retrieval_query: str | None = None):
+        query_for_search = (retrieval_query or message).strip() or message
         retrieval = attach_case_context(
-            self.search(message, top_k, min_similarity),
+            self.search(query_for_search, top_k, min_similarity),
             case_context,
         )
         generator = None if retrieval.no_relevant_context else self.generator_factory()

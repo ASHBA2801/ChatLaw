@@ -20,12 +20,12 @@ function formatDate(value: Date | string) {
 export default function WorkspaceList({ documents }: { documents: DocumentRow[] }) {
   if (documents.length === 0) {
     return (
-      <div className="rounded-2xl border border-[var(--line)] bg-white px-6 py-16 text-center">
+      <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-16 text-center">
         <h2 className="text-xl font-semibold">No drafts in this workspace yet</h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
           Start from a supported template. You will enter the parties and terms first; ChatLaw will then assemble a structured draft for review.
         </p>
-        <Link href="/documents/new" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--forest)] px-5 text-sm font-semibold text-white">
+        <Link href="/documents/new" className="mt-6 inline-flex min-h-11 items-center rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white">
           Create a document
         </Link>
       </div>
@@ -33,10 +33,10 @@ export default function WorkspaceList({ documents }: { documents: DocumentRow[] 
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+    <div className="overflow-hidden rounded-sm border border-[var(--line)] bg-white">
       <table className="w-full text-left text-sm">
         <caption className="sr-only">Saved legal drafts</caption>
-        <thead className="border-b border-[var(--line)] bg-[#edf2ec] text-xs uppercase tracking-wide text-[var(--ink-muted)]">
+        <thead className="border-b border-[var(--line)] bg-[var(--module-fill)] text-xs uppercase tracking-wide text-[var(--ink-muted)]">
           <tr>
             <th scope="col" className="px-4 py-3 font-medium">Document</th>
             <th scope="col" className="hidden px-4 py-3 font-medium sm:table-cell">Type</th>

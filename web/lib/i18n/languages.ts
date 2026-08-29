@@ -58,14 +58,36 @@ export function formatLanguageLabel(lang: LanguageOption): string {
   return `${lang.nativeName} — ${lang.name}`;
 }
 
-export function readStoredLanguage(): LanguageCode {
-  if (typeof window === "undefined") return DEFAULT_LANGUAGE;
+export function peekStoredLanguage(): LanguageCode | null {
+  if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return isLanguageCode(raw) ? raw : DEFAULT_LANGUAGE;
+    return isLanguageCode(raw) ? raw : null;
   } catch {
-    return DEFAULT_LANGUAGE;
+    return null;
   }
+}
+
+export function readStoredLanguage(): LanguageCode {
+  return peekStoredLanguage() ?? DEFAULT_LANGUAGE;
+}
+
+export function resolveActiveLanguage({
+  override,
+  stored,
+  sessionLanguage,
+  initialLanguage,
+}: {
+  override?: LanguageCode | null;
+  stored?: LanguageCode | null;
+  sessionLanguage?: LanguageCode | null;
+  initialLanguage?: string | null;
+}): LanguageCode {
+  if (isLanguageCode(override)) return override;
+  if (isLanguageCode(sessionLanguage)) return sessionLanguage;
+  if (isLanguageCode(stored)) return stored;
+  if (isLanguageCode(initialLanguage)) return initialLanguage;
+  return DEFAULT_LANGUAGE;
 }
 
 export function writeStoredLanguage(code: LanguageCode): void {

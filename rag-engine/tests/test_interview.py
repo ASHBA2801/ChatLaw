@@ -91,6 +91,64 @@ def test_process_turn_clarify_does_not_need_generator():
     assert set(result.state) >= {"domain", "round", "max_rounds", "slots", "asked", "assumptions", "original_query"}
 
 
+def test_completed_tenancy_answer_does_not_capture_later_lookup():
+    mgr = InterviewManager()
+    first = mgr.process_turn("My landlord is refusing to return my deposit.", language="en")
+    assert first.action == "answer"
+    assert first.state.get("pending") is False
+    second = mgr.process_turn(
+        "Explain Section 303 of the Bharatiya Nyaya Sanhita.",
+        language="en",
+        prior_interview_state=first.state,
+    )
+    assert second.action == "answer"
+    assert "303" in (second.state.get("original_query") or "")
+    assert "landlord" not in (second.state.get("original_query") or "").lower()
+
+
+def test_lookup_during_clarification_starts_fresh_question():
+    mgr = InterviewManager()
+    first = mgr.process_turn("I need help with a tenancy deposit problem", language="en")
+    assert first.action == "clarify"
+    second = mgr.process_turn(
+        "What is the punishment for theft under BNS section 303?",
+        language="en",
+        prior_interview_state=first.state,
+    )
+    assert second.action == "answer"
+    assert "303" in (second.state.get("original_query") or "")
+    assert second.state.get("pending") is False
+
+
+def test_different_domain_during_clarification_starts_fresh_interview():
+    mgr = InterviewManager()
+    first = mgr.process_turn("I need help with a tenancy deposit problem", language="en")
+    assert first.action == "clarify"
+    second = mgr.process_turn(
+        "My employer terminated me without notice and withheld salary",
+        language="en",
+        prior_interview_state=first.state,
+    )
+    assert second.state.get("domain") == "employment"
+    assert "employer" in (second.state.get("original_query") or "").lower()
+
+
+def test_active_interview_from_metadata_only_resumes_clarifications():
+    from conversation.interview import active_interview_from_metadata
+
+    clarify = {
+        "kind": "clarification",
+        "interview": {"domain": "tenancy", "asked": ["party_role"], "original_query": "deposit"},
+    }
+    answered = {
+        "kind": "no_context",
+        "interview": {"domain": "tenancy", "asked": [], "original_query": "deposit", "pending": False},
+    }
+    assert active_interview_from_metadata(clarify) is not None
+    assert active_interview_from_metadata(answered) is None
+    assert active_interview_from_metadata(None) is None
+
+
 def test_normalize_language_and_names():
     assert normalize_language("HI") == "hi"
     assert normalize_language("ta-IN") == "ta"

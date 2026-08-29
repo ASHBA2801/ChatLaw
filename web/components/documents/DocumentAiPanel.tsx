@@ -52,7 +52,7 @@ export default function DocumentAiPanel({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
         <h2 className="text-sm font-semibold">AI assistant</h2>
         <p className="mt-1 text-sm text-[var(--ink-muted)]">
           Ask for document changes. Suggestions are previewed before they replace your draft.
@@ -62,7 +62,7 @@ export default function DocumentAiPanel({
             <p className="text-sm text-[var(--ink-muted)]">Examples: “Make the termination period 30 days.” or “Add a confidentiality clause.”</p>
           ) : (
             messages.map((item, index) => (
-              <div key={`${item.role}-${index}`} className={`rounded-xl px-3 py-2 text-sm ${item.role === "user" ? "bg-[#eef5d0]" : "bg-[#edf2ec]"}`}>
+              <div key={`${item.role}-${index}`} className={`rounded-sm px-3 py-2 text-sm ${item.role === "user" ? "bg-[var(--signal-soft)]" : "bg-[var(--module-fill)]"}`}>
                 <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--ink-muted)]">{item.role === "user" ? "You" : "Assistant"}</p>
                 <p className="mt-1 whitespace-pre-wrap">{item.content}</p>
               </div>
@@ -70,16 +70,16 @@ export default function DocumentAiPanel({
           )}
         </div>
         {pendingRevise ? (
-          <div className="mt-3 rounded-xl border border-[var(--line)] bg-[#f8faf6] p-3">
+          <div className="mt-3 rounded-sm border border-[var(--line)] bg-[#f8faf6] p-3">
             <p className="text-sm font-medium">Pending document changes</p>
             <p className="mt-1 text-sm text-[var(--ink-muted)]">
               {pendingRevise.sections.length} sections in proposal. Accept to apply locally, then save a version.
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
-              <button type="button" onClick={onAcceptRevise} disabled={busy !== null} className="min-h-11 rounded-full bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
+              <button type="button" onClick={onAcceptRevise} disabled={busy !== null} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
                 Accept
               </button>
-              <button type="button" onClick={onRejectRevise} disabled={busy !== null} className="min-h-11 rounded-full border border-[var(--line)] bg-white px-4 text-sm">
+              <button type="button" onClick={onRejectRevise} disabled={busy !== null} className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-4 text-sm">
                 Reject
               </button>
             </div>
@@ -93,16 +93,16 @@ export default function DocumentAiPanel({
             onChange={(event) => setInstruction(event.target.value)}
             rows={3}
             placeholder="Describe the change…"
-            className="w-full rounded-xl border border-[var(--line)] p-3 text-sm"
+            className="w-full rounded-sm border border-[var(--line)] p-3 text-sm"
             disabled={busy !== null}
           />
-          <button type="submit" disabled={busy !== null || !instruction.trim()} className="min-h-11 w-full rounded-full bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
+          <button type="submit" disabled={busy !== null || !instruction.trim()} className="min-h-11 w-full rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
             {busy === "revise" ? "Working…" : "Propose changes"}
           </button>
         </form>
       </div>
 
-      <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
         <h2 className="text-sm font-semibold">Warnings and legal context</h2>
         <ul className="mt-3 space-y-2">
           {(payload.warnings as DocumentWarning[]).map((warning) => (
@@ -123,7 +123,7 @@ export default function DocumentAiPanel({
         ) : null}
       </div>
 
-      <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
         <fieldset>
           <legend className="text-sm font-medium">Document status</legend>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -133,7 +133,7 @@ export default function DocumentAiPanel({
                 type="button"
                 onClick={() => onStatus(item)}
                 aria-pressed={status === item}
-                className={`min-h-11 rounded-full px-3 text-sm ${status === item ? "bg-[var(--forest)] text-white" : "border border-[var(--line)]"}`}
+                className={`min-h-11 rounded-sm px-3 text-sm ${status === item ? "bg-[var(--forest)] text-white" : "border border-[var(--line)]"}`}
               >
                 {STATUS_LABELS[item]}
               </button>
@@ -146,7 +146,7 @@ export default function DocumentAiPanel({
             {versions.map((version) => (
               <li key={version.id} className="flex items-center justify-between gap-2 text-sm">
                 <span>Version {version.versionNumber} · {version.status}</span>
-                <button type="button" onClick={() => onRestore(version.versionNumber)} className="min-h-11 rounded-full border border-[var(--line)] px-3">
+                <button type="button" onClick={() => onRestore(version.versionNumber)} className="min-h-11 rounded-sm border border-[var(--line)] px-3">
                   Restore
                 </button>
               </li>

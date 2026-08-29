@@ -8,9 +8,9 @@ import CaseAssistant from "@/components/cases/CaseAssistant";
 import { CASE_STATUSES } from "@/lib/cases/status";
 
 const FIELD =
-  "mt-1 h-11 w-full rounded-lg border border-[var(--line)] px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
+  "mt-1 h-11 w-full rounded-sm border border-[var(--line)] px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
 const AREA =
-  "mt-1 w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
+  "mt-1 w-full rounded-sm border border-[var(--line)] px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
 
 type PublicDocument = {
   id: string;
@@ -262,10 +262,10 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
   return (
     <div className="mt-8 grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
       <div className="space-y-6">
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <h2 className="text-lg font-semibold">Overview</h2>
-            <span className="rounded-full bg-[#eef5d0] px-3 py-1 text-xs font-semibold text-[var(--forest)]">{overview.status.replace("_", " ")}</span>
+            <span className="rounded-sm bg-[var(--signal-soft)] px-3 py-1 text-xs font-semibold text-[var(--forest)]">{overview.status.replace("_", " ")}</span>
           </div>
           <form onSubmit={saveOverview} className="mt-4 grid gap-3">
             <label className="text-sm font-medium">Title
@@ -285,22 +285,22 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
               </label>
             </div>
             <div className="flex flex-wrap gap-2">
-              <button type="submit" disabled={saving} className="min-h-11 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50">{saving ? "Saving..." : "Save changes"}</button>
-              <button type="button" onClick={() => void archiveCase()} className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm font-medium">Archive case</button>
-              <Link href={`/chat?caseId=${item.id}`} className="inline-flex min-h-11 items-center rounded-lg border border-[var(--line)] px-4 text-sm font-medium text-[var(--forest)]">
+              <button type="submit" disabled={saving} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50">{saving ? "Saving..." : "Save changes"}</button>
+              <button type="button" onClick={() => void archiveCase()} className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm font-medium">Archive case</button>
+              <Link href={`/chat?caseId=${item.id}`} className="inline-flex min-h-11 items-center rounded-sm border border-[var(--line)] px-4 text-sm font-medium text-[var(--forest)]">
                 Open full chat
               </Link>
             </div>
           </form>
         </section>
 
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-semibold">Documents</h2>
               <p className="mt-1 text-sm text-[var(--ink-muted)]">Private PDFs associated with this case.</p>
             </div>
-            <button type="button" onClick={() => input.current?.click()} disabled={uploading} className="min-h-10 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white">
+            <button type="button" onClick={() => input.current?.click()} disabled={uploading} className="min-h-10 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white">
               {uploading ? "Uploading..." : "Upload Document"}
             </button>
             <input ref={input} type="file" accept="application/pdf,.pdf" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.currentTarget.value = ""; }} />
@@ -313,18 +313,18 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
             onDragLeave={() => setDragOver(false)}
             onDrop={onDrop}
             onKeyDown={onDropZoneKeyDown}
-            className={`mt-4 rounded-xl border border-dashed px-4 py-6 text-center text-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] ${dragOver ? "border-[var(--forest)] bg-[#eef5d0]" : "border-[var(--line)] text-[var(--ink-muted)]"}`}
+            className={`mt-4 rounded-sm border border-dashed px-4 py-6 text-center text-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] ${dragOver ? "border-[var(--forest)] bg-[var(--signal-soft)]" : "border-[var(--line)] text-[var(--ink-muted)]"}`}
           >
             Drag & drop a PDF here, or press Enter to choose a file.
           </div>
           <div aria-live="polite">
-            {message && <p className="mt-4 rounded-lg bg-[#eef5d0] p-3 text-sm" role="status">{message}</p>}
-            {error && <p className="mt-4 text-sm text-[#935a1e]" role="alert">{error}</p>}
+            {message && <p className="mt-4 rounded-sm bg-[var(--signal-soft)] p-3 text-sm" role="status">{message}</p>}
+            {error && <p className="mt-4 text-sm text-[var(--warn)]" role="alert">{error}</p>}
           </div>
           {documents.length === 0 ? (
-            <div className="mt-5 rounded-xl border border-dashed border-[var(--line)] p-5 text-center">
+            <div className="mt-5 rounded-sm border border-dashed border-[var(--line)] p-5 text-center">
               <p className="text-sm text-[var(--ink-muted)]">No documents have been added to this case yet.</p>
-              <button type="button" onClick={() => input.current?.click()} disabled={uploading} className="mt-4 min-h-11 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50">
+              <button type="button" onClick={() => input.current?.click()} disabled={uploading} className="mt-4 min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50">
                 Upload Document
               </button>
             </div>
@@ -338,12 +338,12 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
                       {(doc.fileSize / 1024).toFixed(0)} KB · {doc.pageCount ?? "?"} pages · {statusLabel(doc.extractedTextStatus)}
                     </p>
                     {(doc.extractedTextStatus === "PROCESSING" || doc.extractedTextStatus === "PENDING") && (
-                      <div className="mt-2 h-2 w-40 max-w-full overflow-hidden rounded-full bg-[var(--line)]" role="progressbar" aria-valuetext="Processing document" aria-label="Processing document">
+                      <div className="mt-2 h-2 w-40 max-w-full overflow-hidden rounded-sm bg-[var(--line)]" role="progressbar" aria-valuetext="Processing document" aria-label="Processing document">
                         <div className="h-full w-2/3 bg-[var(--forest)] transition-all duration-200" />
                       </div>
                     )}
                     {doc.extractionError && doc.extractedTextStatus === "FAILED" && (
-                      <p className="mt-2 text-xs text-[#935a1e]">{doc.extractionError}</p>
+                      <p className="mt-2 text-xs text-[var(--warn)]">{doc.extractionError}</p>
                     )}
                     {doc.summary && (
                       <p className="mt-2 max-w-xl text-xs text-[var(--ink-muted)]">
@@ -354,17 +354,17 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => void openPreview(doc)} className="min-h-11 rounded-lg border border-[var(--line)] px-3 text-sm">View</button>
-                    <a className="inline-flex min-h-11 items-center rounded-lg border border-[var(--line)] px-3 text-sm" href={`/api/cases/${item.id}/documents/${doc.id}/download`}>Download</a>
+                    <button type="button" onClick={() => void openPreview(doc)} className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm">View</button>
+                    <a className="inline-flex min-h-11 items-center rounded-sm border border-[var(--line)] px-3 text-sm" href={`/api/cases/${item.id}/documents/${doc.id}/download`}>Download</a>
                     {doc.extractedTextStatus === "READY" && (
-                      <button type="button" onClick={() => void summarize(doc.id)} disabled={summarizingId === doc.id} className="min-h-11 rounded-lg border border-[var(--forest)] px-3 text-sm font-medium text-[var(--forest)] disabled:opacity-50">
+                      <button type="button" onClick={() => void summarize(doc.id)} disabled={summarizingId === doc.id} className="min-h-11 rounded-sm border border-[var(--forest)] px-3 text-sm font-medium text-[var(--forest)] disabled:opacity-50">
                         {summarizingId === doc.id ? "Summarizing..." : "Summarize Document"}
                       </button>
                     )}
                     {doc.extractedTextStatus === "FAILED" && (
-                      <button type="button" onClick={() => void retry(doc.id)} className="min-h-11 rounded-lg border border-[var(--line)] px-3 text-sm">Retry</button>
+                      <button type="button" onClick={() => void retry(doc.id)} className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm">Retry</button>
                     )}
-                    <button type="button" onClick={() => void remove(doc.id)} className="min-h-11 text-sm text-[#935a1e] underline">Delete</button>
+                    <button type="button" onClick={() => void remove(doc.id)} className="min-h-11 text-sm text-[var(--warn)] underline">Delete</button>
                   </div>
                 </li>
               ))}
@@ -376,10 +376,10 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
       </div>
 
       <aside className="space-y-6">
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5">
           <h2 className="text-lg font-semibold">Timeline</h2>
           {timeline.length === 0 ? (
-            <p className="mt-4 rounded-xl border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-muted)]">
+            <p className="mt-4 rounded-sm border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-muted)]">
               No timeline events yet. Uploads and notes appear here automatically.
             </p>
           ) : (
@@ -399,14 +399,14 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
             </label>
             <label className="sr-only" htmlFor={`case-note-${item.id}`}>Note details</label>
             <textarea id={`case-note-${item.id}`} value={note.description} onChange={(event) => setNote((current) => ({ ...current, description: event.target.value }))} placeholder="Optional details" rows={2} className={`${AREA} text-sm`} maxLength={2000} />
-            <button type="submit" disabled={!note.title.trim()} className="min-h-11 rounded-lg border border-[var(--forest)] px-3 text-sm font-semibold text-[var(--forest)] disabled:opacity-50">Add note</button>
+            <button type="submit" disabled={!note.title.trim()} className="min-h-11 rounded-sm border border-[var(--forest)] px-3 text-sm font-semibold text-[var(--forest)] disabled:opacity-50">Add note</button>
           </form>
         </section>
 
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5">
           <h2 className="text-lg font-semibold">Important dates</h2>
           {dates.length === 0 ? (
-            <p className="mt-4 rounded-xl border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-muted)]">
+            <p className="mt-4 rounded-sm border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-muted)]">
               No important dates have been added. Track court dates, notices, and deadlines here.
             </p>
           ) : (
@@ -418,7 +418,7 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
                     <p className="text-xs text-[var(--ink-muted)]">{new Date(entry.date).toLocaleDateString("en-IN")}{entry.reminderPreference && entry.reminderPreference !== "none" ? ` · reminder: ${entry.reminderPreference.replace("_", " ")}` : ""}</p>
                     {entry.description && <p className="mt-1 text-xs text-[var(--ink-muted)]">{entry.description}</p>}
                   </div>
-                  <button type="button" onClick={() => void removeDate(entry.id)} className="text-sm text-[#935a1e] underline">Remove</button>
+                  <button type="button" onClick={() => void removeDate(entry.id)} className="text-sm text-[var(--warn)] underline">Remove</button>
                 </li>
               ))}
             </ul>
@@ -437,12 +437,12 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
                 <option value="day_before">Remind the day before</option>
               </select>
             </label>
-            <button type="submit" className="min-h-11 rounded-lg border border-[var(--forest)] px-3 text-sm font-semibold text-[var(--forest)]">Add date</button>
+            <button type="submit" className="min-h-11 rounded-sm border border-[var(--forest)] px-3 text-sm font-semibold text-[var(--forest)]">Add date</button>
             <p className="text-xs text-[var(--ink-muted)]">Reminder preference is stored only. Notifications are not sent yet.</p>
           </form>
         </section>
 
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
+        <section className="rounded-sm border border-[var(--line)] bg-white p-5">
           <h2 className="text-lg font-semibold">Legal resources</h2>
           <p className="mt-2 text-sm text-[var(--ink-muted)]">Find potentially relevant courts and nearby advocates using the existing case intelligence tools.</p>
           <CaseIntelligencePanel query={intelligenceQuery} defaultLocation={defaultLocation} defaultPracticeArea={item.category || ""} />
@@ -455,29 +455,29 @@ export default function CaseDetail({ item }: { item: CaseItem }) {
           <div className="flex h-full w-full max-w-xl flex-col overflow-y-auto border-l border-[var(--line)] bg-white p-5">
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-base font-semibold">{preview.document.fileName}</h3>
-              <button type="button" onClick={() => setPreview(null)} className="min-h-11 min-w-11 rounded-lg border border-[var(--line)]" aria-label="Close document preview">✕</button>
+              <button type="button" onClick={() => setPreview(null)} className="min-h-11 min-w-11 rounded-sm border border-[var(--line)]" aria-label="Close document preview">✕</button>
             </div>
             <p className="mt-2 text-sm text-[var(--ink-muted)]">
               {preview.document.pageCount ?? "?"} pages · {statusLabel(preview.document.extractedTextStatus)}
             </p>
             {preview.document.extractedTextStatus === "FAILED" && (
-              <p className="mt-3 text-sm text-[#935a1e]">{preview.document.extractionError || "Text extraction failed."}</p>
+              <p className="mt-3 text-sm text-[var(--warn)]">{preview.document.extractionError || "Text extraction failed."}</p>
             )}
             {preview.document.extractedTextStatus === "PROCESSING" && (
               <p className="mt-3 text-sm text-[var(--ink-muted)]">Processing document...</p>
             )}
             {preview.document.summary && (
-              <div className="mt-4 rounded-lg border border-[var(--line)] bg-[var(--background)] p-3 text-sm">
+              <div className="mt-4 rounded-sm border border-[var(--line)] bg-[var(--background)] p-3 text-sm">
                 <p className="font-semibold">{preview.document.summaryLabel || "AI-generated summary"}</p>
                 <p className="mt-2 whitespace-pre-wrap text-[var(--ink-muted)]">{preview.document.summary}</p>
                 <p className="mt-2 text-xs text-[var(--ink-muted)]">This is an AI interpretation, not a legal conclusion.</p>
               </div>
             )}
             {preview.extractedText && (
-              <pre className="mt-4 max-h-64 overflow-auto whitespace-pre-wrap rounded-lg border border-[var(--line)] bg-[var(--background)] p-3 text-xs leading-5">{preview.extractedText}</pre>
+              <pre className="mt-4 max-h-64 overflow-auto whitespace-pre-wrap rounded-sm border border-[var(--line)] bg-[var(--background)] p-3 text-xs leading-5">{preview.extractedText}</pre>
             )}
             {preview.blobUrl ? (
-              <iframe title="PDF preview" src={preview.blobUrl} className="mt-4 min-h-80 w-full rounded-lg border border-[var(--line)]" />
+              <iframe title="PDF preview" src={preview.blobUrl} className="mt-4 min-h-80 w-full rounded-sm border border-[var(--line)]" />
             ) : (
               <p className="mt-4 text-sm text-[var(--ink-muted)]">The stored file is unavailable.</p>
             )}

@@ -1,7 +1,7 @@
 "use client";
 
 import type { SpeechLanguageCode, VoiceChatState } from "@/lib/speech/types";
-import { getEnabledSpeechLanguages } from "@/lib/speech/support";
+import { getEnabledSpeechLanguages, getSpeechRecognitionUnavailableMessage } from "@/lib/speech/support";
 
 function VoiceOrb({ state }: { state: VoiceChatState }) {
   const active = state === "listening" || state === "speaking";
@@ -11,19 +11,19 @@ function VoiceOrb({ state }: { state: VoiceChatState }) {
 
   return (
     <div
-      className={`relative mx-auto flex h-28 w-28 items-center justify-center rounded-full border-2 ${
+      className={`relative mx-auto flex h-28 w-28 items-center justify-center rounded-sm border-2 ${
         error
-          ? "border-[#e3c59f] bg-[#fff5e7]"
+          ? "border-[var(--warn-line)] bg-[var(--warn-bg)]"
           : reviewing
             ? "border-[var(--warm)] bg-[#fff8ef]"
             : active
-              ? "border-[var(--forest)] bg-[#eef5d0]"
+              ? "border-[var(--forest)] bg-[var(--signal-soft)]"
               : "border-[var(--line)] bg-white"
       }`}
       aria-hidden="true"
     >
       <div
-        className={`h-16 w-16 rounded-full ${
+        className={`h-16 w-16 rounded-sm ${
           state === "listening"
             ? "animate-pulse bg-[#b42318]/20"
             : state === "speaking"
@@ -37,7 +37,7 @@ function VoiceOrb({ state }: { state: VoiceChatState }) {
       />
       <div className="absolute inset-0 flex items-center justify-center">
         {state === "listening" ? (
-          <span className="h-3 w-3 rounded-full bg-[#b42318]" title="Listening indicator" />
+          <span className="h-3 w-3 rounded-sm bg-[#b42318]" title="Listening indicator" />
         ) : state === "speaking" ? (
           <span className="flex items-end gap-1" title="Speaking indicator (decorative)">
             <span className="h-3 w-1 rounded-sm bg-[var(--forest)] voice-bar" />
@@ -125,7 +125,7 @@ export default function VoiceChatPanel({
 
   return (
     <section
-      className="mx-auto flex w-full max-w-xl flex-col gap-4 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6"
+      className="mx-auto flex w-full max-w-xl flex-col gap-4 rounded-sm border border-[var(--line)] bg-white p-4 sm:p-6"
       aria-label="ChatLaw voice chat"
     >
       <div className="flex items-center justify-between gap-3">
@@ -138,7 +138,7 @@ export default function VoiceChatPanel({
         <button
           type="button"
           onClick={onSwitchToText}
-          className="min-h-11 rounded-lg border border-[var(--line)] px-3 text-xs font-medium hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+          className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-xs font-medium hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
           aria-label="Switch to text mode"
         >
           Text mode
@@ -151,7 +151,7 @@ export default function VoiceChatPanel({
         <p className="text-sm font-medium text-[var(--foreground)]">{stateLabel}</p>
         {!supported && (
           <p className="mt-2 text-xs text-[var(--ink-muted)]">
-            Voice input isn&apos;t supported in this browser.{" "}
+            {getSpeechRecognitionUnavailableMessage()}{" "}
             <button type="button" onClick={onSwitchToText} className="underline underline-offset-2">
               Use text chat
             </button>
@@ -174,20 +174,20 @@ export default function VoiceChatPanel({
             value={draftText}
             onChange={(event) => onDraftTextChange(event.target.value)}
             rows={3}
-            className="w-full rounded-lg border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
+            className="w-full rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
             aria-label="Edit transcript before sending"
           />
           <p className="text-xs text-[var(--ink-muted)]">Review and edit before sending. ChatLaw will not rewrite legal terms for you.</p>
         </div>
       ) : displayTranscript ? (
-        <blockquote className="rounded-lg border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm italic text-[var(--foreground)]">
+        <blockquote className="rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm italic text-[var(--foreground)]">
           &ldquo;{displayTranscript}&rdquo;
         </blockquote>
       ) : null}
 
       {lastAssistantText && state === "idle" && (
-        <div className="rounded-lg border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm leading-6 text-[var(--ink-muted)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink-muted)]">Latest answer</p>
+        <div className="rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm leading-6 text-[var(--ink-muted)]">
+          <p className="text-xs font-medium text-[var(--ink-muted)]">Latest answer</p>
           <p className="mt-2 line-clamp-4">{lastAssistantText}</p>
         </div>
       )}
@@ -198,7 +198,7 @@ export default function VoiceChatPanel({
             type="button"
             onClick={onStartListening}
             disabled={!supported}
-            className="min-h-11 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
             aria-label="Start voice chat listening"
           >
             {isSpeaking || isPaused ? "Interrupt and listen" : "Start listening"}
@@ -210,7 +210,7 @@ export default function VoiceChatPanel({
             <button
               type="button"
               onClick={onStopListening}
-              className="min-h-11 rounded-lg border border-[#b42318] bg-[#fef3f2] px-4 text-sm font-semibold text-[#b42318] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              className="min-h-11 rounded-sm border border-[#b42318] bg-[#fef3f2] px-4 text-sm font-semibold text-[#b42318] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
               aria-label="Stop voice input recording"
             >
               Stop
@@ -218,7 +218,7 @@ export default function VoiceChatPanel({
             <button
               type="button"
               onClick={onCancelListening}
-              className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
               aria-label="Cancel voice input"
             >
               Cancel
@@ -232,7 +232,7 @@ export default function VoiceChatPanel({
               type="button"
               onClick={onConfirmSend}
               disabled={!draftText.trim()}
-              className="min-h-11 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
               aria-label="Send voice transcript"
             >
               Send
@@ -240,7 +240,7 @@ export default function VoiceChatPanel({
             <button
               type="button"
               onClick={onDiscardDraft}
-              className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
               aria-label="Discard transcript"
             >
               Discard
@@ -248,7 +248,7 @@ export default function VoiceChatPanel({
             <button
               type="button"
               onClick={onStartListening}
-              className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
               aria-label="Record again"
             >
               Re-record
@@ -258,10 +258,10 @@ export default function VoiceChatPanel({
 
         {isSpeaking && (
           <>
-            <button type="button" onClick={onPauseSpeaking} className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Pause speech">
+            <button type="button" onClick={onPauseSpeaking} className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Pause speech">
               Pause
             </button>
-            <button type="button" onClick={onStopSpeaking} className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Stop speech">
+            <button type="button" onClick={onStopSpeaking} className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Stop speech">
               Stop
             </button>
           </>
@@ -269,17 +269,17 @@ export default function VoiceChatPanel({
 
         {isPaused && (
           <>
-            <button type="button" onClick={onResumeSpeaking} className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Resume speech">
+            <button type="button" onClick={onResumeSpeaking} className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Resume speech">
               Resume
             </button>
-            <button type="button" onClick={onStopSpeaking} className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Stop speech">
+            <button type="button" onClick={onStopSpeaking} className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Stop speech">
               Stop
             </button>
           </>
         )}
 
         {state === "idle" && lastAssistantText && ttsSupported && !muted && (
-          <button type="button" onClick={onReplaySpeaking} className="min-h-11 rounded-lg border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Replay spoken response">
+          <button type="button" onClick={onReplaySpeaking} className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]" aria-label="Replay spoken response">
             Replay
           </button>
         )}
@@ -304,7 +304,7 @@ export default function VoiceChatPanel({
           value={language}
           onChange={(event) => onLanguageChange(event.target.value as SpeechLanguageCode)}
           disabled={disabled || isListening || isTranscribing || isThinking || isReady}
-          className="min-h-11 rounded-lg border border-[var(--line)] bg-white px-3 text-xs text-[var(--ink-muted)]"
+          className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-3 text-xs text-[var(--ink-muted)]"
           aria-label="Voice language"
         >
           {languages.map((option) => (
@@ -316,7 +316,7 @@ export default function VoiceChatPanel({
       </div>
 
       {error && (
-        <p className="text-sm text-[#935a1e]" role="alert">
+        <p className="text-sm text-[var(--warn)]" role="alert">
           {error}{" "}
           <button type="button" onClick={onClearError} className="underline underline-offset-2">
             Dismiss

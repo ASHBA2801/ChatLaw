@@ -3,6 +3,8 @@ import { mapSpeechError } from "@/lib/speech/errors";
 import {
   getEnabledSpeechLanguages,
   getSpeechRecognitionConstructor,
+  getSpeechRecognitionUnavailableMessage,
+  isBraveBrowser,
   isSpeechRecognitionSupported,
 } from "@/lib/speech/support";
 import { extractTranscriptParts, mergeTranscript } from "@/lib/speech/transcript";
@@ -65,6 +67,21 @@ describe("speech support", () => {
     expect(isSpeechRecognitionSupported({ webkitSpeechRecognition: Ctor } as unknown as SpeechWindow)).toBe(true);
   });
 
+  it("treats Brave as unsupported even when the API constructor exists", () => {
+    const Ctor = vi.fn();
+    const win = {
+      SpeechRecognition: Ctor,
+      navigator: {
+        userAgent: "Mozilla/5.0 Brave/1.0",
+        brave: { isBrave: async () => true },
+      },
+    } as unknown as Window;
+
+    expect(isBraveBrowser(win)).toBe(true);
+    expect(getSpeechRecognitionConstructor(win as unknown as SpeechWindow)).toBe(Ctor);
+    expect(getSpeechRecognitionUnavailableMessage(win)).toContain("Brave");
+  });
+
   it("exposes Eighth Schedule speech locales including major Indian languages", () => {
     const enabled = getEnabledSpeechLanguages();
     expect(enabled.every((item) => item.enabled)).toBe(true);
@@ -95,6 +112,19 @@ describe("speech errors", () => {
     expect(mapSpeechError("unsupported")).toContain("isn't supported");
     expect(mapSpeechError("empty")).toContain("Nothing was transcribed");
     expect(mapSpeechError("mysterious-stack")).not.toContain("mysterious");
+  });
+
+  it("explains Brave network failures clearly", () => {
+    const win = {
+      navigator: {
+        userAgent: "Mozilla/5.0 Brave/1.0",
+        brave: { isBrave: async () => true },
+      },
+    } as unknown as Window;
+
+    vi.stubGlobal("window", win);
+    expect(mapSpeechError("network")).toContain("Brave");
+    vi.unstubAllGlobals();
   });
 });
 

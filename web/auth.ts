@@ -8,11 +8,15 @@ import { getAuthConfiguration } from "@/lib/auth/config";
 const authConfiguration = getAuthConfiguration();
 const googleConfigured = authConfiguration.googleConfigured;
 
+if (process.env.NODE_ENV === "production" && !authConfiguration.authSecretConfigured) {
+  throw new Error("AUTH_SECRET must be configured with a stable random value in production.");
+}
+
 export const isGoogleAuthConfigured = googleConfigured;
 export const authConfigurationStatus = authConfiguration;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  trustHost: true,
+  trustHost: process.env.AUTH_TRUST_HOST === "true" || process.env.NODE_ENV !== "production",
   adapter: PrismaAdapter(prisma as never),
   session: { strategy: "database" },
   pages: { signIn: "/signin" },

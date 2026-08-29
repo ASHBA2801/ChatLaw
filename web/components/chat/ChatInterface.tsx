@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   createConversation,
@@ -9,9 +11,7 @@ import {
   listConversations,
   sendConversationMessage,
   type ConversationSummary,
-  type StoredMessage,
   type ChatResponse,
-  type Citation,
   RagApiError,
   isCaseDocumentCitation,
 } from "@/lib/api/rag";
@@ -25,143 +25,35 @@ import {
   isSpeechLocaleLikelySupported,
 } from "@/lib/speech";
 import VoiceInputControls from "@/components/chat/VoiceInputControls";
-import VoiceChatPanel from "@/components/chat/VoiceChatPanel";
-import { ClarificationCard, DocumentDraftCard, LegalAnswerCard } from "@/components/chat/LegalAnswerCard";
+import ChatMessageList, { type ChatMessage } from "@/components/chat/ChatMessageList";
+import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, MenuIcon } from "@/components/chat/ChatIcons";
+import { composeCitationText, formatRelativeDate, runConversationBoot, type CitationPanelState } from "@/components/chat/chatUtils";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
 import { formatLanguageLabel } from "@/lib/i18n/languages";
-import { defaultValues, getTemplate } from "@/lib/documents/templates";
-import type { DocumentValues } from "@/lib/documents/types";
+import { isSafeExternalUrl } from "@/lib/urls/safeUrl";
 
-type Message =
-  | StoredMessage
-  | { id: string; role: "assistant"; content: string; response?: ChatResponse; error?: boolean };
+const VoiceChatPanel = dynamic(() => import("@/components/chat/VoiceChatPanel"), { ssr: false });
 
-const NO_CONTEXT_MESSAGE =
-  "I couldn't find sufficiently relevant legal sources for this question.";
-const MESSAGE_LIMIT = 12_000;
+type Message = ChatMessage;
+
 const SUGGESTED_QUESTIONS = [
-  "My landlord is refusing to return my deposit.",
-  "My employer terminated me without notice.",
   "Explain Section 303 of the Bharatiya Nyaya Sanhita.",
-  "What remedies are available for a defective product?",
+  "What is the punishment for theft?",
+  "When can police arrest without a warrant under BNSS?",
+  "What is a document under the Bharatiya Sakshya Adhiniyam?",
 ];
+const MESSAGE_LIMIT = 12_000;
 const LOADING_STATES = [
   "Understanding your situation...",
   "Researching legal sources...",
   "Preparing a plain-language answer...",
 ];
 
-type CitationPanelState = {
-  citation: ChatResponse["citations"][number];
-};
-
-function formatRelativeDate(value: string): string {
-  const time = new Date(value).getTime();
-  if (Number.isNaN(time)) return "Unknown activity";
-  const diff = Date.now() - time;
-  if (diff < 60_000) return "Just now";
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
-  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
-  if (diff < 604_800_000) return `${Math.floor(diff / 86_400_000)}d ago`;
-  return new Date(value).toLocaleDateString();
-}
-
-function composeCitationText(citation: Citation): string {
-  if (isCaseDocumentCitation(citation)) {
-    return ["Case Document", citation.document, citation.page !== null ? `Page ${citation.page}` : null]
-      .filter(Boolean)
-      .join(" | ");
-  }
-  return [
-    citation.document,
-    citation.section ? `Section ${citation.section}` : null,
-    citation.subsection ? `Subsection ${citation.subsection}` : null,
-    citation.clause ? `Clause ${citation.clause}` : null,
-    citation.page !== null ? `Page ${citation.page}` : null,
-  ]
-    .filter(Boolean)
-    .join(" | ");
-}
-
-function responseFromStoredMessage(message: Message): ChatResponse | undefined {
-  if (
-    message.role !== "assistant" ||
-    !("metadata" in message) ||
-    !message.metadata ||
-    typeof message.metadata !== "object"
-  ) {
-    return undefined;
-  }
-  const metadata = message.metadata as Record<string, unknown>;
-  const citations = Array.isArray(metadata.citations) ? metadata.citations : [];
-  const kind =
-    typeof metadata.kind === "string"
-      ? metadata.kind
-      : typeof metadata.response_kind === "string"
-        ? metadata.response_kind
-        : "answer";
-
-  if (kind === "clarification" || kind === "document_clarification" || kind === "document_unsupported" || kind === "document_ready") {
-    return {
-      message: message.content,
-      answer: message.content,
-      has_context: false,
-      no_relevant_context: false,
-      citations: [],
-      invalid_citations: [],
-      retrieval: { top_k: 0, results_used: 0 },
-      generation: { model: null, latency_seconds: 0 },
-      total_latency_seconds: 0,
-      response_kind: kind as ChatResponse["response_kind"],
-      interview:
-        metadata.interview && typeof metadata.interview === "object"
-          ? (metadata.interview as ChatResponse["interview"])
-          : null,
-      document_draft:
-        metadata.document_draft && typeof metadata.document_draft === "object"
-          ? (metadata.document_draft as ChatResponse["document_draft"])
-          : null,
-    };
-  }
-
-  return {
-    message: message.content,
-    answer: message.content,
-    has_context: metadata.has_context === true,
-    no_relevant_context: metadata.has_context !== true,
-    citations: citations as Citation[],
-    invalid_citations: Array.isArray(metadata.invalid_citations)
-      ? metadata.invalid_citations.filter((id): id is number => typeof id === "number")
-      : [],
-    retrieval: (
-      metadata.retrieval && typeof metadata.retrieval === "object"
-        ? metadata.retrieval
-        : { top_k: 8, results_used: citations.length }
-    ) as ChatResponse["retrieval"],
-    generation: (
-      metadata.generation && typeof metadata.generation === "object"
-        ? metadata.generation
-        : { model: null, latency_seconds: 0 }
-    ) as ChatResponse["generation"],
-    total_latency_seconds: 0,
-    response_kind:
-      kind === "no_context" || kind === "answer"
-        ? kind
-        : metadata.has_context === true
-          ? "answer"
-          : "no_context",
-    interview:
-      metadata.interview && typeof metadata.interview === "object"
-        ? (metadata.interview as ChatResponse["interview"])
-        : null,
-  };
-}
-
 export default function ChatInterface({ caseId }: { caseId?: string }) {
   const router = useRouter();
   const { language, languageOption } = useLanguage();
-  const speechLang = chatLanguageToSpeechCode(language);
-  const voiceSupportedForLanguage = isSpeechLocaleLikelySupported(speechLang);
+  const speechLang = useMemo(() => chatLanguageToSpeechCode(language), [language]);
+  const voiceSupportedForLanguage = useMemo(() => isSpeechLocaleLikelySupported(speechLang), [speechLang]);
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -170,7 +62,6 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [history, setHistory] = useState<ConversationSummary[]>([]);
   const [loadingConversation, setLoadingConversation] = useState(true);
-  const [loadingEvidence, setLoadingEvidence] = useState(false);
   const [sidebarSearch, setSidebarSearch] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -181,6 +72,10 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const draftCreateRef = useRef(false);
+  const isLoadingRef = useRef(false);
+  const messageCountRef = useRef(0);
+
+  const loadingStepLabel = LOADING_STATES[loadingStepIndex] ?? LOADING_STATES[0];
 
   const filteredHistory = useMemo(
     () => history.filter((item) => item.title.toLowerCase().includes(sidebarSearch.toLowerCase().trim())),
@@ -188,38 +83,61 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
   );
 
   useEffect(() => {
-    void (async () => {
-      try {
-        if (caseId) {
-          const storedId = window.localStorage.getItem(`chatlaw-case-conversation:${caseId}`);
-          setConversationId(storedId);
-          setHistory([]);
-          return;
-        }
-        const storedId = window.localStorage.getItem("chatlaw-active-conversation");
-        const conversations = await listConversations();
-        setHistory(conversations.conversations);
-        const id =
-          storedId && conversations.conversations.some((item) => item.id === storedId) ? storedId : null;
-        if (id) {
-          const conversation = await getConversation(id);
-          setConversationId(id);
-          setMessages(conversation.messages);
-        } else {
-          const created = await createConversation();
-          window.localStorage.setItem("chatlaw-active-conversation", created.id);
-          setConversationId(created.id);
-        }
-      } catch (requestError) {
-        setError(requestError instanceof RagApiError ? requestError.message : "Unable to load conversation history.");
-      } finally {
-        setLoadingConversation(false);
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const bootKey = caseId ?? "__default__";
+    queueMicrotask(() => {
+      if (!cancelled) setLoadingConversation(true);
+    });
+
+    void runConversationBoot(bootKey, async () => {
+      if (caseId) {
+        const storedId = window.localStorage.getItem(`chatlaw-case-conversation:${caseId}`);
+        setConversationId(storedId);
+        setHistory([]);
+        return;
       }
-    })();
+      const storedId = window.localStorage.getItem("chatlaw-active-conversation");
+      const conversations = await listConversations();
+      setHistory(conversations.conversations);
+      const id =
+        storedId && conversations.conversations.some((item) => item.id === storedId) ? storedId : null;
+      if (id) {
+        const conversation = await getConversation(id);
+        setConversationId(id);
+        setMessages(conversation.messages);
+      } else {
+        const created = await createConversation();
+        window.localStorage.setItem("chatlaw-active-conversation", created.id);
+        setConversationId(created.id);
+      }
+    })
+      .catch((requestError: unknown) => {
+        setError(requestError instanceof RagApiError ? requestError.message : "Unable to load conversation history.");
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingConversation(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [caseId]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    const el = scrollRef.current;
+    if (!el) return;
+    const count = messages.length;
+    const isInitialLoad = count > 0 && messageCountRef.current === 0;
+    const appended = count > messageCountRef.current;
+    messageCountRef.current = count;
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: isInitialLoad ? "auto" : appended || isLoading ? "smooth" : "auto",
+    });
   }, [messages, isLoading]);
 
   useEffect(() => {
@@ -241,7 +159,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
   const sendChatMessage = useCallback(
     async (message: string): Promise<VoiceChatSendResult> => {
       const trimmed = message.trim();
-      if (!trimmed || isLoading) {
+      if (!trimmed || isLoadingRef.current) {
         throw new Error("Enter a question before sending.");
       }
       if (!caseId && !conversationId) {
@@ -290,15 +208,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
             min_similarity: 0.6,
           });
         }
-        const assistantText =
-          response.response_kind === "clarification" ||
-          response.response_kind === "document_clarification" ||
-          response.response_kind === "document_ready" ||
-          response.response_kind === "document_unsupported"
-            ? response.answer
-            : response.no_relevant_context
-              ? NO_CONTEXT_MESSAGE
-              : response.answer;
+        const assistantText = response.answer;
         setHistory((current) =>
           current.map((item) =>
             item.id === (response.conversation_id || conversationId)
@@ -328,8 +238,9 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
             setDraftGenerating(true);
             void (async () => {
               try {
+                const { defaultValues, getTemplate } = await import("@/lib/documents/templates");
                 const template = getTemplate(templateId);
-                const values: DocumentValues = {
+                const values = {
                   ...defaultValues(template),
                   ...draftValues,
                   draft_language: language,
@@ -363,7 +274,6 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
           requestError instanceof RagApiError
             ? requestError.message
             : "Unable to connect to the legal research service. Please try again.";
-        setError(friendlyMessage);
         setMessages((current) => [
           ...current,
           { id: `${userId}-error`, role: "assistant", content: friendlyMessage, error: true },
@@ -374,14 +284,14 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
         setIsLoading(false);
       }
     },
-    [caseId, conversationId, isLoading, language, router],
+    [caseId, conversationId, language, router],
   );
 
   const voiceChat = useVoiceChat({
     conversationId,
     allowWithoutConversation: Boolean(caseId),
     language: speechLang,
-    disabled: loadingConversation || chatMode !== "voice",
+    disabled: loadingConversation || isLoading || chatMode !== "voice",
     sendMessage: sendChatMessage,
   });
 
@@ -482,11 +392,32 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
     }
   }
 
-  function openCitationPanel(citation: ChatResponse["citations"][number]) {
-    setLoadingEvidence(true);
+  const handleOpenCitation = useCallback((citation: ChatResponse["citations"][number]) => {
     setCitationPanel({ citation });
-    setTimeout(() => setLoadingEvidence(false), 120);
-  }
+  }, []);
+
+  const applySuggestedQuestion = useCallback(
+    (question: string) => {
+      if (chatMode === "voice") {
+        voiceChat.reset();
+        answerPlayback.stop();
+        setChatMode("text");
+      }
+      setInput(question);
+      window.requestAnimationFrame(() => inputRef.current?.focus());
+    },
+    [answerPlayback, chatMode, voiceChat],
+  );
+
+  const handleAskAnother = useCallback(() => {
+    if (chatMode === "voice") {
+      voiceChat.reset();
+      answerPlayback.stop();
+      setChatMode("text");
+    }
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+  }, [answerPlayback, chatMode, voiceChat]);
 
   const composerValue = speech.isListening ? speech.displayValue : input;
   const remainingChars = MESSAGE_LIMIT - composerValue.length;
@@ -495,78 +426,87 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
     (caseId ? "Case conversation" : "New conversation");
 
   return (
-    <div className="flex w-full">
+    <div className="flex h-full min-h-0 w-full overflow-hidden">
       <aside
-        className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 w-[86%] max-w-sm border-r border-[var(--line)] bg-white transition-transform duration-200 ease-out lg:static lg:inset-auto lg:z-0 lg:w-72 lg:max-w-none lg:translate-x-0 ${isSidebarCollapsed ? "lg:w-16" : ""}`}
+        className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 w-[86%] max-w-sm border-r border-[var(--line)] bg-white transition-transform duration-200 ease-out lg:static lg:inset-auto lg:z-0 lg:h-full lg:max-w-none lg:translate-x-0 ${
+          isSidebarCollapsed ? "lg:hidden" : "lg:flex lg:w-72"
+        }`}
         aria-label="Conversations"
+        aria-hidden={isSidebarCollapsed && !isSidebarOpen ? true : undefined}
       >
-        <div className="flex h-full flex-col pt-16 lg:pt-0">
-          <div className="border-b border-[var(--line)] p-3">
-            <div className="flex items-center gap-2">
-              {!isSidebarCollapsed && (
-                <button
-                  type="button"
-                  onClick={() => void startNewChat()}
-                  className="min-h-11 flex-1 rounded-lg bg-[var(--forest)] px-3 text-sm font-semibold text-white"
-                >
-                  + New conversation
-                </button>
-              )}
+        <div className="flex h-full min-h-0 w-full flex-col pt-16 lg:pt-0">
+          <div className="module-tab">Conversations</div>
+          <div className="border-b border-[var(--line)] p-2">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
-                onClick={() => setIsSidebarCollapsed((v) => !v)}
-                className="hidden min-h-11 min-w-11 rounded-lg border border-[var(--line)] text-sm lg:block"
-                aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                onClick={() => void startNewChat()}
+                className="min-h-11 flex-1 bg-[var(--signal)] px-3 text-xs font-bold uppercase tracking-wide text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
               >
-                {isSidebarCollapsed ? "›" : "‹"}
+                New conversation
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsSidebarCollapsed(true)}
+                className="hidden min-h-11 min-w-11 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:inline-flex focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                aria-label="Hide conversations"
+              >
+                <ChevronLeftIcon className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(false)}
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                aria-label="Close conversations panel"
+              >
+                <CloseIcon className="h-5 w-5" />
               </button>
             </div>
-            {!isSidebarCollapsed && (
-              <label className="mt-3 block">
-                <span className="sr-only">Search conversations</span>
-                <input
-                  value={sidebarSearch}
-                  onChange={(event) => setSidebarSearch(event.target.value)}
-                  placeholder="Search conversations"
-                  className="h-11 w-full rounded-lg border border-[var(--line)] px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
-                />
-              </label>
+            <label className="mt-3 block">
+              <span className="sr-only">Search conversations</span>
+              <input
+                value={sidebarSearch}
+                onChange={(event) => setSidebarSearch(event.target.value)}
+                placeholder="Search conversations"
+                className="h-11 w-full rounded-sm border border-[var(--line)] px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
+              />
+            </label>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
+            {loadingConversation && history.length === 0 ? (
+              <p className="px-2 py-3 text-sm text-[var(--ink-muted)]" role="status">
+                Loading conversations…
+              </p>
+            ) : filteredHistory.length === 0 ? (
+              <p className="px-2 py-3 text-sm text-[var(--ink-muted)]">
+                {caseId ? "Case chats stay on this matter." : "No matching conversations."}
+              </p>
+            ) : (
+              filteredHistory.map((item) => (
+                <div
+                  key={item.id}
+                  className={`group mb-1 rounded-sm border ${item.id === conversationId ? "border-[var(--forest)] bg-[var(--signal-soft)]" : "border-transparent hover:border-[var(--line)]"}`}
+                >
+                  <button type="button" onClick={() => void openChat(item.id)} className="w-full p-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]">
+                    <p className="truncate text-sm font-medium">{item.title}</p>
+                    <p className="mt-1 text-xs text-[var(--ink-muted)]">
+                      Last activity {formatRelativeDate(item.updated_at)}
+                    </p>
+                  </button>
+                  <div className="flex items-center justify-end px-3 pb-2">
+                    <button
+                      type="button"
+                      onClick={() => void handleDeleteConversation(item.id)}
+                      className="min-h-10 text-xs text-[var(--warn)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                      aria-label={`Delete conversation: ${item.title}`}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
             )}
           </div>
-          {!isSidebarCollapsed && (
-            <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
-              {loadingConversation && history.length === 0 ? (
-                <p className="px-2 py-3 text-sm text-[var(--ink-muted)]">Loading conversations...</p>
-              ) : filteredHistory.length === 0 ? (
-                <p className="px-2 py-3 text-sm text-[var(--ink-muted)]">
-                  {caseId ? "Case chats stay on this matter." : "No matching conversations."}
-                </p>
-              ) : (
-                filteredHistory.map((item) => (
-                  <div
-                    key={item.id}
-                    className={`group mb-1 rounded-lg border ${item.id === conversationId ? "border-[var(--forest)] bg-[#eef5d0]" : "border-transparent hover:border-[var(--line)]"}`}
-                  >
-                    <button type="button" onClick={() => void openChat(item.id)} className="w-full p-3 text-left">
-                      <p className="truncate text-sm font-medium">{item.title}</p>
-                      <p className="mt-1 text-xs text-[var(--ink-muted)]">
-                        Last activity {formatRelativeDate(item.updated_at)}
-                      </p>
-                    </button>
-                    <div className="flex items-center justify-end px-3 pb-2">
-                      <button
-                        type="button"
-                        onClick={() => void handleDeleteConversation(item.id)}
-                        className="text-xs text-[#935a1e] underline-offset-2 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
         </div>
       </aside>
       {isSidebarOpen && (
@@ -578,23 +518,43 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
         />
       )}
 
-      <section className="flex min-h-[calc(100dvh-8rem)] min-w-0 flex-1 flex-col">
-        <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] px-4 py-2 sm:px-6">
-          <button
-            type="button"
-            onClick={() => setIsSidebarOpen(true)}
-            className="min-h-11 min-w-11 rounded-lg border border-[var(--line)] text-sm lg:hidden"
-            aria-label="Open conversations panel"
-          >
-            ☰
-          </button>
+      <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--line)] px-4 py-2 sm:px-6">
+          {caseId ? (
+            <Link
+              href={`/cases/${caseId}`}
+              className="inline-flex min-h-11 shrink-0 items-center rounded-sm border border-[var(--line)] px-3 text-xs font-semibold text-[var(--forest)] sm:text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            >
+              <span className="sm:hidden">← Case</span>
+              <span className="hidden sm:inline">← Back to case</span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(true)}
+              className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              aria-label="Open conversations panel"
+            >
+              <MenuIcon className="h-5 w-5" />
+            </button>
+          )}
+          {isSidebarCollapsed ? (
+            <button
+              type="button"
+              onClick={() => setIsSidebarCollapsed(false)}
+              className="hidden min-h-11 min-w-11 shrink-0 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:inline-flex focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              aria-label="Show conversations"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          ) : null}
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-sm font-semibold">{conversationTitle}</h2>
             <p className="truncate text-xs text-[var(--ink-muted)]">
               Answering in {formatLanguageLabel(languageOption)}
             </p>
           </div>
-          <div className="flex rounded-lg border border-[var(--line)] p-0.5" role="group" aria-label="Input mode">
+          <div className="flex rounded-sm border border-[var(--line)] p-0.5" role="group" aria-label="Input mode">
             <button
               type="button"
               onClick={() => {
@@ -602,7 +562,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 answerPlayback.stop();
                 setChatMode("text");
               }}
-              className={`min-h-9 rounded-md px-3 text-xs font-medium ${chatMode === "text" ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)]"}`}
+              className={`min-h-11 rounded-md px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] ${chatMode === "text" ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
               aria-pressed={chatMode === "text"}
             >
               Text
@@ -614,7 +574,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 answerPlayback.stop();
                 setChatMode("voice");
               }}
-              className={`min-h-9 rounded-md px-3 text-xs font-medium ${chatMode === "voice" ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)]"}`}
+              className={`min-h-11 rounded-md px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] ${chatMode === "voice" ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
               aria-pressed={chatMode === "voice"}
             >
               Voice
@@ -623,17 +583,17 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
         </div>
 
         {caseId ? (
-          <p className="border-b border-[var(--line)] bg-[#eef5d0] px-4 py-2 text-sm text-[var(--forest)]">
+          <p className="shrink-0 border-b border-[var(--line)] bg-[var(--signal-soft)] px-4 py-2 text-sm text-[var(--forest)]">
             This conversation may use official legal sources and your authorized case documents. Uploaded files are not
             official law.
           </p>
         ) : null}
 
-        <div ref={scrollRef} className="chat-scroll min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-4 md:px-8 md:py-6">
+        <div ref={scrollRef} className="chat-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4 sm:px-4 md:px-8 md:py-6">
           {chatMode === "voice" && (
             <div className="mb-6">
               {!voiceSupportedForLanguage ? (
-                <p className="mb-3 rounded-xl border border-[var(--line)] bg-white px-4 py-3 text-sm text-[var(--ink-muted)]">
+                <p className="mb-3 rounded-sm border border-[var(--line)] bg-white px-4 py-3 text-sm text-[var(--ink-muted)]">
                   Voice may not be available for {formatLanguageLabel(languageOption)} in this browser. Text chat still
                   works in your selected language.
                 </p>
@@ -674,20 +634,37 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
           )}
 
           {loadingConversation ? (
-            <p className="mt-16 text-center text-sm text-[var(--ink-muted)]">Loading conversation...</p>
+            <p className="mt-16 text-center text-sm text-[var(--ink-muted)]" role="status" aria-busy="true">
+              Loading conversation…
+            </p>
           ) : messages.length === 0 ? (
             <div className="mx-auto mt-8 max-w-xl text-center sm:mt-12">
+              {error ? (
+                <div
+                  className="mb-6 rounded-sm border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-left text-sm text-[var(--warn)]"
+                  role="alert"
+                >
+                  <p>{error}</p>
+                  <button
+                    type="button"
+                    onClick={() => setError(null)}
+                    className="mt-2 underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              ) : null}
               <h3 className="text-2xl font-semibold tracking-tight">Describe your situation</h3>
               <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
-                ChatLaw may ask a few focused follow-ups, then explain the law in plain language with sources.
+                ChatLaw currently answers from the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita, and Bharatiya Sakshya Adhiniyam. Ask a section or offence from those codes.
               </p>
               <div className="mt-6 grid gap-2 text-left">
                 {SUGGESTED_QUESTIONS.map((question) => (
                   <button
                     key={question}
                     type="button"
-                    onClick={() => setInput(question)}
-                    className="min-h-11 rounded-lg border border-[var(--line)] bg-white px-3 py-2 text-sm hover:border-[var(--forest)]"
+                    onClick={() => applySuggestedQuestion(question)}
+                    className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-3 py-2 text-sm hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
                   >
                     {question}
                   </button>
@@ -695,71 +672,40 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
               </div>
             </div>
           ) : (
-            <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-              {messages.map((message, index) => {
-                const response =
-                  message.role === "assistant"
-                    ? message.response || responseFromStoredMessage(message)
-                    : undefined;
-                const priorUserText =
-                  [...messages.slice(0, index)].reverse().find((item) => item.role === "user")?.content || "";
-                return (
-                  <article
-                    key={message.id}
-                    className={
-                      message.role === "user"
-                        ? "ml-auto w-full max-w-[96%] rounded-2xl rounded-br-md bg-[var(--forest)] px-4 py-3 text-sm text-white sm:max-w-[80%]"
-                        : `w-full rounded-2xl rounded-bl-md border px-4 py-4 text-[var(--foreground)] ${message.error ? "border-[#e3c59f] bg-[#fff5e7]" : "border-[var(--line)] bg-white"}`
-                    }
-                  >
-                    {message.role === "user" ? (
-                      <p className="whitespace-pre-wrap leading-6">{message.content}</p>
-                    ) : message.error ? (
-                      <p className="leading-6">{message.content}</p>
-                    ) : response?.response_kind === "clarification" ? (
-                      <ClarificationCard content={message.content} />
-                    ) : response?.response_kind === "document_clarification" ||
-                      response?.response_kind === "document_ready" ||
-                      response?.response_kind === "document_unsupported" ? (
-                      <DocumentDraftCard
-                        content={message.content}
-                        response={response}
-                        generating={response.response_kind === "document_ready" && draftGenerating}
-                      />
-                    ) : response ? (
-                      <LegalAnswerCard
-                        messageId={message.id}
-                        content={message.content}
-                        response={response}
-                        priorUserText={priorUserText}
-                        onOpenCitation={openCitationPanel}
-                        playback={answerPlayback}
-                        chatMode={chatMode}
-                        disabledPlayback={isLoading || speech.isListening}
-                      />
-                    ) : (
-                      <p className="whitespace-pre-wrap leading-6">{message.content}</p>
-                    )}
-                  </article>
-                );
-              })}
-              {isLoading && (
-                <div
-                  className="w-full rounded-2xl rounded-bl-md border border-[var(--line)] bg-white px-4 py-4 text-sm text-[var(--ink-muted)]"
-                  role="status"
-                >
-                  {LOADING_STATES[loadingStepIndex]}
-                </div>
-              )}
-              {error && <p className="text-sm text-[#935a1e]">{error}</p>}
-            </div>
+            <ChatMessageList
+              messages={messages}
+              isLoading={isLoading}
+              loadingStepLabel={loadingStepLabel}
+              chatMode={chatMode}
+              draftGenerating={draftGenerating}
+              speechListening={speech.isListening}
+              playback={answerPlayback}
+              onOpenCitation={handleOpenCitation}
+              onAskAnother={handleAskAnother}
+            />
           )}
         </div>
 
         {chatMode === "text" && (
-          <div className="border-t border-[var(--line)] bg-[var(--background)] px-2 py-2 pb-4 sm:px-4 sm:py-3 md:px-8">
-            <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl rounded-2xl border border-[var(--line)] bg-white p-2">
-              <div className="flex items-end gap-2">
+          <div className="shrink-0 border-t border-[var(--line)] bg-[var(--background)] px-2 py-2 pb-4 sm:px-4 sm:py-3 md:px-8">
+            {error && messages.length > 0 ? (
+              <div
+                className="mx-auto mb-2 w-full max-w-3xl rounded-sm border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn)]"
+                role="alert"
+              >
+                {error}{" "}
+                <button
+                  type="button"
+                  onClick={() => setError(null)}
+                  className="underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                >
+                  Dismiss
+                </button>
+              </div>
+            ) : null}
+            <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl border border-[var(--line)] bg-white">
+              <div className="module-tab">Question input</div>
+              <div className="flex items-end gap-2 p-2">
                 <label className="sr-only" htmlFor="chatlaw-message">
                   Message input
                 </label>
@@ -772,30 +718,18 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                   rows={2}
                   disabled={isLoading || loadingConversation || speech.isListening}
                   placeholder="Describe your situation in your own words..."
-                  className="max-h-48 min-h-11 w-full resize-y bg-transparent px-3 py-2 text-sm leading-6 outline-none placeholder:text-[var(--ink-muted)] disabled:cursor-not-allowed"
+                  className="max-h-48 min-h-11 w-full resize-y bg-transparent px-3 py-2 text-sm leading-6 outline-none placeholder:text-[var(--ink-muted)] focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:cursor-not-allowed disabled:opacity-60"
                 />
-                <button
-                  type="button"
-                  disabled
-                  className="min-h-11 min-w-11 shrink-0 rounded-lg border border-[var(--line)] text-[var(--ink-muted)]"
-                  aria-label="Document upload coming soon"
-                  title="Document upload coming soon"
-                >
-                  <svg className="mx-auto h-5 w-5" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
-                    <path d="M14 3v5h5" />
-                  </svg>
-                </button>
                 <button
                   type="submit"
                   disabled={isLoading || loadingConversation || speech.isListening || !input.trim()}
-                  className="min-h-11 shrink-0 rounded-lg bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50"
+                  className="min-h-11 shrink-0 bg-[var(--signal)] px-4 text-xs font-bold uppercase tracking-wide text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
                   aria-label="Send message"
                 >
                   {isLoading ? "Sending..." : "Send"}
                 </button>
               </div>
-              <div className="mt-2 flex flex-col gap-2 px-1 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex flex-col gap-2 border-t border-[var(--line)] px-2 py-2 sm:flex-row sm:items-start sm:justify-between">
                 <VoiceInputControls
                   status={speech.status}
                   supported={speech.supported}
@@ -813,7 +747,12 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                   <span>
                     Language: {languageOption.nativeName} · Enter to send
                   </span>
-                  <span className={remainingChars < 200 ? "text-[#935a1e]" : ""}>{remainingChars}</span>
+                  <span
+                    className={remainingChars < 200 ? "text-[var(--warn)]" : ""}
+                    aria-live={remainingChars < 200 ? "polite" : "off"}
+                  >
+                    {remainingChars} characters left
+                  </span>
                 </div>
               </div>
             </form>
@@ -830,19 +769,16 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
               <button
                 type="button"
                 onClick={() => setCitationPanel(null)}
-                className="min-h-11 min-w-11 rounded-lg border border-[var(--line)] text-sm"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-[var(--line)] text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
                 aria-label="Close evidence panel"
               >
-                ✕
+                <CloseIcon className="h-5 w-5" />
               </button>
             </div>
-            {loadingEvidence ? (
-              <p className="mt-4 text-sm text-[var(--ink-muted)]">Loading evidence...</p>
-            ) : (
-              <div className="mt-4 space-y-3 text-sm">
+            <div className="mt-4 space-y-3 text-sm">
                 <p className="font-semibold">{citationPanel.citation.document || "Source unavailable"}</p>
                 {isCaseDocumentCitation(citationPanel.citation) ? (
-                  <p className="rounded-full bg-[#eef5d0] px-3 py-1 text-xs font-semibold text-[var(--forest)]">
+                  <p className="rounded-sm bg-[var(--signal-soft)] px-3 py-1 text-xs font-semibold text-[var(--forest)]">
                     Case document — not an official legal source
                   </p>
                 ) : (
@@ -859,7 +795,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                   <p className="text-[var(--ink-muted)]">Page {citationPanel.citation.page}</p>
                 )}
                 {citationPanel.citation.evidence && (
-                  <div className="rounded-lg border border-[var(--line)] bg-[var(--background)] p-3">
+                  <div className="rounded-sm border border-[var(--line)] bg-[var(--background)] p-3">
                     <p className="whitespace-pre-wrap leading-6">{citationPanel.citation.evidence}</p>
                   </div>
                 )}
@@ -867,23 +803,25 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                   <button
                     type="button"
                     onClick={() => navigator.clipboard.writeText(composeCitationText(citationPanel.citation))}
-                    className="min-h-11 rounded-lg border border-[var(--line)] px-3 text-sm"
+                    className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm"
                   >
                     Copy citation
                   </button>
-                  {citationPanel.citation.source?.url && (
-                    <a
-                      className="inline-flex min-h-11 items-center rounded-lg border border-[var(--line)] px-3 text-sm text-[var(--forest)] underline"
-                      href={citationPanel.citation.source.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View source
-                    </a>
-                  )}
+                  {(() => {
+                    const sourceUrl = isSafeExternalUrl(citationPanel.citation.source?.url);
+                    return sourceUrl ? (
+                      <a
+                        className="inline-flex min-h-11 items-center rounded-sm border border-[var(--line)] px-3 text-sm text-[var(--forest)] underline"
+                        href={sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View source
+                      </a>
+                    ) : null;
+                  })()}
                 </div>
-              </div>
-            )}
+            </div>
           </div>
         </aside>
       )}

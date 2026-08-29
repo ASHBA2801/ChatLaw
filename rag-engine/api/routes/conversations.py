@@ -18,7 +18,7 @@ from api.models import (
 )
 from api.routes.search import get_service
 from conversation.document_drafting import drafting_state_from_metadata, process_document_turn
-from conversation.interview import InterviewManager, interview_state_from_metadata
+from conversation.interview import InterviewManager, active_interview_from_metadata
 from conversation.languages import normalize_language
 from retrieval.vector_search import connect_from_environment
 
@@ -157,7 +157,7 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
                 top_k=request.top_k,
             )
 
-        prior = interview_state_from_metadata(last_meta)
+        prior = active_interview_from_metadata(last_meta)
         result = _interview.process_turn(request.message, language, prior)
 
         if result.action == "clarify":
@@ -200,13 +200,16 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
             f"{item['role'].upper()}: {item['content']}"
             for item in store.recent_messages(conversation_id)[:-1]
         )
+        generation_message = result.assembled_situation or request.message
+        retrieval_query = str(result.state.get("original_query") or request.message).strip()
         retrieval, answer = service.chat(
-            result.assembled_situation or request.message,
+            generation_message,
             request.top_k,
             request.min_similarity,
             history,
             case_context=request.case_context,
             language=language,
+            retrieval_query=retrieval_query,
         )
         response_kind = "answer" if answer.has_context else "no_context"
         metadata = {

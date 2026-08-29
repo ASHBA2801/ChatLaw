@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { RagApiError, searchLegalSources, type SearchResult } from "@/lib/api/rag";
 import { searchLandmarkCases, type LandmarkCase } from "@/lib/legal-data/landmarkCases";
+import { isSafeExternalUrl } from "@/lib/urls/safeUrl";
 
 type Scope = "all" | "statutes" | "cases";
 
@@ -33,7 +34,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
     setLoading(true);
     setError(null);
     setSearched(true);
-    const landmarkHits = searchLandmarkCases(value, 12);
+    const landmarkHits = searchLandmarkCases(value, 12, 1);
     setCases(landmarkHits);
     try {
       const response = await searchLegalSources({ query: value, top_k: 12, min_similarity: 0.55 });
@@ -86,7 +87,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
 
   return (
     <div className="space-y-6">
-      <form ref={formRef} onSubmit={onSubmit} className="rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+      <form ref={formRef} onSubmit={onSubmit} className="rounded-sm border border-[var(--line)] bg-white p-4 sm:p-5">
         <label htmlFor="research-query" className="text-sm font-semibold">
           Legal question or keywords
         </label>
@@ -96,19 +97,19 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="e.g. privacy Article 21 OR security deposit landlord"
-            className="min-h-11 flex-1 rounded-xl border border-[var(--line)] bg-[var(--background)] px-4 text-sm outline-none focus:border-[var(--forest)]"
+            className="min-h-11 flex-1 rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 text-sm outline-none focus:border-[var(--forest)]"
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="min-h-11 rounded-full bg-[var(--forest)] px-6 text-sm font-semibold text-white disabled:opacity-50"
+            className="min-h-11 rounded-sm bg-[var(--forest)] px-6 text-sm font-semibold text-white disabled:opacity-50"
           >
             {loading ? "Searching…" : "Search"}
           </button>
         </div>
         {searched ? (
           <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex rounded-xl border border-[var(--line)] p-1" role="group" aria-label="Result type">
+            <div className="flex rounded-sm border border-[var(--line)] p-1" role="group" aria-label="Result type">
               {(
                 [
                   ["all", "All"],
@@ -120,7 +121,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                   key={value}
                   type="button"
                   onClick={() => setScope(value)}
-                  className={`min-h-10 flex-1 rounded-lg px-3 text-sm font-medium ${scope === value ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)]"}`}
+                  className={`min-h-10 flex-1 rounded-sm px-3 text-sm font-medium ${scope === value ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)]"}`}
                   aria-pressed={scope === value}
                 >
                   {label}
@@ -132,20 +133,20 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
               placeholder="Filter by title, section, court, or text"
-              className="min-h-11 flex-1 rounded-xl border border-[var(--line)] px-4 text-sm outline-none focus:border-[var(--forest)]"
+              className="min-h-11 flex-1 rounded-sm border border-[var(--line)] px-4 text-sm outline-none focus:border-[var(--forest)]"
             />
           </div>
         ) : null}
       </form>
 
       {error ? (
-        <div role="alert" className="rounded-2xl border border-[#e8c9a5] bg-[#fff8ed] px-5 py-4 text-sm text-[#704616]">
+        <div role="alert" className="rounded-sm border border-[var(--warn-line)] bg-[var(--warn-bg)] px-5 py-4 text-sm text-[var(--warn)]">
           {error}
         </div>
       ) : null}
 
       {!searched && !loading ? (
-        <div className="rounded-2xl border border-dashed border-[var(--line)] bg-white px-6 py-14 text-center">
+        <div className="rounded-sm border border-dashed border-[var(--line)] bg-white px-6 py-14 text-center">
           <h2 className="text-lg font-semibold">Search statutes and landmark cases</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
             Statute passages come from the ChatLaw corpus. Landmark cases are a curated verified set with official
@@ -157,13 +158,13 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
       {loading ? (
         <div className="space-y-3" aria-busy="true" aria-live="polite">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-28 animate-pulse rounded-2xl border border-[var(--line)] bg-white" />
+            <div key={i} className="h-28 animate-pulse rounded-sm border border-[var(--line)] bg-white" />
           ))}
         </div>
       ) : null}
 
       {searched && !loading && noRelevant && !error ? (
-        <div className="rounded-2xl border border-[var(--line)] bg-white px-6 py-12 text-center">
+        <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-12 text-center">
           <h2 className="text-lg font-semibold">No matching sources</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
             Try different keywords, a section number, a case name, or ask in{" "}
@@ -184,8 +185,10 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
             </p>
           </div>
           <ul className="space-y-3">
-            {filteredCases.map((item) => (
-              <li key={item.id} className="rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+            {filteredCases.map((item) => {
+              const sourceUrl = isSafeExternalUrl(item.source_url);
+              return (
+              <li key={item.id} className="rounded-sm border border-[var(--line)] bg-white p-4 sm:p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="text-base font-semibold leading-6">{item.title}</h3>
@@ -193,14 +196,16 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                       {item.court} · {item.year} · {item.citation}
                     </p>
                   </div>
+                  {sourceUrl ? (
                   <a
-                    href={item.source_url}
+                    href={sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="min-h-10 rounded-full border border-[var(--line)] px-3 text-sm font-medium text-[var(--forest)] hover:border-[var(--forest)]"
+                    className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-sm font-medium text-[var(--forest)] hover:border-[var(--forest)]"
                   >
                     Open source
                   </a>
+                  ) : null}
                 </div>
                 <p className="mt-3 text-sm leading-6">{item.summary}</p>
                 <p className="mt-2 text-sm text-[var(--ink-muted)]">{item.why_relevant}</p>
@@ -208,7 +213,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                   <p className="mt-2 text-xs text-[var(--ink-muted)]">Related: {item.relevant_sections.join(" · ")}</p>
                 ) : null}
               </li>
-            ))}
+            );})}
           </ul>
         </section>
       ) : null}
@@ -222,13 +227,12 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
           <ul className="space-y-3">
             {filteredStatutes.map((item) => {
               const sourceUrl =
-                typeof item.metadata?.source_url === "string"
-                  ? item.metadata.source_url
-                  : typeof item.metadata?.url === "string"
-                    ? item.metadata.url
-                    : null;
+                isSafeExternalUrl(
+                  typeof item.metadata?.source_url === "string" ? item.metadata.source_url : null,
+                ) ??
+                isSafeExternalUrl(typeof item.metadata?.url === "string" ? item.metadata.url : null);
               return (
-                <li key={item.chunk_id} className="rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+                <li key={item.chunk_id} className="rounded-sm border border-[var(--line)] bg-white p-4 sm:p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h3 className="text-base font-semibold leading-6">{item.document_title}</h3>
@@ -249,7 +253,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                         href={sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="min-h-10 rounded-full border border-[var(--line)] px-3 text-sm font-medium text-[var(--forest)] hover:border-[var(--forest)]"
+                        className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-sm font-medium text-[var(--forest)] hover:border-[var(--forest)]"
                       >
                         Open source
                       </a>

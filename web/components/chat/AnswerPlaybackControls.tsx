@@ -1,7 +1,7 @@
 "use client";
 
 import type { AnswerPlaybackStatus } from "@/lib/speech/useAnswerPlayback";
-
+import { PlayIcon } from "@/components/chat/ChatIcons";
 export interface AnswerPlaybackControlsProps {
   messageId: string;
   text: string;
@@ -44,10 +44,10 @@ export default function AnswerPlaybackControls({
           type="button"
           onClick={() => onPlay(messageId, text)}
           disabled={disabled || !text.trim()}
-          className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-[var(--line)] px-3 text-xs font-medium text-[var(--foreground)] hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] disabled:opacity-50"
+          className="inline-flex min-h-10 items-center gap-1.5 rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--foreground)] hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] disabled:opacity-50"
           aria-label="Play answer"
         >
-          <span aria-hidden="true">▶</span>
+          <PlayIcon className="h-3.5 w-3.5" />
           Listen
         </button>
       )}
@@ -59,7 +59,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onPause}
-            className="min-h-10 rounded-lg border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
             aria-label="Pause answer"
           >
             Pause
@@ -67,7 +67,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onStop}
-            className="min-h-10 rounded-lg border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
             aria-label="Stop speech"
           >
             Stop
@@ -82,7 +82,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onResume}
-            className="min-h-10 rounded-lg border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
             aria-label="Resume answer"
           >
             Resume
@@ -90,7 +90,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onStop}
-            className="min-h-10 rounded-lg border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
             aria-label="Stop speech"
           >
             Stop

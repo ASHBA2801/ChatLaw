@@ -24,7 +24,7 @@ export default function TemplateField({
   const describedBy = [error ? `${field.id}-error` : null, recommended ? `${field.id}-hint` : null, field.help ? `${field.id}-help` : null]
     .filter(Boolean)
     .join(" ") || undefined;
-  const className = `min-h-11 w-full rounded-xl border bg-white px-3 text-sm text-[var(--foreground)] ${error ? "border-[#8a3b2b]" : "border-[var(--line)]"}`;
+  const className = `min-h-11 w-full rounded-sm border bg-white px-3 text-sm text-[var(--foreground)] ${error ? "border-[#8a3b2b]" : "border-[var(--line)]"}`;
 
   if (field.type === "checkbox") {
     return (

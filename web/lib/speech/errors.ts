@@ -1,3 +1,5 @@
+import { isBraveBrowser } from "./support";
+
 /** Map browser speech errors to calm, actionable copy. Never expose raw internals. */
 
 export function mapSpeechError(errorCode: string | null | undefined): string {
@@ -8,6 +10,9 @@ export function mapSpeechError(errorCode: string | null | undefined): string {
     case "audio-capture":
       return "No microphone is available. Check your device settings and try again.";
     case "network":
+      if (isBraveBrowser()) {
+        return "Voice input isn't available in Brave. Brave blocks the browser speech service ChatLaw uses for transcription. Try Chrome or Edge, or type your question.";
+      }
       return "Voice recognition could not reach the speech service. Check your connection and try again.";
     case "no-speech":
       return "No speech was detected. Please try again.";

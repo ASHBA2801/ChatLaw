@@ -1,13 +1,13 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useSession } from "next-auth/react";
 
 import {
-  DEFAULT_LANGUAGE,
   getLanguage,
   isLanguageCode,
-  LANGUAGE_STORAGE_KEY,
+  peekStoredLanguage,
+  resolveActiveLanguage,
   writeStoredLanguage,
   type LanguageCode,
   type LanguageOption,
@@ -33,18 +33,12 @@ function subscribeLanguage(onStoreChange: () => void) {
   };
 }
 
-function readLanguageSnapshot(): LanguageCode {
-  if (typeof window === "undefined") return DEFAULT_LANGUAGE;
-  try {
-    const raw = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return isLanguageCode(raw) ? raw : DEFAULT_LANGUAGE;
-  } catch {
-    return DEFAULT_LANGUAGE;
-  }
+function readLanguageSnapshot(): LanguageCode | null {
+  return peekStoredLanguage();
 }
 
-function getServerSnapshot(): LanguageCode {
-  return DEFAULT_LANGUAGE;
+function getServerSnapshot(): LanguageCode | null {
+  return null;
 }
 
 export function LanguageProvider({
@@ -55,21 +49,29 @@ export function LanguageProvider({
   initialLanguage?: string | null;
 }) {
   const session = useSession();
+  const updateSession = session.update;
+  const [override, setOverride] = useState<LanguageCode | null>(null);
   const stored = useSyncExternalStore(subscribeLanguage, readLanguageSnapshot, getServerSnapshot);
   const sessionLanguage =
     session.status === "authenticated" &&
     isLanguageCode((session.data?.user as { preferredLanguage?: string } | undefined)?.preferredLanguage)
       ? ((session.data?.user as { preferredLanguage?: string }).preferredLanguage as LanguageCode)
       : null;
-  const language: LanguageCode = sessionLanguage
-    ?? (isLanguageCode(initialLanguage) ? initialLanguage : stored);
+  const language = resolveActiveLanguage({
+    override,
+    stored,
+    sessionLanguage,
+    initialLanguage,
+  });
+
+  useEffect(() => {
+    document.documentElement.lang = getLanguage(language).bcp47;
+  }, [language]);
 
   const setLanguage = useCallback(
     (code: LanguageCode) => {
+      setOverride(code);
       writeStoredLanguage(code);
-      if (typeof document !== "undefined") {
-        document.documentElement.lang = getLanguage(code).bcp47;
-      }
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("chatlaw-language-change"));
       }
@@ -78,12 +80,16 @@ export function LanguageProvider({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ language: code }),
-        }).catch(() => {
-          /* preference sync is best-effort */
-        });
+        })
+          .then((response) => {
+            if (response.ok) return updateSession();
+          })
+          .catch(() => {
+            /* preference sync is best-effort */
+          });
       }
     },
-    [session.status],
+    [session.status, updateSession],
   );
 
   const value = useMemo(

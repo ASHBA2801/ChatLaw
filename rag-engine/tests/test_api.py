@@ -31,10 +31,12 @@ class FakeService:
                                  embedding_latency_seconds=0.01,
                                  database_latency_seconds=0.02)
 
-    def chat(self, message, top_k, min_similarity, history="", case_context=None, *, language="en"):
+    def chat(self, message, top_k, min_similarity, history="", case_context=None, *, language="en",
+             retrieval_query=None):
         from generation.answer import answer_question
         from context.case_documents import attach_case_context
-        retrieval = attach_case_context(self.search(message, top_k, min_similarity), case_context)
+        query_for_search = (retrieval_query or message).strip() or message
+        retrieval = attach_case_context(self.search(query_for_search, top_k, min_similarity), case_context)
         if retrieval.no_relevant_context:
             return retrieval, answer_question(message, retrieval, None, top_k=top_k, language=language)
 

@@ -1,7 +1,7 @@
 "use client";
 
 import type { SpeechInputStatus, SpeechLanguageCode } from "@/lib/speech/types";
-import { getEnabledSpeechLanguages } from "@/lib/speech/support";
+import { getEnabledSpeechLanguages, getSpeechRecognitionUnavailableMessage } from "@/lib/speech/support";
 
 function MicIcon({ className }: { className?: string }) {
   return (
@@ -94,7 +94,7 @@ export default function VoiceInputControls({
           type="button"
           onClick={handleMicClick}
           disabled={disabled || !supported || status === "unsupported" || isProcessing}
-          className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] disabled:cursor-not-allowed disabled:opacity-50 ${
+          className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] disabled:cursor-not-allowed disabled:opacity-50 ${
             isRecording
               ? "border-[#b42318] bg-[#fef3f2] text-[#b42318]"
               : "border-[var(--line)] text-[var(--foreground)] hover:border-[var(--forest)]"
@@ -114,7 +114,7 @@ export default function VoiceInputControls({
           value={language}
           onChange={(event) => onLanguageChange(event.target.value as SpeechLanguageCode)}
           disabled={disabled || isRecording || isProcessing || !supported}
-          className="hidden h-11 max-w-[9.5rem] rounded-lg border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink-muted)] sm:block"
+          className="hidden h-11 max-w-[9.5rem] rounded-sm border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink-muted)] sm:block"
           aria-label="Voice input language"
         >
           {languages.map((option) => (
@@ -128,7 +128,7 @@ export default function VoiceInputControls({
           <button
             type="button"
             onClick={onCancel}
-            className="min-h-11 rounded-lg border border-[var(--line)] px-3 text-xs font-medium text-[var(--ink-muted)] hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--ink-muted)] hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
           >
             Cancel
           </button>
@@ -145,12 +145,10 @@ export default function VoiceInputControls({
           </p>
         )}
         {status === "unsupported" && (
-          <p className="text-xs text-[var(--ink-muted)]">
-            Voice input isn&apos;t supported in this browser. You can continue using the keyboard.
-          </p>
+          <p className="text-xs text-[var(--ink-muted)]">{getSpeechRecognitionUnavailableMessage()}</p>
         )}
         {error && (
-          <p className="text-xs text-[#935a1e]" role="alert">
+          <p className="text-xs text-[var(--warn)]" role="alert">
             {error}{" "}
             <button type="button" onClick={onClearError} className="underline underline-offset-2">
               Dismiss

@@ -1,0 +1,44 @@
+{
+  "title": "Approve Chat composition",
+  "question": "High-Density Module Mosaic is locked. Pick the Chat first-viewport composition to build against (comp-led).",
+  "options": [
+    {
+      "id": "comp-a",
+      "label": "Three-column mosaic",
+      "kicker": "DECISION COMP",
+      "thesis": "History, structured answer, and citations as three abutting ruled columns with red header tabs.",
+      "palette": ["#FFFFFF", "#111111", "#E60012", "#F0F0F0", "#6B6B6B"],
+      "materials": ["hairline boxes", "utility-red tabs", "compact gothic sans", "edge-to-edge modules"],
+      "viewport": "Left conversation history, center structured answer + composer, right citation list and language toggle.",
+      "risk": "Three equal columns can compete; citations may steal the answer.",
+      "comp": ".impeccable/mocks/chat-comp-a.png"
+    },
+    {
+      "id": "comp-b",
+      "label": "Two-row mosaic",
+      "kicker": "VARIANT",
+      "thesis": "History as a thin top strip; answer and citations share the main row; composer is a full-width bottom module.",
+      "palette": ["#FFFFFF", "#111111", "#E60012", "#F0F0F0"],
+      "materials": ["hairline boxes", "utility-red tabs", "horizontal history chips"],
+      "viewport": "Top history strip, 70/30 answer vs citations, full-width composer with red Send.",
+      "risk": "History strip may feel cramped on desktop.",
+      "comp": ".impeccable/mocks/chat-comp-b.png"
+    },
+    {
+      "id": "comp-c",
+      "label": "Answer-dominant plate",
+      "kicker": "VARIANT",
+      "thesis": "One dominant structured-answer plate; citations live inside it as hairline fields; thin status rail for interview steps.",
+      "palette": ["#FFFFFF", "#111111", "#E60012", "#F5F5F5"],
+      "materials": ["one large ruled plate", "inline citation fields", "micro-nav tabs"],
+      "viewport": "Almost full-width answer with inline citations; right rail for Step 2 of 3 and language.",
+      "risk": "Drops history from the first viewport; denser reading, less scan of past turns.",
+      "comp": ".impeccable/mocks/chat-comp-c.png"
+    }
+  ],
+  "steer": true,
+  "buildPath": {
+    "value": "comp",
+    "toggle": false
+  }
+}

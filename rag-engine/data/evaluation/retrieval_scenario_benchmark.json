@@ -1,0 +1,262 @@
+{
+  "metrics": {
+    "total_test_queries": 13,
+    "legal_scenario_queries": 11,
+    "irrelevant_queries": 2,
+    "domain_routing_accuracy": 1.0,
+    "concept_recall": 0.9545454545454546,
+    "statutory_expansion_rate": 0.8181818181818182,
+    "irrelevant_query_detection_accuracy": 1.0,
+    "type_classification_accuracy": 1.0,
+    "latency": {
+      "average_latency_ms": 11.738461538278408,
+      "median_latency_ms": 12.64409999930649,
+      "max_latency_ms": 14.071100000364822
+    },
+    "gemini_api_calls_made": 0,
+    "embeddings_generated_in_eval": 0
+  },
+  "results": [
+    {
+      "id": "SCENARIO-001",
+      "question": "I bought a product on an e-commerce website. The product was defective when I received it, and the seller refused to accept a return or provide a refund.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "defective_goods",
+        "refund_return_dispute",
+        "ecommerce_transaction"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 13.23229999979958
+    },
+    {
+      "id": "SCENARIO-002",
+      "question": "I bought a defective phone online and the seller refuses to refund me.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "defective_goods",
+        "refund_return_dispute",
+        "ecommerce_transaction"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 11.614400000325986
+    },
+    {
+      "id": "SCENARIO-003",
+      "question": "The online shop sent me a completely different product and won't replace it.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "refund_return_dispute",
+        "ecommerce_transaction",
+        "wrong_product_delivery"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 14.071100000364822
+    },
+    {
+      "id": "SCENARIO-004",
+      "question": "I paid for a product but the seller never delivered it.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "non_delivery_goods"
+      ],
+      "concept_recall": 0.5,
+      "expanded_contains_statute": true,
+      "latency_ms": 12.583199999426142
+    },
+    {
+      "id": "SCENARIO-005",
+      "question": "The seller refuses to honour the warranty.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "warranty_guarantee_breach"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 12.841499999922235
+    },
+    {
+      "id": "SCENARIO-006",
+      "question": "I was charged money twice for the same online order.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "banking_finance",
+      "domain_matched": true,
+      "matched_concepts": [
+        "ecommerce_transaction",
+        "double_charging_unauthorized_payment"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 13.698799999474431
+    },
+    {
+      "id": "SCENARIO-007",
+      "question": "The company advertised a product with features that it does not actually have.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "misleading_advertisement"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 14.037099999768543
+    },
+    {
+      "id": "SCENARIO-008",
+      "question": "I bought something online and the seller refuses to return it even though it arrived damaged.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "consumer_protection",
+      "expected_domain": "consumer_protection",
+      "domain_matched": true,
+      "matched_concepts": [
+        "defective_goods",
+        "refund_return_dispute",
+        "ecommerce_transaction"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 12.64409999930649
+    },
+    {
+      "id": "SCENARIO-009",
+      "question": "I was cheated by someone who took my money online.",
+      "type": "scenario",
+      "relevant": true,
+      "is_scenario": true,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "cyber_law",
+      "expected_domain": "cyber_law",
+      "domain_matched": true,
+      "matched_concepts": [
+        "ecommerce_transaction",
+        "criminal_cheating_fraud",
+        "cyber_fraud_online_theft"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 13.727899999139481
+    },
+    {
+      "id": "DIRECT-001",
+      "question": "What is Section 303 of BNS?",
+      "type": "direct_lookup",
+      "relevant": true,
+      "is_scenario": false,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "criminal_law",
+      "expected_domain": "criminal_law",
+      "domain_matched": true,
+      "matched_concepts": [
+        "theft_stealing"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": false,
+      "latency_ms": 10.494000000107917
+    },
+    {
+      "id": "DIRECT-002",
+      "question": "What is the punishment for theft?",
+      "type": "direct_lookup",
+      "relevant": true,
+      "is_scenario": false,
+      "is_legal_query": true,
+      "type_correct": true,
+      "primary_domain": "criminal_law",
+      "expected_domain": "criminal_law",
+      "domain_matched": true,
+      "matched_concepts": [
+        "theft_stealing"
+      ],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": false,
+      "latency_ms": 11.496199998873635
+    },
+    {
+      "id": "IRRELEVANT-001",
+      "question": "What is the capital of France?",
+      "type": "irrelevant",
+      "relevant": false,
+      "is_scenario": false,
+      "is_legal_query": false,
+      "type_correct": true,
+      "primary_domain": "general_legal",
+      "expected_domain": "general_legal",
+      "domain_matched": true,
+      "matched_concepts": [],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 5.924500001128763
+    },
+    {
+      "id": "IRRELEVANT-002",
+      "question": "What is the recipe for biryani?",
+      "type": "irrelevant",
+      "relevant": false,
+      "is_scenario": false,
+      "is_legal_query": false,
+      "type_correct": true,
+      "primary_domain": "general_legal",
+      "expected_domain": "general_legal",
+      "domain_matched": true,
+      "matched_concepts": [],
+      "concept_recall": 1.0,
+      "expanded_contains_statute": true,
+      "latency_ms": 6.23489999998128
+    }
+  ]
+}

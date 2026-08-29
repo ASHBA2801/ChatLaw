@@ -13,12 +13,12 @@ export default function AccountPanel() {
   const user = session.data?.user;
 
   if (session.status === "loading") {
-    return <div className="h-48 animate-pulse rounded-2xl border border-[var(--line)] bg-white" aria-busy="true" />;
+    return <div className="h-48 animate-pulse rounded-sm border border-[var(--line)] bg-white" aria-busy="true" />;
   }
 
   if (session.status !== "authenticated" || !user) {
     return (
-      <div className="rounded-2xl border border-[var(--line)] bg-white px-6 py-10">
+      <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-10">
         <h1 className="text-2xl font-semibold tracking-tight">Account</h1>
         <p className="mt-3 max-w-lg text-sm leading-6 text-[var(--ink-muted)]">
           Sign in to save document drafts, case workspaces, and your preferred language across devices. Chat and Research
@@ -27,7 +27,7 @@ export default function AccountPanel() {
         <button
           type="button"
           onClick={() => signIn("google", { callbackUrl: "/account" })}
-          className="mt-6 min-h-11 rounded-full bg-[var(--forest)] px-5 text-sm font-semibold text-white"
+          className="mt-6 min-h-11 rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white"
         >
           Sign in with Google
         </button>
@@ -44,7 +44,7 @@ export default function AccountPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-[var(--line)] bg-white px-6 py-8">
+      <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-8">
         <h1 className="text-2xl font-semibold tracking-tight">Account</h1>
         <dl className="mt-6 space-y-4 text-sm">
           <div>
@@ -59,13 +59,13 @@ export default function AccountPanel() {
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="mt-6 min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-medium hover:border-[var(--forest)]"
+          className="mt-6 min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm font-medium hover:border-[var(--forest)]"
         >
           Sign out
         </button>
       </div>
 
-      <div className="rounded-2xl border border-[var(--line)] bg-white px-6 py-8">
+      <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-8">
         <h2 className="text-lg font-semibold">Language preference</h2>
         <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
           Chat clarifications and answers use this language. Citations keep official Act and section names.
@@ -78,16 +78,16 @@ export default function AccountPanel() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[var(--line)] bg-white px-6 py-8">
+      <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-8">
         <h2 className="text-lg font-semibold">Your workspaces</h2>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href="/cases" className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-medium hover:border-[var(--forest)]">
+          <Link href="/cases" className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm font-medium hover:border-[var(--forest)]">
             My cases
           </Link>
-          <Link href="/documents" className="min-h-11 rounded-full border border-[var(--line)] px-4 text-sm font-medium hover:border-[var(--forest)]">
+          <Link href="/documents" className="min-h-11 rounded-sm border border-[var(--line)] px-4 text-sm font-medium hover:border-[var(--forest)]">
             Documents
           </Link>
-          <Link href="/chat" className="min-h-11 rounded-full bg-[var(--forest)] px-4 text-sm font-semibold text-white">
+          <Link href="/chat" className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white">
             Open Chat
           </Link>
         </div>

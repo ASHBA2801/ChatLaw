@@ -18,7 +18,7 @@ const STATUSES = ["ALL", "ACTIVE", "ON_HOLD", "RESOLVED", "ARCHIVED"] as const;
 type SortKey = "updated" | "title" | "status";
 
 const CONTROL =
-  "h-11 w-full rounded-lg border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
+  "h-11 w-full rounded-sm border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
 
 function relativeUpdate(value: Date | string) {
   const time = new Date(value).getTime();
@@ -104,7 +104,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
       </div>
 
       {visible.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-[var(--line)] bg-white px-6 py-16 text-center">
+        <div className="mt-6 rounded-sm border border-[var(--line)] bg-white px-6 py-16 text-center">
           <h2 className="text-xl font-semibold">
             {cases.length ? "No matching cases" : "You don't have any cases yet."}
           </h2>
@@ -116,7 +116,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
           {!cases.length ? (
             <Link
               href="/cases/new"
-              className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--forest)] px-5 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+              className="mt-6 inline-flex min-h-11 items-center rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
             >
               Create Case
             </Link>
@@ -128,7 +128,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
                 setStatus("ALL");
                 setCategory("ALL");
               }}
-              className="mt-6 inline-flex min-h-11 items-center rounded-lg border border-[var(--forest)] px-4 text-sm font-semibold text-[var(--forest)]"
+              className="mt-6 inline-flex min-h-11 items-center rounded-sm border border-[var(--forest)] px-4 text-sm font-semibold text-[var(--forest)]"
             >
               Clear filters
             </button>
@@ -138,7 +138,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
         <ul className="mt-6 grid list-none gap-4 md:grid-cols-2">
           {visible.map((item) => (
             <li key={item.id}>
-              <article className="h-full rounded-2xl border border-[var(--line)] bg-white p-5">
+              <article className="h-full rounded-sm border border-[var(--line)] bg-white p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <h2 className="truncate text-lg font-semibold" title={item.title}>
@@ -148,7 +148,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
                       {item.category || "Category not specified"}
                     </p>
                   </div>
-                  <span className="shrink-0 rounded-full bg-[#eef5d0] px-3 py-1 text-xs font-semibold text-[var(--forest)]">
+                  <span className="shrink-0 rounded-sm bg-[var(--signal-soft)] px-3 py-1 text-xs font-semibold text-[var(--forest)]">
                     {item.status.replace("_", " ")}
                   </span>
                 </div>
@@ -161,7 +161,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
                 </p>
                 <Link
                   href={`/cases/${item.id}`}
-                  className="mt-5 inline-flex min-h-11 items-center rounded-lg border border-[var(--forest)] px-4 text-sm font-semibold text-[var(--forest)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                  className="mt-5 inline-flex min-h-11 items-center rounded-sm border border-[var(--forest)] px-4 text-sm font-semibold text-[var(--forest)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
                 >
                   Open Case
                 </Link>

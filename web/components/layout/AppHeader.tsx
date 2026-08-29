@@ -22,11 +22,11 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
     pathname.startsWith("/documents") || pathname.startsWith("/cases") ? pathname : "/documents";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--background)]/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--background)]/95  -sm">
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-3 font-semibold tracking-tight">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--forest)] text-xs text-[var(--lime)]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-[var(--forest)] text-xs text-white">
               CL
             </span>
             <span>ChatLaw</span>
@@ -39,7 +39,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded-full px-3 py-2 text-sm font-medium ${active ? "bg-white text-[var(--forest)]" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
+                  className={`rounded-sm px-3 py-2 text-sm font-medium ${active ? "bg-white text-[var(--forest)]" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
                 >
                   {link.label}
                 </Link>
@@ -50,7 +50,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
         <div className="flex min-w-0 items-center gap-3">
           <LanguageSelector compact />
           {subtitle ? (
-            <span className="hidden rounded-full border border-[var(--line)] bg-white px-3 py-1 text-xs font-medium text-[var(--ink-muted)] md:inline">
+            <span className="hidden rounded-sm border border-[var(--line)] bg-white px-3 py-1 text-xs font-medium text-[var(--ink-muted)] md:inline">
               {subtitle}
             </span>
           ) : null}
@@ -58,7 +58,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="min-h-11 rounded-full border border-[var(--line)] bg-white px-3 text-sm font-medium"
+              className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-3 text-sm font-medium"
             >
               Sign out
             </button>
@@ -66,7 +66,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
             <button
               type="button"
               onClick={() => signIn("google", { callbackUrl: signInTarget })}
-              className="min-h-11 rounded-full bg-[var(--forest)] px-4 text-sm font-semibold text-white"
+              className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white"
             >
               Sign in
             </button>

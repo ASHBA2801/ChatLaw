@@ -62,7 +62,7 @@ export default function LanguageSelector({ compact = false }: { compact?: boolea
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((value) => !value)}
-        className={`inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--line)] bg-white px-3 text-sm font-medium text-[var(--foreground)] hover:border-[var(--forest)] focus-visible:ring-2 focus-visible:ring-[var(--warm)] ${compact ? "max-w-[9.5rem]" : ""}`}
+        className={`inline-flex min-h-11 items-center gap-2 rounded-sm border border-[var(--line)] bg-white px-3 text-sm font-medium text-[var(--foreground)] hover:border-[var(--forest)] focus-visible:ring-2 focus-visible:ring-[var(--warm)] ${compact ? "max-w-[9.5rem]" : ""}`}
       >
         <span className="truncate" title={formatLanguageLabel(languageOption)}>
           {compact ? languageOption.nativeName : formatLanguageLabel(languageOption)}
@@ -74,7 +74,7 @@ export default function LanguageSelector({ compact = false }: { compact?: boolea
           id={listId}
           role="listbox"
           aria-label="Language"
-          className="absolute right-0 z-50 mt-2 w-[min(18rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[var(--line)] bg-white shadow-[0_12px_40px_rgba(23,73,54,0.12)]"
+          className="absolute right-0 z-50 mt-2 w-[min(18rem,calc(100vw-2rem))] overflow-hidden rounded-sm border border-[var(--line)] bg-white "
         >
           <div className="border-b border-[var(--line)] p-2">
             <label className="sr-only" htmlFor={`${listId}-search`}>
@@ -85,7 +85,7 @@ export default function LanguageSelector({ compact = false }: { compact?: boolea
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search languages"
-              className="min-h-11 w-full rounded-xl border border-[var(--line)] bg-[var(--background)] px-3 text-sm outline-none focus:border-[var(--forest)]"
+              className="min-h-11 w-full rounded-sm border border-[var(--line)] bg-[var(--background)] px-3 text-sm outline-none focus:border-[var(--forest)]"
               autoFocus
             />
           </div>
@@ -102,7 +102,7 @@ export default function LanguageSelector({ compact = false }: { compact?: boolea
                       role="option"
                       aria-selected={selected}
                       onClick={() => choose(lang.code)}
-                      className={`flex min-h-11 w-full items-center justify-between px-4 text-left text-sm ${selected ? "bg-[#eef5d0] font-semibold text-[var(--forest)]" : "hover:bg-[var(--background)]"}`}
+                      className={`flex min-h-11 w-full items-center justify-between px-4 text-left text-sm ${selected ? "bg-[var(--signal-soft)] font-semibold text-[var(--forest)]" : "hover:bg-[var(--background)]"}`}
                     >
                       <span>{formatLanguageLabel(lang)}</span>
                       {lang.pinned && !query ? (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MutableRefObject } from "react";
 import { mapSpeechError } from "./errors";
 import { DEFAULT_SPEECH_LANGUAGE, isSpeechRecognitionSupported } from "./support";
 import { SpeechInputSession } from "./SpeechInputSession";
@@ -56,14 +56,25 @@ export interface UseVoiceChatResult {
   reset: () => void;
 }
 
-function setStateSafe(
-  current: VoiceChatState,
+function transitionVoiceState(
+  stateRef: MutableRefObject<VoiceChatState>,
   next: VoiceChatState,
   setter: (value: VoiceChatState) => void,
 ): boolean {
-  if (!canTransition(current, next)) return false;
+  if (stateRef.current === next) return true;
+  if (!canTransition(stateRef.current, next)) return false;
+  stateRef.current = next;
   setter(next);
   return true;
+}
+
+function forceVoiceState(
+  stateRef: MutableRefObject<VoiceChatState>,
+  next: VoiceChatState,
+  setter: (value: VoiceChatState) => void,
+): void {
+  stateRef.current = next;
+  setter(next);
 }
 
 export function useVoiceChat({
@@ -82,10 +93,7 @@ export function useVoiceChat({
   const [draftText, setDraftText] = useState("");
   const [lastUserText, setLastUserText] = useState("");
   const [lastAssistantText, setLastAssistantText] = useState("");
-  const language = initialLanguage;
-  const setLanguage = (() => {
-    /* Language is controlled by the app language selector. */
-  }) as (next: SpeechLanguageCode) => void;
+  const [language, setLanguage] = useState<SpeechLanguageCode>(initialLanguage);
 
   const stateRef = useRef(state);
   const transcriptRef = useRef("");
@@ -99,6 +107,7 @@ export function useVoiceChat({
   const conversationIdRef = useRef(conversationId);
   const allowWithoutConversationRef = useRef(allowWithoutConversation);
   const processingRef = useRef(false);
+  const skipFinalizeRef = useRef(false);
 
   const recognitionSupported = typeof window !== "undefined" && isSpeechRecognitionSupported();
   const ttsSupported = typeof window !== "undefined" && Boolean(window.speechSynthesis);
@@ -112,6 +121,10 @@ export function useVoiceChat({
   }, [draftText]);
 
   useEffect(() => {
+    setLanguage(initialLanguage);
+  }, [initialLanguage]);
+
+  useEffect(() => {
     sendMessageRef.current = sendMessage;
     onMessagesAppendedRef.current = onMessagesAppended;
     mutedRef.current = muted;
@@ -122,17 +135,18 @@ export function useVoiceChat({
 
   useEffect(() => {
     outputSessionRef.current = new SpeechOutputSession({
-      onStart: () => setStateSafe(stateRef.current, "speaking", setState),
+      onStart: () => transitionVoiceState(stateRef, "speaking", setState),
       onEnd: () => {
-        if (stateRef.current === "speaking" || stateRef.current === "paused") {
-          setState("idle");
+        const current = stateRef.current;
+        if (current === "speaking" || current === "paused" || current === "thinking") {
+          forceVoiceState(stateRef, "idle", setState);
         }
       },
-      onPause: () => setStateSafe(stateRef.current, "paused", setState),
-      onResume: () => setStateSafe(stateRef.current, "speaking", setState),
+      onPause: () => transitionVoiceState(stateRef, "paused", setState),
+      onResume: () => transitionVoiceState(stateRef, "speaking", setState),
       onError: (message) => {
         setError(message);
-        setState("error");
+        forceVoiceState(stateRef, "error", setState);
       },
     });
 
@@ -147,14 +161,14 @@ export function useVoiceChat({
   const clearError = useCallback(() => {
     setError(null);
     if (stateRef.current === "error") {
-      setState("idle");
+      forceVoiceState(stateRef, "idle", setState);
     }
   }, []);
 
   const stopSpeakingInternal = useCallback(() => {
     outputSessionRef.current?.stop();
     if (stateRef.current === "speaking" || stateRef.current === "paused") {
-      setState("idle");
+      forceVoiceState(stateRef, "idle", setState);
     }
   }, []);
 
@@ -167,7 +181,7 @@ export function useVoiceChat({
     draftRef.current = "";
     transcriptRef.current = "";
     setInterimText("");
-    setState("thinking");
+    forceVoiceState(stateRef, "thinking", setState);
 
     try {
       const result = await sendMessageRef.current(text);
@@ -176,7 +190,7 @@ export function useVoiceChat({
 
       const spoken = prepareTextForSpeech(result.assistantText);
       if (!spoken || mutedRef.current || !ttsSupported) {
-        setState("idle");
+        forceVoiceState(stateRef, "idle", setState);
         return;
       }
 
@@ -186,7 +200,7 @@ export function useVoiceChat({
         ? requestError.message
         : "Unable to complete the voice request.";
       setError(message);
-      setState("error");
+      forceVoiceState(stateRef, "error", setState);
     } finally {
       processingRef.current = false;
     }
@@ -199,26 +213,26 @@ export function useVoiceChat({
 
     if (!text) {
       setError(mapSpeechError("empty"));
-      setState("error");
+      forceVoiceState(stateRef, "error", setState);
       return;
     }
 
     setDraftText(text);
     draftRef.current = text;
     setLastUserText(text);
-    setState("ready_to_send");
+    forceVoiceState(stateRef, "ready_to_send", setState);
   }, []);
 
   const beginListening = useCallback(() => {
     if (disabled) return;
     if (!recognitionSupported) {
       setError(mapSpeechError("unsupported"));
-      setState("error");
+      forceVoiceState(stateRef, "error", setState);
       return;
     }
     if (!canStartVoiceListening(conversationIdRef.current, allowWithoutConversationRef.current)) {
       setError("Your conversation is still loading. Please try again.");
-      setState("error");
+      forceVoiceState(stateRef, "error", setState);
       return;
     }
 
@@ -234,13 +248,17 @@ export function useVoiceChat({
     const session = new SpeechInputSession(languageRef.current, {
       onStatus: (status) => {
         if (status === "recording") {
-          setStateSafe(stateRef.current, "listening", setState);
+          transitionVoiceState(stateRef, "listening", setState);
         } else if (status === "processing") {
-          setStateSafe(stateRef.current, "transcribing", setState);
+          transitionVoiceState(stateRef, "transcribing", setState);
         } else if (status === "idle") {
+          if (skipFinalizeRef.current) {
+            skipFinalizeRef.current = false;
+            return;
+          }
           finalizeTranscript();
         } else if (status === "error") {
-          setState("error");
+          forceVoiceState(stateRef, "error", setState);
         }
       },
       onInterim: (text) => setInterimText(text),
@@ -249,11 +267,12 @@ export function useVoiceChat({
       },
       onError: (message) => {
         setError(message);
-        setState("error");
+        forceVoiceState(stateRef, "error", setState);
       },
     });
 
     inputSessionRef.current = session;
+    forceVoiceState(stateRef, "listening", setState);
     session.start();
   }, [disabled, recognitionSupported, stopSpeakingInternal, finalizeTranscript]);
 
@@ -269,6 +288,7 @@ export function useVoiceChat({
   }, []);
 
   const cancelListening = useCallback(() => {
+    skipFinalizeRef.current = true;
     inputSessionRef.current?.cancel();
     inputSessionRef.current = null;
     processingRef.current = false;
@@ -276,7 +296,7 @@ export function useVoiceChat({
     transcriptRef.current = "";
     setDraftText("");
     draftRef.current = "";
-    setState("idle");
+    forceVoiceState(stateRef, "idle", setState);
   }, []);
 
   const confirmSend = useCallback(() => {
@@ -284,7 +304,7 @@ export function useVoiceChat({
     const text = draftRef.current.trim();
     if (!text) {
       setError(mapSpeechError("empty"));
-      setState("error");
+      forceVoiceState(stateRef, "error", setState);
       return;
     }
     void runSend(text);
@@ -295,7 +315,7 @@ export function useVoiceChat({
     draftRef.current = "";
     transcriptRef.current = "";
     setInterimText("");
-    setState("idle");
+    forceVoiceState(stateRef, "idle", setState);
   }, []);
 
   const updateDraftText = useCallback((text: string) => {
@@ -327,6 +347,7 @@ export function useVoiceChat({
   }, [disabled, lastAssistantText, stopSpeakingInternal, ttsSupported]);
 
   const reset = useCallback(() => {
+    skipFinalizeRef.current = true;
     inputSessionRef.current?.cancel();
     inputSessionRef.current = null;
     processingRef.current = false;
@@ -336,7 +357,7 @@ export function useVoiceChat({
     setDraftText("");
     draftRef.current = "";
     setError(null);
-    setState("idle");
+    forceVoiceState(stateRef, "idle", setState);
   }, [stopSpeakingInternal]);
 
   return {

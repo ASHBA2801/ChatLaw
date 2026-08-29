@@ -46,6 +46,7 @@ export class SpeechOutputSession {
   private disposed = false;
   private started = false;
   private stopping = false;
+  private startTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private readonly callbacks: SpeechOutputCallbacks,
@@ -77,11 +78,35 @@ export class SpeechOutputSession {
 
     this.stopping = false;
     synth.cancel();
+    try {
+      synth.resume?.();
+    } catch {
+      // Some browsers expose resume only after a user gesture.
+    }
     this.lastText = trimmed;
     this.lastLang = resolveSpeechLocale(lang).locale;
     this.queue = segmentSpeechText(trimmed);
     this.started = false;
     this.speakNext();
+  }
+
+  private clearStartTimeout(): void {
+    if (this.startTimeout !== null) {
+      clearTimeout(this.startTimeout);
+      this.startTimeout = null;
+    }
+  }
+
+  private armStartTimeout(): void {
+    this.clearStartTimeout();
+    this.startTimeout = setTimeout(() => {
+      this.startTimeout = null;
+      if (this.disposed || this.stopping || this.started) return;
+      this.queue = [];
+      this.utterance = null;
+      this.synthesis?.cancel();
+      this.callbacks.onError("Speech output did not start. You can read the answer on screen.");
+    }, 3000);
   }
 
   private speakNext(): void {
@@ -95,6 +120,7 @@ export class SpeechOutputSession {
     const next = this.queue.shift();
     if (!next) {
       this.utterance = null;
+      this.clearStartTimeout();
       this.callbacks.onEnd();
       return;
     }
@@ -113,6 +139,7 @@ export class SpeechOutputSession {
 
     utterance.onstart = () => {
       if (this.disposed || this.stopping) return;
+      this.clearStartTimeout();
       if (!this.started) {
         this.started = true;
         this.callbacks.onStart();
@@ -127,6 +154,7 @@ export class SpeechOutputSession {
       if (this.disposed || this.stopping) return;
       this.utterance = null;
       this.queue = [];
+      this.clearStartTimeout();
       if (event.error === "canceled" || event.error === "interrupted") {
         this.callbacks.onEnd();
         return;
@@ -143,6 +171,9 @@ export class SpeechOutputSession {
     };
 
     this.utterance = utterance;
+    if (!this.started) {
+      this.armStartTimeout();
+    }
     synth.speak(utterance);
   }
 
@@ -159,6 +190,7 @@ export class SpeechOutputSession {
   stop(): void {
     if (this.disposed) return;
     this.stopping = true;
+    this.clearStartTimeout();
     this.queue = [];
     this.utterance = null;
     this.synthesis?.cancel();

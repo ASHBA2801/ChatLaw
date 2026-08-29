@@ -11,6 +11,8 @@ export {
   SPEECH_LANGUAGE_OPTIONS,
   getEnabledSpeechLanguages,
   getSpeechRecognitionConstructor,
+  getSpeechRecognitionUnavailableMessage,
+  isBraveBrowser,
   isSpeechRecognitionSupported,
   chatLanguageToSpeechCode,
   speechCodeToChatLanguage,

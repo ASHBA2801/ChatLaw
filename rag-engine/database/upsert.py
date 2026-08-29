@@ -11,6 +11,11 @@ from typing import Any, Mapping, Protocol
 
 from embeddings.base import EmbeddingProviderInfo
 
+try:
+    from acts.catalog import get_catalog
+except ImportError:
+    get_catalog = None
+
 
 class DatabaseClient(Protocol):
     def execute(self, query: str, *params: Any) -> Any: ...
@@ -21,23 +26,66 @@ class ChunkUpserter:
 
     def __init__(self, client: DatabaseClient):
         self.client = client
+        self.catalog = get_catalog() if get_catalog else None
 
-    @staticmethod
-    def document_metadata(chunk: Mapping[str, Any], source_file_hash: str) -> dict[str, Any]:
-        return {
-            "source_document_id": chunk.get("document_id"),
+    @classmethod
+    def _resolve_act_cls(cls, doc_id_or_title: str | None):
+        if not get_catalog or not doc_id_or_title:
+            return None
+        catalog = get_catalog()
+        return catalog.find_by_alias(doc_id_or_title) or catalog.get(doc_id_or_title)
+
+    @classmethod
+    def document_metadata(cls, chunk: Mapping[str, Any], source_file_hash: str) -> dict[str, Any]:
+        source_doc_id = chunk.get("document_id")
+        doc_title = chunk.get("document_title")
+        act = cls._resolve_act_cls(source_doc_id) or cls._resolve_act_cls(doc_title)
+
+        meta: dict[str, Any] = {
+            "source_document_id": source_doc_id,
             "source_document_sha256": source_file_hash,
-            "document_title": chunk.get("document_title"),
+            "document_title": doc_title,
         }
+        if act:
+            meta.update({
+                "act_id": act.act_id,
+                "act_title": act.official_title,
+                "short_title": act.short_title,
+                "act_year": act.year,
+                "act_number": act.act_number,
+                "domain": act.domain,
+                "category": act.category,
+                "document_type": act.document_type,
+                "status": act.status,
+                "effective_from": act.effective_from,
+                "source_authority": act.source_authority,
+                "source_url": act.official_url,
+                "jurisdiction": act.jurisdiction,
+            })
+        return meta
 
-    @staticmethod
-    def chunk_metadata(chunk: Mapping[str, Any], info: EmbeddingProviderInfo) -> dict[str, Any]:
+    @classmethod
+    def chunk_metadata(cls, chunk: Mapping[str, Any], info: EmbeddingProviderInfo) -> dict[str, Any]:
         fields = (
             "chunk_id", "chunk_hash", "document_id", "part", "subclause", "schedule",
             "page_start", "page_end", "chunk_part", "total_parts", "is_continuation",
             "parent_chunk_id", "context_path", "context_prefix", "chunk_type",
         )
         metadata = {key: chunk.get(key) for key in fields}
+
+        source_doc_id = chunk.get("document_id")
+        doc_title = chunk.get("document_title")
+        act = cls._resolve_act_cls(source_doc_id) or cls._resolve_act_cls(doc_title)
+
+        if act:
+            metadata.update({
+                "act_id": act.act_id,
+                "domain": act.domain,
+                "category": act.category,
+                "document_type": act.document_type,
+                "act_year": act.year,
+            })
+
         metadata.update({
             "embedding_provider": info.provider,
             "embedding_model": info.model,

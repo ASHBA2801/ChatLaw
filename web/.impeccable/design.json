@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-25T15:42:00+05:30",
+  "title": "Design System: ChatLaw",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "Ash Ground",
+        "canonical": "#f5f5f5",
+        "tonalRamp": ["#1a1a1a", "#3d3d3d", "#6b6b6b", "#9a9a9a", "#c4c4c4", "#e0e0e0", "#f5f5f5", "#fafafa"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Module White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#111111", "#333333", "#666666", "#999999", "#cccccc", "#e8e8e8", "#f5f5f5", "#ffffff"]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Near-Black Ink",
+        "canonical": "#111111",
+        "tonalRamp": ["#000000", "#111111", "#2a2a2a", "#4a4a4a", "#6b6b6b", "#9a9a9a", "#c8c8c8", "#f0f0f0"]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#6b6b6b",
+        "tonalRamp": ["#1f1f1f", "#3a3a3a", "#525252", "#6b6b6b", "#8a8a8a", "#adadad", "#d0d0d0", "#ededed"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#d0d0d0",
+        "tonalRamp": ["#4a4a4a", "#6b6b6b", "#8f8f8f", "#b0b0b0", "#c4c4c4", "#d0d0d0", "#e5e5e5", "#f5f5f5"]
+      },
+      "signal": {
+        "role": "primary",
+        "displayName": "Signal Red",
+        "canonical": "#db1b1a",
+        "tonalRamp": ["#4a0808", "#7a0e0e", "#a01010", "#db1b1a", "#e85a59", "#f5c2c0", "#fce8e8", "#fff5f5"]
+      },
+      "signal-soft": {
+        "role": "primary",
+        "displayName": "Signal Soft",
+        "canonical": "#fce8e8",
+        "tonalRamp": ["#7a0e0e", "#a01010", "#db1b1a", "#e85a59", "#f5c2c0", "#fce8e8", "#fff1f0", "#fffaf9"]
+      },
+      "signal-mid": {
+        "role": "primary",
+        "displayName": "Signal Mid",
+        "canonical": "#f5c2c0",
+        "tonalRamp": ["#7a0e0e", "#a01010", "#db1b1a", "#e85a59", "#f5c2c0", "#f8d4d2", "#fce8e8", "#fff5f5"]
+      },
+      "module-fill": {
+        "role": "neutral",
+        "displayName": "Module Fill",
+        "canonical": "#f0f0f0",
+        "tonalRamp": ["#3d3d3d", "#6b6b6b", "#9a9a9a", "#c4c4c4", "#d8d8d8", "#e8e8e8", "#f0f0f0", "#fafafa"]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Focus Ink",
+        "canonical": "#111111",
+        "tonalRamp": ["#000000", "#111111", "#2a2a2a", "#4a4a4a", "#6b6b6b", "#9a9a9a", "#c8c8c8", "#f0f0f0"]
+      },
+      "warn": {
+        "role": "neutral",
+        "displayName": "Warn Ink",
+        "canonical": "#9a3412",
+        "tonalRamp": ["#3b1408", "#5c220c", "#7a2a10", "#9a3412", "#c45a2e", "#e8a090", "#fff1f0", "#fffaf9"]
+      },
+      "warn-bg": {
+        "role": "neutral",
+        "displayName": "Warn Wash",
+        "canonical": "#fff1f0",
+        "tonalRamp": ["#9a3412", "#c45a2e", "#e8a090", "#f5c2c0", "#fce8e8", "#fff1f0", "#fff7f6", "#fffcfb"]
+      },
+      "warn-line": {
+        "role": "neutral",
+        "displayName": "Warn Line",
+        "canonical": "#f5c2c0",
+        "tonalRamp": ["#9a3412", "#c45a2e", "#e8a090", "#f5c2c0", "#f8d4d2", "#fce8e8", "#fff1f0", "#fffaf9"]
+      },
+      "on-signal": {
+        "role": "neutral",
+        "displayName": "On Signal",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#111111", "#333333", "#666666", "#999999", "#cccccc", "#e8e8e8", "#f5f5f5", "#ffffff"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Landing hero brand lockup and signal subline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Empty-state and sign-in titles inside Operate."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Shell page titles, conversation titles, wordmark."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Answers, forms, and list copy at 14px / 1.5."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Module tabs, nav plates, uppercase primary CTAs (~11px bold)."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "color-transition",
+        "value": "transition-colors",
+        "purpose": "Default hover/active color shifts on nav and bordered controls."
+      },
+      {
+        "name": "panel-slide",
+        "value": "200ms ease-out",
+        "purpose": "Mobile conversation drawer translate."
+      },
+      {
+        "name": "voice-bar",
+        "value": "0.9s ease-in-out infinite; delays 0.15s / 0.3s",
+        "purpose": "Listening indicator bars; disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Square signal-red commitment action with uppercase utility label.",
+      "html": "<button type=\"button\" class=\"ds-btn-primary\">Start with Chat</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.25rem; background: var(--signal, #db1b1a); color: #ffffff; border: none; border-radius: 0; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; } .ds-btn-primary:hover { background: #a01010; } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus, #111111); outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Hairline bordered square action on white.",
+      "html": "<button type=\"button\" class=\"ds-btn-secondary\">Search sources</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.25rem; background: var(--surface, #ffffff); color: var(--foreground, #111111); border: 1px solid var(--line, #d0d0d0); border-radius: 0; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease; } .ds-btn-secondary:hover { border-color: var(--signal, #db1b1a); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--focus, #111111); outline-offset: 2px; }"
+    },
+    {
+      "name": "Module Tab",
+      "kind": "custom",
+      "refersTo": "module-tab",
+      "description": "Signal-red utility plate naming a mosaic zone.",
+      "html": "<div class=\"ds-module-tab\">Structured answer</div>",
+      "css": ".ds-module-tab { background: var(--signal, #db1b1a); color: #ffffff; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.2; padding: 0.4rem 0.65rem; border-radius: 0; }"
+    },
+    {
+      "name": "Module Panel",
+      "kind": "card",
+      "refersTo": "module-panel",
+      "description": "Hairline ruled box — the mosaic cell.",
+      "html": "<div class=\"ds-module\"><div class=\"ds-module-tab\">Sources</div><div class=\"ds-module-body\">Section-level citations stack here.</div></div>",
+      "css": ".ds-module { border: 1px solid var(--line, #d0d0d0); background: var(--surface, #ffffff); border-radius: 2px; overflow: hidden; } .ds-module-tab { background: var(--signal, #db1b1a); color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.2; padding: 0.4rem 0.65rem; } .ds-module-body { padding: 0.75rem; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 0.875rem; line-height: 1.5; color: var(--foreground, #111111); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Hairline field with near-black focus ring.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Search conversations\" />",
+      "css": ".ds-input { box-sizing: border-box; width: 100%; height: 2.75rem; padding: 0 0.75rem; background: var(--surface, #ffffff); color: var(--foreground, #111111); border: 1px solid var(--line, #d0d0d0); border-radius: 2px; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 0.875rem; outline: none; } .ds-input::placeholder { color: var(--ink-muted, #6b6b6b); } .ds-input:focus-visible { box-shadow: 0 0 0 2px var(--focus, #111111); }"
+    },
+    {
+      "name": "Nav Item Active",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Product-rail link in signal-soft wash with signal label.",
+      "html": "<a class=\"ds-nav-item ds-nav-item-active\" href=\"#\"><span class=\"ds-nav-label\">Chat</span><span class=\"ds-nav-hint\">Legal assistant</span></a>",
+      "css": ".ds-nav-item { display: block; padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--line, #d0d0d0); text-decoration: none; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; color: var(--ink-muted, #6b6b6b); transition: background 0.15s ease, color 0.15s ease; } .ds-nav-item:hover { background: var(--module-fill, #f0f0f0); color: var(--foreground, #111111); } .ds-nav-item-active { background: var(--signal-soft, #fce8e8); color: var(--signal, #db1b1a); } .ds-nav-label { display: block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; } .ds-nav-hint { display: block; margin-top: 0.125rem; font-size: 11px; color: var(--ink-muted, #6b6b6b); } .ds-nav-item:focus-visible { outline: 2px solid var(--focus, #111111); outline-offset: -2px; }"
+    },
+    {
+      "name": "Citation Chip",
+      "kind": "chip",
+      "refersTo": "citation-chip",
+      "description": "Inline soft-signal citation reference plate.",
+      "html": "<button type=\"button\" class=\"ds-citation-chip\">[1]</button>",
+      "css": ".ds-citation-chip { display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0.125rem 0.5rem; background: var(--signal-soft, #fce8e8); color: var(--signal, #db1b1a); border: 1px solid var(--line, #d0d0d0); border-radius: 2px; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.15s ease; } .ds-citation-chip:hover { background: var(--signal-mid, #f5c2c0); } .ds-citation-chip:focus-visible { outline: 2px solid var(--focus, #111111); outline-offset: 2px; }"
+    },
+    {
+      "name": "CL Brand Mark",
+      "kind": "custom",
+      "refersTo": "mark-cl",
+      "description": "Square signal tile with white CL initials.",
+      "html": "<span class=\"ds-mark-cl\" aria-hidden=\"true\">CL</span>",
+      "css": ".ds-mark-cl { display: inline-flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; background: var(--signal, #db1b1a); color: #ffffff; border-radius: 0; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; font-size: 10px; font-weight: 700; line-height: 1; }"
+    },
+    {
+      "name": "Composer Module",
+      "kind": "custom",
+      "refersTo": "module-panel",
+      "description": "Question-input mosaic cell with tab and square Send.",
+      "html": "<form class=\"ds-composer\"><div class=\"ds-module-tab\">Question input</div><div class=\"ds-composer-row\"><textarea class=\"ds-composer-input\" rows=\"2\" placeholder=\"Describe your situation in your own words...\"></textarea><button type=\"button\" class=\"ds-btn-primary ds-composer-send\">Send</button></div></form>",
+      "css": ".ds-composer { border: 1px solid var(--line, #d0d0d0); background: var(--surface, #ffffff); border-radius: 2px; overflow: hidden; font-family: \"Segoe UI\", \"Noto Sans\", sans-serif; } .ds-module-tab { background: var(--signal, #db1b1a); color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.2; padding: 0.4rem 0.65rem; } .ds-composer-row { display: flex; align-items: flex-end; gap: 0.5rem; padding: 0.5rem; } .ds-composer-input { flex: 1; min-height: 2.75rem; max-height: 12rem; resize: vertical; border: none; background: transparent; padding: 0.5rem 0.75rem; font-size: 0.875rem; line-height: 1.5; color: var(--foreground, #111111); outline: none; } .ds-composer-input::placeholder { color: var(--ink-muted, #6b6b6b); } .ds-composer-input:focus-visible { box-shadow: inset 0 0 0 2px var(--focus, #111111); } .ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1rem; background: var(--signal, #db1b1a); color: #ffffff; border: none; border-radius: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; } .ds-btn-primary:hover { background: #a01010; } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus, #111111); outline-offset: 2px; } .ds-composer-send { flex-shrink: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "High-Density Module Mosaic",
+    "overview": "ChatLaw’s shipped interface is a packed mosaic of ruled boxes on ash and white: every major zone — conversations, structured answers, sources, composer, product menu — is a hairline module capped by a utility-red tab. The world is Japanese high-density web adapted for civic Operate work: dense, legible, and edge-to-edge, not sparse mint SaaS chat.\n\nPersonality is plain, trustworthy, and civic. Signal red (#db1b1a) marks tabs, primary actions, and active emphasis; everything else stays ink, ash, and hairline gray. Typography is a compact gothic sans stack that stays Indic-script capable (Segoe UI + Noto Sans family). Persuade (landing) and Operate (product shell) wear the same world — landing is a denser mosaic demo of the chat loop, not a separate marketing aesthetic.\n\nConfirmed refusals: sparse mint/forest SaaS chat, purple/indigo AI dashboards, glassmorphism, multi-layer shadows, decorative card stacks, and Latin-only display faces that break Hindi, Tamil, Bengali, or other product languages.",
+    "keyCharacteristics": [
+      "Ash page ground (#f5f5f5) with white module surfaces and 1px #d0d0d0 hairlines",
+      "Signal-red module tabs and square primary actions",
+      "Near-square corners (2px module radius; primary CTAs and brand mark are 0)",
+      "Compact Indic-capable sans; body at 14px / 1.5",
+      "Edge-to-edge abutting columns and stacked modules — density as clarity, not decoration",
+      "Flat depth: borders and tonal fills only; honor prefers-reduced-motion"
+    ],
+    "rules": [
+      {
+        "name": "The Signal Tab Rule",
+        "body": "Signal red owns module tabs and primary commitment actions. It is not a decorative wash across the canvas; soft pink is for selection and citations only.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hairline Neutrals Rule",
+        "body": "Structure is ash + white + #d0d0d0. Do not reintroduce mint grounds, forest greens, or warm cream paper as product neutrals.",
+        "section": "colors"
+      },
+      {
+        "name": "The Indic Stack Rule",
+        "body": "Product UI must keep the Segoe UI + Noto Sans (Devanagari / Tamil / Bengali) stack. Never ship a Latin-only display face for chrome or answers.",
+        "section": "typography"
+      },
+      {
+        "name": "The Label Plate Rule",
+        "body": "Zone names and primary actions read as uppercase utility plates (tabs, nav, CTAs) — functional naming, not decorative eyebrows.",
+        "section": "typography"
+      },
+      {
+        "name": "The Abutting Mosaic Rule",
+        "body": "Columns and stacked panels share 1px hairlines; do not float isolated cards in empty mint space.",
+        "section": "layout"
+      },
+      {
+        "name": "The Touch Floor Rule",
+        "body": "Primary controls stay at least min-h-11 (44px); icon-only chrome at least min-h-10 / min-w-10.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Mosaic Rule",
+        "body": "No ambient or multi-layer shadows on modules. If it needs “lift,” use a border or a tonal fill, not a shadow stack.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Commitment Rule",
+        "body": "Primary actions and red tabs stay square. Soft large radii (rounded-2xl, pills) are outside this world.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do label major zones with .module-tab (signal red, white uppercase plate).",
+      "Do pack content into hairline modules on ash/white; abut columns and stacks.",
+      "Do use signal red for tabs, primary CTAs, brand mark, and active emphasis only.",
+      "Do keep the Indic-capable Segoe / Noto stack for all product UI copy.",
+      "Do keep primary controls ≥44px tall and visible near-black focus rings.",
+      "Do honor prefers-reduced-motion for voice and panel motion."
+    ],
+    "donts": [
+      "Don't revive mint grounds, forest green primaries, or warm cream paper as the product palette.",
+      "Don't build sparse ChatGPT-clone chrome or floating soft cards with large radii and shadows.",
+      "Don't use purple/indigo AI gradients, glassmorphism, or glow accents.",
+      "Don't ship Latin-only display typography that breaks Indic scripts.",
+      "Don't treat module tabs as decorative kickers unrelated to the zone’s function.",
+      "Don't use signal red for error/warning — use the warn triad."
+    ]
+  }
+}

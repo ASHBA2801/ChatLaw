@@ -14,7 +14,7 @@ from api.models import (
 )
 from api.service import RagService
 from conversation.document_drafting import drafting_state_from_metadata, process_document_turn
-from conversation.interview import InterviewManager, interview_state_from_metadata
+from conversation.interview import InterviewManager, active_interview_from_metadata
 from conversation.languages import normalize_language
 from .search import get_service
 
@@ -44,7 +44,7 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
             store = ConversationStore(service.connection)
             if store.exists(request.conversation_id):
                 meta = store.last_assistant_metadata(request.conversation_id)
-                prior = interview_state_from_metadata(meta)
+                prior = active_interview_from_metadata(meta)
                 draft_prior = drafting_state_from_metadata(meta)
 
         draft = process_document_turn(request.message, draft_prior)
@@ -86,13 +86,16 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
                 interview=_interview_payload(result.state),
             )
 
+        generation_message = result.assembled_situation or request.message
+        retrieval_query = str(result.state.get("original_query") or request.message).strip()
         logger.info("[CHAT] Query received; retrieving context")
         retrieval, answer = service.chat(
-            result.assembled_situation or request.message,
+            generation_message,
             request.top_k,
             request.min_similarity,
             case_context=request.case_context,
             language=language,
+            retrieval_query=retrieval_query,
         )
         response_kind = "answer" if answer.has_context else "no_context"
         return ChatResponse(

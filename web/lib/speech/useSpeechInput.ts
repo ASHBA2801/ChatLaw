@@ -59,10 +59,7 @@ export function useSpeechInput({
   const [error, setError] = useState<string | null>(null);
   const [interimText, setInterimText] = useState("");
   const [baseValue, setBaseValue] = useState(value);
-  const language = initialLanguage;
-  const setLanguage = (() => {
-    /* Language is controlled by the app language selector. */
-  }) as (next: SpeechLanguageCode) => void;
+  const [language, setLanguage] = useState<SpeechLanguageCode>(initialLanguage);
 
   const sessionRef = useRef<SpeechInputSession | null>(null);
   const baseValueRef = useRef(value);
@@ -72,6 +69,10 @@ export function useSpeechInput({
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
+
+  useEffect(() => {
+    setLanguage(initialLanguage);
+  }, [initialLanguage]);
 
   useEffect(() => {
     languageRef.current = language;

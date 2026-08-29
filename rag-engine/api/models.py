@@ -91,6 +91,7 @@ class ConversationMessageRequest(QueryOptions):
     message: str = Field(..., min_length=1, max_length=12000)
     language: str = "en"
     case_context: list[CaseContextExcerpt] = Field(default_factory=list)
+    user_id: str | None = Field(default=None, max_length=128)
 
     @field_validator("message")
     @classmethod
@@ -169,6 +170,7 @@ class InterviewState(BaseModel):
     asked: list[str] = Field(default_factory=list)
     assumptions: list[str] = Field(default_factory=list)
     original_query: str | None = None
+    pending: bool = False
 
 
 class DocumentDraftState(BaseModel):
