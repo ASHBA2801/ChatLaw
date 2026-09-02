@@ -56,7 +56,7 @@ DOMAINS: dict[str, Domain] = {
             "पगार", "नोकरी",
             "বেতন", "চাকরি",
         ),
-        slots=("party_role", "issue_type", "written_contract", "duration"),
+        slots=("party_role", "issue_type", "written_contract", "duration", "employment_role"),
         required_slots=("party_role", "issue_type"),
         slot_values={
             "party_role": ("employee", "employer", "worker", "staff", "कर्मचारी", "नियोक्ता"),
@@ -65,6 +65,7 @@ DOMAINS: dict[str, Domain] = {
                 "harassment", "overtime", "pf", "gratuity", "वेतन",
             ),
             "written_contract": ("yes", "no", "written", "contract", "appointment", "oral"),
+            "employment_role": ("employee", "employer", "contractor", "consultant", "intern"),
         },
     ),
     "consumer": Domain(
@@ -104,8 +105,8 @@ DOMAINS: dict[str, Domain] = {
             "घटस्फोट", "निर्वाह",
             "বিবাহবিচ্ছেদ", "ভরণপোষণ",
         ),
-        slots=("relationship", "issue_type", "location"),
-        required_slots=("relationship", "issue_type"),
+        slots=("relationship", "issue_type", "marriage_framework", "location"),
+        required_slots=("relationship", "issue_type", "marriage_framework"),
         slot_values={
             "relationship": (
                 "spouse", "wife", "husband", "partner", "parent", "father",
@@ -114,6 +115,10 @@ DOMAINS: dict[str, Domain] = {
             "issue_type": (
                 "divorce", "custody", "maintenance", "alimony", "domestic",
                 "separation", "तलाक", "भरण-पोषण",
+            ),
+            "marriage_framework": (
+                "hindu marriage act", "special marriage act", "muslim personal law",
+                "christian marriage act", "parsi marriage act", "not sure", "unsure",
             ),
         },
     ),

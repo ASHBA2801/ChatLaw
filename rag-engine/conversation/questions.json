@@ -97,6 +97,10 @@
       "bn": "আপনি সেখানে কতদিন কাজ করেছেন?",
       "gu": "તમે ત્યાં કેટલા સમયથી કામ કર્યું છે?",
       "pa": "ਤੁਸੀਂ ਉੱਥੇ ਕਿੰਨਾ ਚਿਰ ਕੰਮ ਕੀਤਾ ਹੈ?"
+    },
+    "employment_role": {
+      "en": "Are you an employee, employer, contractor, or consultant?",
+      "hi": "क्या आप कर्मचारी, नियोक्ता, ठेकेदार या सलाहकार हैं?"
     }
   },
   "consumer": {
@@ -185,6 +189,10 @@
       "bn": "আপনি কোন রাজ্যে আছেন?",
       "gu": "તમે કયા રાજ્યમાં છો?",
       "pa": "ਤੁਸੀਂ ਕਿਹੜੇ ਰਾਜ ਵਿੱਚ ਹੋ?"
+    },
+    "marriage_framework": {
+      "en": "Which marriage law applies to your marriage (e.g., Hindu Marriage Act, Special Marriage Act, or not sure)?",
+      "hi": "आपके विवाह पर कौन सा विवाह कानून लागू होता है (जैसे, हिंदू विवाह अधिनियम, विशेष विवाह अधिनियम, या पता नहीं)?"
     }
   },
   "contract": {

@@ -27,7 +27,8 @@ import {
 import VoiceInputControls from "@/components/chat/VoiceInputControls";
 import ChatMessageList, { type ChatMessage } from "@/components/chat/ChatMessageList";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, MenuIcon } from "@/components/chat/ChatIcons";
-import { composeCitationText, formatRelativeDate, runConversationBoot, type CitationPanelState } from "@/components/chat/chatUtils";
+import { composeCitationText, formatRelativeDate, formatCitationEvidence, groupConversationsByDate, runConversationBoot, type CitationPanelState } from "@/components/chat/chatUtils";
+import LanguageSelector from "@/components/layout/LanguageSelector";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
 import { formatLanguageLabel } from "@/lib/i18n/languages";
 import { isSafeExternalUrl } from "@/lib/urls/safeUrl";
@@ -77,10 +78,28 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
 
   const loadingStepLabel = LOADING_STATES[loadingStepIndex] ?? LOADING_STATES[0];
 
+  const interviewStep = useMemo(() => {
+    if (isLoading) return { current: loadingStepIndex + 1, total: LOADING_STATES.length, label: loadingStepLabel };
+    for (let index = messages.length - 1; index >= 0; index -= 1) {
+      const message = messages[index];
+      if (message.role !== "assistant") continue;
+      const response = "response" in message ? message.response : undefined;
+      if (response?.response_kind === "clarification") {
+        return { current: 2, total: 3, label: "Clarifying your situation" };
+      }
+      if (response?.citations?.length) {
+        return { current: 3, total: 3, label: "Answer grounded in statute" };
+      }
+    }
+    return messages.length === 0 ? { current: 1, total: 3, label: "Describe your situation" } : null;
+  }, [isLoading, loadingStepIndex, loadingStepLabel, messages]);
+
   const filteredHistory = useMemo(
     () => history.filter((item) => item.title.toLowerCase().includes(sidebarSearch.toLowerCase().trim())),
     [history, sidebarSearch],
   );
+
+  const groupedHistory = useMemo(() => groupConversationsByDate(filteredHistory), [filteredHistory]);
 
   useEffect(() => {
     isLoadingRef.current = isLoading;
@@ -425,11 +444,29 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
     history.find((item) => item.id === conversationId)?.title ||
     (caseId ? "Case conversation" : "New conversation");
 
+  const citationEvidenceParagraphs = useMemo(
+    () => (citationPanel?.citation.evidence ? formatCitationEvidence(citationPanel.citation.evidence) : []),
+    [citationPanel],
+  );
+
+  useEffect(() => {
+    if (!citationPanel) return;
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") setCitationPanel(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [citationPanel]);
+
   return (
-    <div className="flex h-full min-h-0 w-full overflow-hidden">
+    <div
+      className={`grid h-full min-h-0 w-full overflow-hidden ${
+        isSidebarCollapsed ? "lg:grid-cols-1" : "lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)]"
+      }`}
+    >
       <aside
-        className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 w-[86%] max-w-sm border-r border-[var(--line)] bg-white transition-transform duration-200 ease-out lg:static lg:inset-auto lg:z-0 lg:h-full lg:max-w-none lg:translate-x-0 ${
-          isSidebarCollapsed ? "lg:hidden" : "lg:flex lg:w-72"
+        className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 w-[86%] max-w-sm border-r border-[var(--line)] bg-white transition-transform duration-200 ease-out lg:static lg:inset-auto lg:z-0 lg:flex lg:h-full lg:max-w-none lg:translate-x-0 ${
+          isSidebarCollapsed ? "lg:hidden" : ""
         }`}
         aria-label="Conversations"
         aria-hidden={isSidebarCollapsed && !isSidebarOpen ? true : undefined}
@@ -482,29 +519,42 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 {caseId ? "Case chats stay on this matter." : "No matching conversations."}
               </p>
             ) : (
-              filteredHistory.map((item) => (
-                <div
-                  key={item.id}
-                  className={`group mb-1 rounded-sm border ${item.id === conversationId ? "border-[var(--forest)] bg-[var(--signal-soft)]" : "border-transparent hover:border-[var(--line)]"}`}
-                >
-                  <button type="button" onClick={() => void openChat(item.id)} className="w-full p-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]">
-                    <p className="truncate text-sm font-medium">{item.title}</p>
-                    <p className="mt-1 text-xs text-[var(--ink-muted)]">
-                      Last activity {formatRelativeDate(item.updated_at)}
-                    </p>
-                  </button>
-                  <div className="flex items-center justify-end px-3 pb-2">
-                    <button
-                      type="button"
-                      onClick={() => void handleDeleteConversation(item.id)}
-                      className="min-h-10 text-xs text-[var(--warn)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-                      aria-label={`Delete conversation: ${item.title}`}
-                    >
-                      Delete
-                    </button>
+              <>
+                {groupedHistory.map((group) => (
+                  <div key={group.label} className="mb-3">
+                    <p className="px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[var(--ink-muted)]">{group.label}</p>
+                    {group.items.map((item) => (
+                      <div
+                        key={item.id}
+                        className={`mb-1 border ${item.id === conversationId ? "border-[var(--signal)] bg-[var(--signal-soft)]" : "border-transparent hover:border-[var(--line)]"}`}
+                      >
+                        <button type="button" onClick={() => void openChat(item.id)} className="w-full p-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]">
+                          <p className="truncate text-sm font-semibold">{item.title}</p>
+                          <div className="mt-1 flex items-center justify-between gap-2">
+                            <p className="truncate text-[11px] text-[var(--ink-muted)]">Legal chat thread</p>
+                            <span className="shrink-0 text-[10px] text-[var(--ink-muted)]">{formatRelativeDate(item.updated_at)}</span>
+                          </div>
+                        </button>
+                        <div className="flex items-center justify-end px-3 pb-2">
+                          <button
+                            type="button"
+                            onClick={() => void handleDeleteConversation(item.id)}
+                            className="min-h-10 text-xs text-[var(--warn)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
+                            aria-label={`Delete conversation: ${item.title}`}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))
+                ))}
+                {history.length > 0 ? (
+                  <p className="border-t border-[var(--line)] px-2 py-2 text-center text-[11px] font-bold text-[var(--signal)]">
+                    Show all history ({history.length})
+                  </p>
+                ) : null}
+              </>
             )}
           </div>
         </div>
@@ -551,9 +601,16 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-sm font-semibold">{conversationTitle}</h2>
             <p className="truncate text-xs text-[var(--ink-muted)]">
-              Answering in {formatLanguageLabel(languageOption)}
+              {interviewStep ? (
+                <>
+                  Step {interviewStep.current} of {interviewStep.total} · {interviewStep.label}
+                </>
+              ) : (
+                <>Answering in {formatLanguageLabel(languageOption)}</>
+              )}
             </p>
           </div>
+          <LanguageSelector compact />
           <div className="flex rounded-sm border border-[var(--line)] p-0.5" role="group" aria-label="Input mode">
             <button
               type="button"
@@ -562,7 +619,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 answerPlayback.stop();
                 setChatMode("text");
               }}
-              className={`min-h-11 rounded-md px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] ${chatMode === "text" ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
+              className={`min-h-11 rounded-none px-3 text-xs font-bold uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] ${chatMode === "text" ? "bg-[var(--signal)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
               aria-pressed={chatMode === "text"}
             >
               Text
@@ -574,7 +631,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 answerPlayback.stop();
                 setChatMode("voice");
               }}
-              className={`min-h-11 rounded-md px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] ${chatMode === "voice" ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
+              className={`min-h-11 rounded-none px-3 text-xs font-bold uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] ${chatMode === "voice" ? "bg-[var(--signal)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
               aria-pressed={chatMode === "voice"}
             >
               Voice
@@ -687,10 +744,10 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
         </div>
 
         {chatMode === "text" && (
-          <div className="shrink-0 border-t border-[var(--line)] bg-[var(--background)] px-2 py-2 pb-4 sm:px-4 sm:py-3 md:px-8">
+          <div className="shrink-0 border-t border-[var(--line)] bg-[var(--background)] px-2 py-2 sm:px-3 sm:py-2">
             {error && messages.length > 0 ? (
               <div
-                className="mx-auto mb-2 w-full max-w-3xl rounded-sm border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn)]"
+                className="mb-2 w-full border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn)]"
                 role="alert"
               >
                 {error}{" "}
@@ -703,7 +760,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 </button>
               </div>
             ) : null}
-            <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl border border-[var(--line)] bg-white">
+            <form onSubmit={handleSubmit} className="w-full border border-[var(--line)] bg-white">
               <div className="module-tab">Question input</div>
               <div className="flex items-end gap-2 p-2">
                 <label className="sr-only" htmlFor="chatlaw-message">
@@ -756,74 +813,108 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 </div>
               </div>
             </form>
+            <p className="mt-2 px-1 text-[10px] leading-5 text-[var(--ink-muted)]">
+              Informational assistance only — not a substitute for a lawyer or court.
+            </p>
           </div>
         )}
       </section>
 
       {citationPanel && (
-        <aside className="fixed inset-0 z-50 flex justify-end bg-black/30" role="dialog" aria-modal="true" aria-label="Evidence panel">
-          <button type="button" className="flex-1" onClick={() => setCitationPanel(null)} aria-label="Close evidence panel" />
-          <div className="chat-scroll h-full w-full max-w-md overflow-y-auto border-l border-[var(--line)] bg-white p-4">
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="text-base font-semibold">Evidence</h3>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Source citation"
+        >
+          <button
+            type="button"
+            className="absolute inset-0"
+            onClick={() => setCitationPanel(null)}
+            aria-label="Close citation"
+          />
+          <div className="relative z-10 flex max-h-[min(85vh,720px)] w-full max-w-xl flex-col overflow-hidden border border-[var(--line)] bg-white shadow-lg">
+            <div className="module-tab shrink-0">
+              Source [{citationPanel.citation.id}]
+            </div>
+            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--line)] px-4 py-3">
+              <div className="min-w-0">
+                <h3 className="text-base font-semibold leading-snug">
+                  {citationPanel.citation.document || "Source unavailable"}
+                </h3>
+                {isCaseDocumentCitation(citationPanel.citation) ? (
+                  <p className="mt-1 text-xs font-semibold text-[var(--forest)]">
+                    Case document — not an official legal source
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs text-[var(--ink-muted)]">
+                    {[
+                      citationPanel.citation.section
+                        ? `Section ${citationPanel.citation.section}`
+                        : "Section unavailable",
+                      citationPanel.citation.subsection
+                        ? `Subsection ${citationPanel.citation.subsection}`
+                        : null,
+                      citationPanel.citation.page !== null
+                        ? `Page ${citationPanel.citation.page}`
+                        : null,
+                      citationPanel.citation.jurisdiction_level === "CENTRAL"
+                        ? "Central Law"
+                        : citationPanel.citation.jurisdiction_level,
+                      citationPanel.citation.domain
+                        ? citationPanel.citation.domain.replace(/_/g, " ")
+                        : null,
+                      citationPanel.citation.source?.url ? "Official source" : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => setCitationPanel(null)}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-[var(--line)] text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-                aria-label="Close evidence panel"
+                className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-sm border border-[var(--line)] text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                aria-label="Close citation"
               >
                 <CloseIcon className="h-5 w-5" />
               </button>
             </div>
-            <div className="mt-4 space-y-3 text-sm">
-                <p className="font-semibold">{citationPanel.citation.document || "Source unavailable"}</p>
-                {isCaseDocumentCitation(citationPanel.citation) ? (
-                  <p className="rounded-sm bg-[var(--signal-soft)] px-3 py-1 text-xs font-semibold text-[var(--forest)]">
-                    Case document — not an official legal source
-                  </p>
-                ) : (
-                  <p className="text-[var(--ink-muted)]">
-                    {citationPanel.citation.section
-                      ? `Section ${citationPanel.citation.section}`
-                      : "Section unavailable"}
-                    {citationPanel.citation.subsection
-                      ? ` · Subsection ${citationPanel.citation.subsection}`
-                      : ""}
-                  </p>
-                )}
-                {citationPanel.citation.page !== null && (
-                  <p className="text-[var(--ink-muted)]">Page {citationPanel.citation.page}</p>
-                )}
-                {citationPanel.citation.evidence && (
-                  <div className="rounded-sm border border-[var(--line)] bg-[var(--background)] p-3">
-                    <p className="whitespace-pre-wrap leading-6">{citationPanel.citation.evidence}</p>
-                  </div>
-                )}
-                <div className="flex flex-wrap gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => navigator.clipboard.writeText(composeCitationText(citationPanel.citation))}
-                    className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm"
-                  >
-                    Copy citation
-                  </button>
-                  {(() => {
-                    const sourceUrl = isSafeExternalUrl(citationPanel.citation.source?.url);
-                    return sourceUrl ? (
-                      <a
-                        className="inline-flex min-h-11 items-center rounded-sm border border-[var(--line)] px-3 text-sm text-[var(--forest)] underline"
-                        href={sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        View source
-                      </a>
-                    ) : null;
-                  })()}
+            <div className="chat-scroll min-h-0 flex-1 overflow-y-auto px-4 py-4">
+              {citationEvidenceParagraphs.length > 0 ? (
+                <div className="space-y-3 text-sm leading-relaxed text-[var(--foreground)]">
+                  {citationEvidenceParagraphs.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
                 </div>
+              ) : (
+                <p className="text-sm text-[var(--ink-muted)]">No excerpt available for this source.</p>
+              )}
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2 border-t border-[var(--line)] px-4 py-3">
+              <button
+                type="button"
+                onClick={() => navigator.clipboard.writeText(composeCitationText(citationPanel.citation))}
+                className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-sm"
+              >
+                Copy citation
+              </button>
+              {(() => {
+                const sourceUrl = isSafeExternalUrl(citationPanel.citation.source?.url);
+                return sourceUrl ? (
+                  <a
+                    className="inline-flex min-h-10 items-center rounded-sm border border-[var(--line)] px-3 text-sm text-[var(--forest)] underline"
+                    href={sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View source
+                  </a>
+                ) : null;
+              })()}
             </div>
           </div>
-        </aside>
+        </div>
       )}
     </div>
   );

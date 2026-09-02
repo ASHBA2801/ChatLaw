@@ -1,8 +1,153 @@
 {
-  "version": "1.0",
-  "last_updated": "2026-08-22",
+  "version": "2.0",
+  "last_updated": "2026-08-29",
   "jurisdiction": "India",
   "authority_default": "Parliament of India / Legislative Department, Ministry of Law and Justice",
+  "taxonomy_path": "legal_corpus/taxonomy/domains.json",
+  "by_domain": {
+    "banking_finance": [
+      "NIACT1881"
+    ],
+    "civil_law": [
+      "CPC1908",
+      "IEA1882",
+      "ITA1882"
+    ],
+    "civil_procedure": [
+      "LIMITATION1963",
+      "CPC1908",
+      "COMMERCIALCOURTS2015",
+      "FCA1984",
+      "NGT2010"
+    ],
+    "commercial_law": [
+      "SOGA1930",
+      "IPA1932",
+      "LLP2008",
+      "COMPETITION2002",
+      "COMMERCIALCOURTS2015"
+    ],
+    "company_commercial_law": [
+      "ARBITRATION1996",
+      "COMPANIES2013",
+      "IBC2016",
+      "LLP2008"
+    ],
+    "constitutional_law": [
+      "RTI2005",
+      "PHRA1993"
+    ],
+    "consumer_protection": [
+      "CPA2019"
+    ],
+    "contract": [
+      "ICA1872",
+      "SRA1963",
+      "SOGA1930",
+      "IPA1932"
+    ],
+    "criminal_law": [
+      "BNS2023",
+      "BSA",
+      "POCSO2012",
+      "NDPS1985",
+      "PCA1988",
+      "JJACT2015",
+      "DOWRY1961",
+      "SCSTPOA1989",
+      "PMLA2002"
+    ],
+    "criminal_procedure": [
+      "BNSS2023"
+    ],
+    "cyber_law": [
+      "ITACT2000",
+      "DPDP2023"
+    ],
+    "environment": [
+      "EPA1986",
+      "WATER1974",
+      "AIR1981",
+      "WPA1972",
+      "NGT2010",
+      "BDA2002",
+      "FCA1980"
+    ],
+    "evidence": [
+      "BSA"
+    ],
+    "family_law": [
+      "DVACT2005",
+      "HMA1955",
+      "HSA1956",
+      "HAMA1956",
+      "HMGA1956",
+      "SMA1954",
+      "GWA1890",
+      "FCA1984",
+      "MWPSC2007",
+      "PCMA2006",
+      "MWPR2019"
+    ],
+    "general_legal": [
+      "EPA1986",
+      "LSA1987",
+      "COMPETITION2002"
+    ],
+    "gst": [
+      "CGST2017",
+      "IGST2017"
+    ],
+    "human_rights": [
+      "PHRA1993"
+    ],
+    "intellectual_property": [
+      "COPYRIGHT1957",
+      "PATENTS1970",
+      "TRADEMARKS1999",
+      "DESIGNS2000",
+      "GI1999",
+      "PPVFR2001"
+    ],
+    "labour_employment": [
+      "POSH2013",
+      "COW2019",
+      "IRC2020",
+      "CSS2020",
+      "OSH2020"
+    ],
+    "motor_vehicle": [
+      "MVA1988"
+    ],
+    "personal_law": [
+      "HMA1955",
+      "HSA1956",
+      "HAMA1956",
+      "HMGA1956",
+      "SMA1954",
+      "GWA1890",
+      "MWPR2019"
+    ],
+    "property": [
+      "TPA1882",
+      "REGISTRATION1908",
+      "IEA1882",
+      "ITA1882",
+      "HSA1956"
+    ],
+    "social_welfare": [
+      "LSA1987",
+      "MWPSC2007",
+      "PCMA2006"
+    ],
+    "tax": [
+      "ITA2025",
+      "ITA1961",
+      "CGST2017",
+      "IGST2017",
+      "CUSTOMS1962"
+    ]
+  },
   "acts": [
     {
       "act_id": "BNS2023",
@@ -12,18 +157,36 @@
       "act_number": "45 of 2023",
       "category": "Substantive Criminal Law",
       "domain": "criminal_law",
-      "sub_domains": ["penal_law", "offences"],
+      "sub_domains": [
+        "penal_law",
+        "offences"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/",
       "status": "in_force",
       "effective_from": "2024-07-01",
-      "repeals": ["Indian Penal Code, 1860"],
+      "repeals": [
+        "Indian Penal Code, 1860"
+      ],
       "priority": "tier_1",
-      "aliases": ["bns", "bns 2023", "bharatiya nyaya sanhita", "bharatiya nyaya sanhita 2023", "the bharatiya nyaya sanhita, 2023"],
+      "aliases": [
+        "bns",
+        "bns 2023",
+        "bharatiya nyaya sanhita",
+        "bharatiya nyaya sanhita 2023",
+        "the bharatiya nyaya sanhita, 2023"
+      ],
       "ingestion_status": "ingested",
-      "source_file": "Law_files/BNS2023.pdf"
+      "source_file": "Law_files/BNS2023.pdf",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "ingested"
     },
     {
       "act_id": "BNSS2023",
@@ -33,18 +196,39 @@
       "act_number": "46 of 2023",
       "category": "Criminal Procedure",
       "domain": "criminal_procedure",
-      "sub_domains": ["investigation", "bail", "arrest", "trial"],
+      "sub_domains": [
+        "investigation",
+        "bail",
+        "arrest",
+        "trial"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/",
       "status": "in_force",
       "effective_from": "2024-07-01",
-      "repeals": ["Code of Criminal Procedure, 1973"],
+      "repeals": [
+        "Code of Criminal Procedure, 1973"
+      ],
       "priority": "tier_1",
-      "aliases": ["bnss", "bnss 2023", "bharatiya nagarik suraksha sanhita", "bharatiya nagarik suraksha sanhita 2023", "the bharatiya nagarik suraksha sanhita, 2023", "Bharatiya_Nagarik_Suraksha_Sanhita_2023"],
+      "aliases": [
+        "bnss",
+        "bnss 2023",
+        "bharatiya nagarik suraksha sanhita",
+        "bharatiya nagarik suraksha sanhita 2023",
+        "the bharatiya nagarik suraksha sanhita, 2023",
+        "Bharatiya_Nagarik_Suraksha_Sanhita_2023"
+      ],
       "ingestion_status": "ingested",
-      "source_file": "Law_files/Bharatiya_Nagarik_Suraksha_Sanhita,_2023.pdf"
+      "source_file": "Law_files/Bharatiya_Nagarik_Suraksha_Sanhita,_2023.pdf",
+      "domains": [
+        "criminal_procedure"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "ingested"
     },
     {
       "act_id": "BSA",
@@ -53,19 +237,41 @@
       "year": 2023,
       "act_number": "47 of 2023",
       "category": "Law of Evidence",
-      "domain": "criminal_law",
-      "sub_domains": ["evidence", "proof", "witnesses", "electronic_evidence"],
+      "domain": "evidence",
+      "sub_domains": [
+        "evidence",
+        "proof",
+        "witnesses",
+        "electronic_evidence"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/",
       "status": "in_force",
       "effective_from": "2024-07-01",
-      "repeals": ["Indian Evidence Act, 1872"],
+      "repeals": [
+        "Indian Evidence Act, 1872"
+      ],
       "priority": "tier_1",
-      "aliases": ["bsa", "bsa 2023", "bharatiya sakshya adhiniyam", "bharatiya sakshya adhiniyam 2023", "the bharatiyasakshyaadhiniyam, 2023", "the bharatiya sakshya adhiniyam, 2023"],
+      "aliases": [
+        "bsa",
+        "bsa 2023",
+        "bharatiya sakshya adhiniyam",
+        "bharatiya sakshya adhiniyam 2023",
+        "the bharatiyasakshyaadhiniyam, 2023",
+        "the bharatiya sakshya adhiniyam, 2023"
+      ],
       "ingestion_status": "ingested",
-      "source_file": "Law_files/BSA.pdf"
+      "source_file": "Law_files/BSA.pdf",
+      "domains": [
+        "evidence",
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "ingested"
     },
     {
       "act_id": "POCSO2012",
@@ -75,16 +281,35 @@
       "act_number": "32 of 2012",
       "category": "Criminal / Child Protection",
       "domain": "criminal_law",
-      "sub_domains": ["child_protection", "sexual_offences", "special_courts"],
+      "sub_domains": [
+        "child_protection",
+        "sexual_offences",
+        "special_courts"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Women and Child Development",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2079",
       "status": "in_force",
       "effective_from": "2012-11-14",
       "priority": "tier_1",
-      "aliases": ["pocso", "pocso act", "pocso 2012", "protection of children from sexual offences act", "protection of children from sexual offences act 2012"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "pocso",
+        "pocso act",
+        "pocso 2012",
+        "protection of children from sexual offences act",
+        "protection of children from sexual offences act 2012"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/POCSO2012.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "NDPS1985",
@@ -94,16 +319,33 @@
       "act_number": "61 of 1985",
       "category": "Criminal / Narcotics",
       "domain": "criminal_law",
-      "sub_domains": ["narcotics", "psychotropic_substances", "contraband"],
+      "sub_domains": [
+        "narcotics",
+        "psychotropic_substances",
+        "contraband"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Department of Revenue, Ministry of Finance",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1790",
       "status": "in_force",
       "effective_from": "1985-11-14",
       "priority": "tier_1",
-      "aliases": ["ndps", "ndps act", "ndps 1985", "narcotic drugs and psychotropic substances act", "narcotic drugs act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "ndps",
+        "ndps act",
+        "ndps 1985",
+        "narcotic drugs and psychotropic substances act",
+        "narcotic drugs act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "PCA1988",
@@ -113,16 +355,34 @@
       "act_number": "49 of 1988",
       "category": "Criminal / Anti-Corruption",
       "domain": "criminal_law",
-      "sub_domains": ["anti_corruption", "public_servants", "bribery"],
+      "sub_domains": [
+        "anti_corruption",
+        "public_servants",
+        "bribery"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Personnel, Public Grievances and Pensions",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1929",
       "status": "in_force",
       "effective_from": "1988-09-09",
       "priority": "tier_1",
-      "aliases": ["pca", "pc act", "prevention of corruption act", "prevention of corruption act 1988", "anti-corruption act", "corruption act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "pca",
+        "pc act",
+        "prevention of corruption act",
+        "prevention of corruption act 1988",
+        "anti-corruption act",
+        "corruption act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "ITACT2000",
@@ -132,16 +392,34 @@
       "act_number": "21 of 2000",
       "category": "Cyber / Technology / Criminal",
       "domain": "cyber_law",
-      "sub_domains": ["cyber_crime", "electronic_commerce", "digital_signatures", "data_protection"],
+      "sub_domains": [
+        "cyber_crime",
+        "electronic_commerce",
+        "digital_signatures",
+        "data_protection"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Electronics and Information Technology",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1999",
       "status": "in_force",
       "effective_from": "2000-10-17",
       "priority": "tier_1",
-      "aliases": ["it act", "it act 2000", "information technology act", "information technology act 2000", "the information technology act, 2000"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "it act",
+        "it act 2000",
+        "information technology act",
+        "information technology act 2000",
+        "the information technology act, 2000"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "cyber_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "CPA2019",
@@ -151,17 +429,39 @@
       "act_number": "35 of 2019",
       "category": "Consumer / Civil / Regulatory",
       "domain": "consumer_protection",
-      "sub_domains": ["consumer_disputes", "product_liability", "unfair_trade_practices", "e_commerce"],
+      "sub_domains": [
+        "consumer_disputes",
+        "product_liability",
+        "unfair_trade_practices",
+        "e_commerce"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Consumer Affairs, Food and Public Distribution",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/15256",
       "status": "in_force",
       "effective_from": "2020-07-20",
-      "repeals": ["Consumer Protection Act, 1986"],
+      "repeals": [
+        "Consumer Protection Act, 1986"
+      ],
       "priority": "tier_1",
-      "aliases": ["cpa", "cpa 2019", "consumer protection act", "consumer protection act 2019", "the consumer protection act, 2019"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "cpa",
+        "cpa 2019",
+        "consumer protection act",
+        "consumer protection act 2019",
+        "the consumer protection act, 2019"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "consumer_protection"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/CPA2019.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "DVACT2005",
@@ -171,16 +471,34 @@
       "act_number": "43 of 2005",
       "category": "Family / Women Protection",
       "domain": "family_law",
-      "sub_domains": ["domestic_violence", "maintenance", "residence_orders", "protection_orders"],
+      "sub_domains": [
+        "domestic_violence",
+        "maintenance",
+        "residence_orders",
+        "protection_orders"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Women and Child Development",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2012",
       "status": "in_force",
       "effective_from": "2006-10-26",
       "priority": "tier_1",
-      "aliases": ["dv act", "domestic violence act", "pwdva", "pwdv act", "protection of women from domestic violence act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "dv act",
+        "domestic violence act",
+        "pwdva",
+        "pwdv act",
+        "protection of women from domestic violence act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "family_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "JJACT2015",
@@ -190,16 +508,33 @@
       "act_number": "2 of 2016",
       "category": "Child Protection / Criminal",
       "domain": "criminal_law",
-      "sub_domains": ["juvenile_justice", "child_in_conflict_with_law", "adoption", "child_care"],
+      "sub_domains": [
+        "juvenile_justice",
+        "child_in_conflict_with_law",
+        "adoption",
+        "child_care"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Women and Child Development",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2148",
       "status": "in_force",
       "effective_from": "2016-01-15",
       "priority": "tier_1",
-      "aliases": ["jj act", "jj act 2015", "juvenile justice act", "juvenile justice care and protection of children act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "jj act",
+        "jj act 2015",
+        "juvenile justice act",
+        "juvenile justice care and protection of children act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "DOWRY1961",
@@ -209,16 +544,30 @@
       "act_number": "28 of 1961",
       "category": "Criminal / Matrimonial",
       "domain": "criminal_law",
-      "sub_domains": ["dowry", "matrimonial_offences"],
+      "sub_domains": [
+        "dowry",
+        "matrimonial_offences"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Women and Child Development",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1519",
       "status": "in_force",
       "effective_from": "1961-07-01",
       "priority": "tier_1",
-      "aliases": ["dowry prohibition act", "dowry act", "dowry prohibition act 1961"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "dowry prohibition act",
+        "dowry act",
+        "dowry prohibition act 1961"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "SCSTPOA1989",
@@ -228,16 +577,33 @@
       "act_number": "33 of 1989",
       "category": "Criminal / Special Protection",
       "domain": "criminal_law",
-      "sub_domains": ["social_justice", "atrocities_prevention", "special_courts"],
+      "sub_domains": [
+        "social_justice",
+        "atrocities_prevention",
+        "special_courts"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Social Justice and Empowerment",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1943",
       "status": "in_force",
       "effective_from": "1990-01-30",
       "priority": "tier_1",
-      "aliases": ["sc st act", "sc st poa act", "prevention of atrocities act", "sc st prevention of atrocities act", "atrocities act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "sc st act",
+        "sc st poa act",
+        "prevention of atrocities act",
+        "sc st prevention of atrocities act",
+        "atrocities act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "PMLA2002",
@@ -247,16 +613,33 @@
       "act_number": "15 of 2003",
       "category": "Criminal / Financial / Anti-Money Laundering",
       "domain": "criminal_law",
-      "sub_domains": ["money_laundering", "proceeds_of_crime", "enforcement_directorate", "attachment"],
+      "sub_domains": [
+        "money_laundering",
+        "proceeds_of_crime",
+        "enforcement_directorate",
+        "attachment"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Department of Revenue, Ministry of Finance",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2036",
       "status": "in_force",
       "effective_from": "2005-07-01",
       "priority": "tier_1",
-      "aliases": ["pmla", "pmla 2002", "prevention of money laundering act", "money laundering act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "pmla",
+        "pmla 2002",
+        "prevention of money laundering act",
+        "money laundering act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "criminal_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "MVA1988",
@@ -266,16 +649,35 @@
       "act_number": "59 of 1988",
       "category": "Transport / Motor Vehicles / Regulatory",
       "domain": "motor_vehicle",
-      "sub_domains": ["traffic", "accidents", "mact_claims", "insurance", "licensing"],
+      "sub_domains": [
+        "traffic",
+        "accidents",
+        "mact_claims",
+        "insurance",
+        "licensing"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Road Transport and Highways",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1798",
       "status": "in_force",
       "effective_from": "1989-07-01",
       "priority": "tier_1",
-      "aliases": ["mva", "mva 1988", "motor vehicles act", "motor vehicles act 1988", "motor vehicle act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "mva",
+        "mva 1988",
+        "motor vehicles act",
+        "motor vehicles act 1988",
+        "motor vehicle act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "motor_vehicle"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "POSH2013",
@@ -285,16 +687,34 @@
       "act_number": "14 of 2013",
       "category": "Labour / Workplace / Women Protection",
       "domain": "labour_employment",
-      "sub_domains": ["workplace_harassment", "internal_committee", "inquiry", "redressal"],
+      "sub_domains": [
+        "workplace_harassment",
+        "internal_committee",
+        "inquiry",
+        "redressal"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Women and Child Development",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2104",
       "status": "in_force",
       "effective_from": "2013-12-09",
       "priority": "tier_1",
-      "aliases": ["posh", "posh act", "posh 2013", "sexual harassment of women at workplace act", "workplace harassment act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "posh",
+        "posh act",
+        "posh 2013",
+        "sexual harassment of women at workplace act",
+        "workplace harassment act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "labour_employment"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "ICA1872",
@@ -304,16 +724,39 @@
       "act_number": "9 of 1872",
       "category": "Civil / Commercial / Contract",
       "domain": "contract",
-      "sub_domains": ["agreements", "breach_of_contract", "damages", "indemnity", "guarantee", "bailment", "agency"],
+      "sub_domains": [
+        "agreements",
+        "breach_of_contract",
+        "damages",
+        "indemnity",
+        "guarantee",
+        "bailment",
+        "agency"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Legislative Department / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2187",
       "status": "in_force",
       "effective_from": "1872-09-01",
       "priority": "tier_2",
-      "aliases": ["ica", "ica 1872", "indian contract act", "contract act", "the indian contract act, 1872"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "ica",
+        "ica 1872",
+        "indian contract act",
+        "contract act",
+        "the indian contract act, 1872"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "contract"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "pilot",
+      "source_file": "Law_files/ICA1872.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "SRA1963",
@@ -323,16 +766,34 @@
       "act_number": "47 of 1963",
       "category": "Civil / Specific Relief",
       "domain": "contract",
-      "sub_domains": ["specific_performance", "injunctions", "declaratory_decrees", "rectification"],
+      "sub_domains": [
+        "specific_performance",
+        "injunctions",
+        "declaratory_decrees",
+        "rectification"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1564",
       "status": "in_force",
       "effective_from": "1964-03-01",
       "priority": "tier_2",
-      "aliases": ["sra", "specific relief act", "specific relief act 1963"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "sra",
+        "specific relief act",
+        "specific relief act 1963"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "contract"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/SRA1963.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "TPA1882",
@@ -342,16 +803,37 @@
       "act_number": "4 of 1882",
       "category": "Property / Civil",
       "domain": "property",
-      "sub_domains": ["immovable_property", "sale", "mortgage", "lease", "exchange", "gift"],
+      "sub_domains": [
+        "immovable_property",
+        "sale",
+        "mortgage",
+        "lease",
+        "exchange",
+        "gift"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Legislative Department / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2338",
       "status": "in_force",
       "effective_from": "1882-07-01",
       "priority": "tier_2",
-      "aliases": ["tpa", "tp act", "transfer of property act", "transfer of property act 1882"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "tpa",
+        "tp act",
+        "transfer of property act",
+        "transfer of property act 1882"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "property"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/TPA1882.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "LIMITATION1963",
@@ -361,16 +843,32 @@
       "act_number": "36 of 1963",
       "category": "Civil Procedure / Limitation",
       "domain": "civil_procedure",
-      "sub_domains": ["limitation_period", "condonation_of_delay", "prescriptive_rights"],
+      "sub_domains": [
+        "limitation_period",
+        "condonation_of_delay",
+        "prescriptive_rights"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1565",
       "status": "in_force",
       "effective_from": "1964-01-01",
       "priority": "tier_2",
-      "aliases": ["limitation act", "limitation act 1963"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "limitation act",
+        "limitation act 1963"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "civil_procedure"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/LIMITATION1963.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "REGISTRATION1908",
@@ -380,16 +878,31 @@
       "act_number": "16 of 1908",
       "category": "Property / Civil / Registration",
       "domain": "property",
-      "sub_domains": ["compulsory_registration", "documents_registration", "stamp_duty"],
+      "sub_domains": [
+        "compulsory_registration",
+        "documents_registration",
+        "stamp_duty"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Legislative Department / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2314",
       "status": "in_force",
       "effective_from": "1909-01-01",
       "priority": "tier_2",
-      "aliases": ["registration act", "registration act 1908", "indian registration act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "registration act",
+        "registration act 1908",
+        "indian registration act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "property"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "ARBITRATION1996",
@@ -399,16 +912,33 @@
       "act_number": "26 of 1996",
       "category": "Commercial / Alternative Dispute Resolution",
       "domain": "company_commercial_law",
-      "sub_domains": ["arbitration", "conciliation", "arbitral_tribunal", "arbitral_awards", "enforcement"],
+      "sub_domains": [
+        "arbitration",
+        "conciliation",
+        "arbitral_tribunal",
+        "arbitral_awards",
+        "enforcement"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Law and Justice",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1978",
       "status": "in_force",
       "effective_from": "1996-08-22",
       "priority": "tier_2",
-      "aliases": ["arbitration act", "arbitration and conciliation act", "arbitration act 1996"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "arbitration act",
+        "arbitration and conciliation act",
+        "arbitration act 1996"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "company_commercial_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "NIACT1881",
@@ -418,16 +948,34 @@
       "act_number": "26 of 1881",
       "category": "Banking / Commercial / Criminal",
       "domain": "banking_finance",
-      "sub_domains": ["cheque_bounce", "section_138", "promissory_notes", "bills_of_exchange"],
+      "sub_domains": [
+        "cheque_bounce",
+        "section_138",
+        "promissory_notes",
+        "bills_of_exchange"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Legislative Department / Ministry of Finance",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2347",
       "status": "in_force",
       "effective_from": "1882-03-01",
       "priority": "tier_2",
-      "aliases": ["ni act", "ni act 1881", "negotiable instruments act", "negotiable instruments act 1881", "section 138 ni act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "ni act",
+        "ni act 1881",
+        "negotiable instruments act",
+        "negotiable instruments act 1881",
+        "section 138 ni act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "banking_finance"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "COMPANIES2013",
@@ -437,17 +985,39 @@
       "act_number": "18 of 2013",
       "category": "Corporate / Commercial",
       "domain": "company_commercial_law",
-      "sub_domains": ["incorporation", "directors", "shareholders", "mergers", "nclt", "corporate_governance"],
+      "sub_domains": [
+        "incorporation",
+        "directors",
+        "shareholders",
+        "mergers",
+        "nclt",
+        "corporate_governance"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Corporate Affairs",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2114",
       "status": "in_force",
       "effective_from": "2013-09-12",
-      "repeals": ["Companies Act, 1956"],
+      "repeals": [
+        "Companies Act, 1956"
+      ],
       "priority": "tier_2",
-      "aliases": ["companies act", "companies act 2013", "company law"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "companies act",
+        "companies act 2013",
+        "company law"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "company_commercial_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "pilot",
+      "source_file": "Law_files/COMPANIES2013.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "IBC2016",
@@ -457,16 +1027,38 @@
       "act_number": "31 of 2016",
       "category": "Insolvency / Corporate / Commercial",
       "domain": "company_commercial_law",
-      "sub_domains": ["insolvency", "bankruptcy", "cirp", "liquidation", "moratorium", "nclt", "ibbi"],
+      "sub_domains": [
+        "insolvency",
+        "bankruptcy",
+        "cirp",
+        "liquidation",
+        "moratorium",
+        "nclt",
+        "ibbi"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Corporate Affairs",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2155",
       "status": "in_force",
       "effective_from": "2016-12-01",
       "priority": "tier_2",
-      "aliases": ["ibc", "ibc 2016", "insolvency and bankruptcy code", "insolvency and bankruptcy code 2016"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "ibc",
+        "ibc 2016",
+        "insolvency and bankruptcy code",
+        "insolvency and bankruptcy code 2016"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "company_commercial_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/IBC2016.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "RTI2005",
@@ -476,16 +1068,33 @@
       "act_number": "22 of 2005",
       "category": "Administrative / Governance / Transparency",
       "domain": "constitutional_law",
-      "sub_domains": ["transparency", "public_authorities", "information_commission"],
+      "sub_domains": [
+        "transparency",
+        "public_authorities",
+        "information_commission"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Personnel, Public Grievances and Pensions",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/2065",
       "status": "in_force",
       "effective_from": "2005-10-12",
       "priority": "tier_3",
-      "aliases": ["rti", "rti act", "rti 2005", "right to information act", "right to information act 2005"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "rti",
+        "rti act",
+        "rti 2005",
+        "right to information act",
+        "right to information act 2005"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "constitutional_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "COPYRIGHT1957",
@@ -495,16 +1104,35 @@
       "act_number": "14 of 1957",
       "category": "Intellectual Property",
       "domain": "intellectual_property",
-      "sub_domains": ["copyright", "infringement", "licensing", "moral_rights", "fair_dealing"],
+      "sub_domains": [
+        "copyright",
+        "infringement",
+        "licensing",
+        "moral_rights",
+        "fair_dealing"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / DPIIT, Ministry of Commerce and Industry",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1367",
       "status": "in_force",
       "effective_from": "1958-01-21",
       "priority": "tier_3",
-      "aliases": ["copyright act", "copyright act 1957", "indian copyright act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "copyright act",
+        "copyright act 1957",
+        "indian copyright act"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "intellectual_property"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "pilot",
+      "source_file": "Law_files/COPYRIGHT1957.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "PATENTS1970",
@@ -514,16 +1142,33 @@
       "act_number": "39 of 1970",
       "category": "Intellectual Property",
       "domain": "intellectual_property",
-      "sub_domains": ["patents", "inventions", "patentability", "compulsory_licensing", "infringement"],
+      "sub_domains": [
+        "patents",
+        "inventions",
+        "patentability",
+        "compulsory_licensing",
+        "infringement"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / DPIIT, Ministry of Commerce and Industry",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1392",
       "status": "in_force",
       "effective_from": "1972-04-20",
       "priority": "tier_3",
-      "aliases": ["patents act", "patents act 1970", "patent act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "patents act",
+        "patents act 1970",
+        "patent act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "intellectual_property"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "TRADEMARKS1999",
@@ -533,16 +1178,35 @@
       "act_number": "47 of 1999",
       "category": "Intellectual Property",
       "domain": "intellectual_property",
-      "sub_domains": ["trademarks", "passing_off", "infringement", "registration"],
+      "sub_domains": [
+        "trademarks",
+        "passing_off",
+        "infringement",
+        "registration"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / DPIIT, Ministry of Commerce and Industry",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1993",
       "status": "in_force",
       "effective_from": "2003-09-15",
       "priority": "tier_3",
-      "aliases": ["trademarks act", "trade marks act", "trade marks act 1999", "trademark act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "trademarks act",
+        "trade marks act",
+        "trade marks act 1999",
+        "trademark act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "intellectual_property"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1",
+      "source_file": "Law_files/TRADEMARKS1999.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "DPDP2023",
@@ -552,16 +1216,35 @@
       "act_number": "22 of 2023",
       "category": "Data Protection / Privacy / Cyber",
       "domain": "cyber_law",
-      "sub_domains": ["data_protection", "privacy", "consent", "data_fiduciaries", "data_protection_board"],
+      "sub_domains": [
+        "data_protection",
+        "privacy",
+        "consent",
+        "data_fiduciaries",
+        "data_protection_board"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Electronics and Information Technology",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/19985",
       "status": "in_force",
       "effective_from": "2023-08-11",
       "priority": "tier_3",
-      "aliases": ["dpdp", "dpdp act", "dpdp 2023", "digital personal data protection act", "data protection act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "dpdp",
+        "dpdp act",
+        "dpdp 2023",
+        "digital personal data protection act",
+        "data protection act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "cyber_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "EPA1986",
@@ -570,17 +1253,37 @@
       "year": 1986,
       "act_number": "29 of 1986",
       "category": "Environmental / Regulatory",
-      "domain": "general_legal",
-      "sub_domains": ["environment", "pollution", "environmental_clearance", "ngt"],
+      "domain": "environment",
+      "sub_domains": [
+        "environment",
+        "pollution",
+        "environmental_clearance",
+        "ngt"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1897",
       "status": "in_force",
       "effective_from": "1986-11-19",
       "priority": "tier_3",
-      "aliases": ["environment protection act", "environment protection act 1986", "epa 1986", "environmental protection act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "environment protection act",
+        "environment protection act 1986",
+        "epa 1986",
+        "environmental protection act"
+      ],
+      "ingestion_status": "ingested",
+      "domains": [
+        "environment",
+        "general_legal"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "pilot",
+      "source_file": "Law_files/EPA1986.pdf",
+      "retrieval_date": "2026-08-29"
     },
     {
       "act_id": "LSA1987",
@@ -589,17 +1292,35 @@
       "year": 1987,
       "act_number": "39 of 1987",
       "category": "Legal Aid / Access to Justice",
-      "domain": "general_legal",
-      "sub_domains": ["legal_aid", "nalsa", "lok_adalat", "free_legal_services"],
+      "domain": "social_welfare",
+      "sub_domains": [
+        "legal_aid",
+        "nalsa",
+        "lok_adalat",
+        "free_legal_services"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Department of Legal Affairs",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1922",
       "status": "in_force",
       "effective_from": "1995-11-09",
       "priority": "tier_3",
-      "aliases": ["legal services authorities act", "lsa act", "nalsa act", "lok adalat act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "legal services authorities act",
+        "lsa act",
+        "nalsa act",
+        "lok adalat act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "social_welfare",
+        "general_legal"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
     },
     {
       "act_id": "PHRA1993",
@@ -608,17 +1329,1305 @@
       "year": 1993,
       "act_number": "10 of 1994",
       "category": "Human Rights / Constitutional",
-      "domain": "constitutional_law",
-      "sub_domains": ["human_rights", "nhrc", "shrc", "human_rights_courts"],
+      "domain": "human_rights",
+      "sub_domains": [
+        "human_rights",
+        "nhrc",
+        "shrc",
+        "human_rights_courts"
+      ],
       "jurisdiction": "India",
-      "document_type": "statute",
+      "document_type": "STATUTE",
       "source_authority": "Parliament of India / Ministry of Home Affairs",
       "official_url": "https://www.indiacode.gov.in/handle/123456789/1959",
       "status": "in_force",
       "effective_from": "1993-09-28",
       "priority": "tier_3",
-      "aliases": ["protection of human rights act", "human rights act", "nhrc act"],
-      "ingestion_status": "pending_source"
+      "aliases": [
+        "protection of human rights act",
+        "human rights act",
+        "nhrc act"
+      ],
+      "ingestion_status": "pending_source",
+      "domains": [
+        "human_rights",
+        "constitutional_law"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "source_type": "official_gazette",
+      "state": null,
+      "ingestion_stage": "stage_1"
+    },
+    {
+      "act_id": "CPC1908",
+      "official_title": "The Code of Civil Procedure, 1908",
+      "short_title": "CPC, 1908",
+      "year": 1908,
+      "act_number": "5 of 1908",
+      "category": "Civil Procedure",
+      "domain": "civil_procedure",
+      "domains": [
+        "civil_procedure",
+        "civil_law"
+      ],
+      "sub_domains": [
+        "plaint",
+        "injunction",
+        "execution",
+        "appeals"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Legislative Department / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2191",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1909-01-01",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "cpc",
+        "cpc 1908",
+        "code of civil procedure",
+        "code of civil procedure 1908"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "SOGA1930",
+      "official_title": "The Sale of Goods Act, 1930",
+      "short_title": "Sale of Goods Act, 1930",
+      "year": 1930,
+      "act_number": "3 of 1930",
+      "category": "Commercial / Contract",
+      "domain": "commercial_law",
+      "domains": [
+        "commercial_law",
+        "contract"
+      ],
+      "sub_domains": [
+        "sale",
+        "warranty",
+        "delivery",
+        "acceptance"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2325",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1930-07-01",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "sale of goods act",
+        "soga",
+        "sale of goods act 1930"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "IPA1932",
+      "official_title": "The Indian Partnership Act, 1932",
+      "short_title": "Partnership Act, 1932",
+      "year": 1932,
+      "act_number": "9 of 1932",
+      "category": "Commercial",
+      "domain": "commercial_law",
+      "domains": [
+        "commercial_law",
+        "contract"
+      ],
+      "sub_domains": [
+        "partnership",
+        "firm",
+        "dissolution"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2328",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1932-10-01",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "partnership act",
+        "indian partnership act",
+        "partnership act 1932"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "IEA1882",
+      "official_title": "The Indian Easements Act, 1882",
+      "short_title": "Easements Act, 1882",
+      "year": 1882,
+      "act_number": "5 of 1882",
+      "category": "Property",
+      "domain": "property",
+      "domains": [
+        "property",
+        "civil_law"
+      ],
+      "sub_domains": [
+        "easements",
+        "prescriptive_rights"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Legislative Department / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2339",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1882-07-01",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "easements act",
+        "indian easements act",
+        "easements act 1882"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "ITA1882",
+      "official_title": "The Indian Trusts Act, 1882",
+      "short_title": "Trusts Act, 1882",
+      "year": 1882,
+      "act_number": "2 of 1882",
+      "category": "Property / Civil",
+      "domain": "property",
+      "domains": [
+        "property",
+        "civil_law"
+      ],
+      "sub_domains": [
+        "trusts",
+        "trustees",
+        "beneficiaries"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Legislative Department / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2336",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1882-03-01",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "trusts act",
+        "indian trusts act",
+        "trusts act 1882"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "LLP2008",
+      "official_title": "The Limited Liability Partnership Act, 2008",
+      "short_title": "LLP Act, 2008",
+      "year": 2008,
+      "act_number": "6 of 2009",
+      "category": "Corporate / Commercial",
+      "domain": "company_commercial_law",
+      "domains": [
+        "company_commercial_law",
+        "commercial_law"
+      ],
+      "sub_domains": [
+        "llp",
+        "partners",
+        "incorporation"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Corporate Affairs",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2070",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2009-03-31",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "llp act",
+        "limited liability partnership act",
+        "llp act 2008"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "COMPETITION2002",
+      "official_title": "The Competition Act, 2002",
+      "short_title": "Competition Act, 2002",
+      "year": 2002,
+      "act_number": "12 of 2003",
+      "category": "Commercial / Regulatory",
+      "domain": "commercial_law",
+      "domains": [
+        "commercial_law",
+        "general_legal"
+      ],
+      "sub_domains": [
+        "anti_competitive",
+        "combinations",
+        "cci"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Corporate Affairs",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2033",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2003-01-31",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "competition act",
+        "competition act 2002",
+        "cci act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "COMMERCIALCOURTS2015",
+      "official_title": "The Commercial Courts Act, 2015",
+      "short_title": "Commercial Courts Act, 2015",
+      "year": 2015,
+      "act_number": "4 of 2016",
+      "category": "Commercial / Civil Procedure",
+      "domain": "commercial_law",
+      "domains": [
+        "commercial_law",
+        "civil_procedure"
+      ],
+      "sub_domains": [
+        "commercial_disputes",
+        "pre_institution_mediation"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2149",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2016-01-15",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "commercial courts act",
+        "commercial courts act 2015"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "HMA1955",
+      "official_title": "The Hindu Marriage Act, 1955",
+      "short_title": "HMA, 1955",
+      "year": 1955,
+      "act_number": "25 of 1955",
+      "category": "Family / Personal Law",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "personal_law"
+      ],
+      "personal_law_framework": "hindu",
+      "sub_domains": [
+        "marriage",
+        "divorce",
+        "restitution",
+        "judicial_separation"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1560",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1955-05-18",
+      "priority": "tier_1",
+      "ingestion_stage": "pilot",
+      "aliases": [
+        "hma",
+        "hindu marriage act",
+        "hindu marriage act 1955"
+      ],
+      "ingestion_status": "ingested",
+      "state": null,
+      "source_file": "Law_files/HMA1955.pdf",
+      "retrieval_date": "2026-08-29"
+    },
+    {
+      "act_id": "HSA1956",
+      "official_title": "The Hindu Succession Act, 1956",
+      "short_title": "HSA, 1956",
+      "year": 1956,
+      "act_number": "30 of 1956",
+      "category": "Family / Personal Law",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "personal_law",
+        "property"
+      ],
+      "personal_law_framework": "hindu",
+      "sub_domains": [
+        "succession",
+        "inheritance",
+        "coparcenary"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1561",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1956-06-17",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "hsa",
+        "hindu succession act",
+        "hindu succession act 1956"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "HAMA1956",
+      "official_title": "The Hindu Adoptions and Maintenance Act, 1956",
+      "short_title": "HAMA, 1956",
+      "year": 1956,
+      "act_number": "78 of 1956",
+      "category": "Family / Personal Law",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "personal_law"
+      ],
+      "personal_law_framework": "hindu",
+      "sub_domains": [
+        "adoption",
+        "maintenance"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1562",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1956-12-21",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "hama",
+        "hindu adoptions and maintenance act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "HMGA1956",
+      "official_title": "The Hindu Minority and Guardianship Act, 1956",
+      "short_title": "HMGA, 1956",
+      "year": 1956,
+      "act_number": "32 of 1956",
+      "category": "Family / Personal Law",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "personal_law"
+      ],
+      "personal_law_framework": "hindu",
+      "sub_domains": [
+        "guardianship",
+        "minor"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1563",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1956-08-25",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "hmga",
+        "hindu minority and guardianship act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "SMA1954",
+      "official_title": "The Special Marriage Act, 1954",
+      "short_title": "SMA, 1954",
+      "year": 1954,
+      "act_number": "43 of 1954",
+      "category": "Family / Personal Law",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "personal_law"
+      ],
+      "personal_law_framework": "special_marriage",
+      "sub_domains": [
+        "civil_marriage",
+        "interfaith",
+        "registration"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1559",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1955-01-01",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "sma",
+        "special marriage act",
+        "special marriage act 1954"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "GWA1890",
+      "official_title": "The Guardians and Wards Act, 1890",
+      "short_title": "GWA, 1890",
+      "year": 1890,
+      "act_number": "8 of 1890",
+      "category": "Family",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "personal_law"
+      ],
+      "personal_law_framework": "secular_family",
+      "sub_domains": [
+        "guardianship",
+        "wards"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Legislative Department / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2305",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1890-03-21",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "gwa",
+        "guardians and wards act",
+        "guardians and wards act 1890"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "FCA1984",
+      "official_title": "The Family Courts Act, 1984",
+      "short_title": "Family Courts Act, 1984",
+      "year": 1984,
+      "act_number": "66 of 1984",
+      "category": "Family / Courts",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "civil_procedure"
+      ],
+      "personal_law_framework": "secular_family",
+      "sub_domains": [
+        "family_courts",
+        "conciliation"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1886",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1984-09-14",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "family courts act",
+        "family courts act 1984"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "MWPSC2007",
+      "official_title": "The Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+      "short_title": "Senior Citizens Act, 2007",
+      "year": 2007,
+      "act_number": "56 of 2007",
+      "category": "Family / Social Welfare",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "social_welfare"
+      ],
+      "personal_law_framework": "secular_family",
+      "sub_domains": [
+        "maintenance",
+        "senior_citizens"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Social Justice and Empowerment",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2068",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2007-12-31",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "senior citizens act",
+        "maintenance and welfare of parents and senior citizens act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "PCMA2006",
+      "official_title": "The Prohibition of Child Marriage Act, 2006",
+      "short_title": "PCMA, 2006",
+      "year": 2006,
+      "act_number": "6 of 2007",
+      "category": "Family / Child Protection",
+      "domain": "family_law",
+      "domains": [
+        "family_law",
+        "social_welfare"
+      ],
+      "personal_law_framework": "secular_family",
+      "sub_domains": [
+        "child_marriage"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Women and Child Development",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2066",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2007-01-10",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "pcma",
+        "prohibition of child marriage act",
+        "child marriage act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "MWPR2019",
+      "official_title": "The Muslim Women (Protection of Rights on Marriage) Act, 2019",
+      "short_title": "Triple Talaq Act, 2019",
+      "year": 2019,
+      "act_number": "20 of 2019",
+      "category": "Family / Personal Law",
+      "domain": "personal_law",
+      "domains": [
+        "personal_law",
+        "family_law"
+      ],
+      "personal_law_framework": "muslim_statutes",
+      "sub_domains": [
+        "talaq",
+        "marriage"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/15255",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2019-09-19",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "triple talaq act",
+        "muslim women protection of rights on marriage act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "ITA2025",
+      "official_title": "The Income-tax Act, 2025",
+      "short_title": "Income-tax Act, 2025",
+      "year": 2025,
+      "act_number": "30 of 2025",
+      "category": "Tax / Direct Tax",
+      "domain": "tax",
+      "domains": [
+        "tax"
+      ],
+      "sub_domains": [
+        "income_tax",
+        "assessment",
+        "deductions"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Central Board of Direct Taxes",
+      "official_url": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2026-04-01",
+      "repeals": [
+        "Income-tax Act, 1961"
+      ],
+      "priority": "tier_1",
+      "ingestion_stage": "pilot",
+      "aliases": [
+        "income tax act 2025",
+        "ita 2025",
+        "income-tax act 2025"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "ITA1961",
+      "official_title": "The Income-tax Act, 1961",
+      "short_title": "Income-tax Act, 1961",
+      "year": 1961,
+      "act_number": "43 of 1961",
+      "category": "Tax / Direct Tax (Historical)",
+      "domain": "tax",
+      "domains": [
+        "tax"
+      ],
+      "sub_domains": [
+        "income_tax",
+        "assessment",
+        "historical"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Central Board of Direct Taxes",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1578",
+      "source_type": "official_gazette",
+      "status": "repealed",
+      "effective_from": "1962-04-01",
+      "effective_to": "2026-03-31",
+      "assessment_year_to": "2025-26",
+      "implementation_notes": "Governs tax years beginning before 1 April 2026; do not present as current law",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "income tax act 1961",
+        "ita 1961",
+        "income-tax act 1961"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "CGST2017",
+      "official_title": "The Central Goods and Services Tax Act, 2017",
+      "short_title": "CGST Act, 2017",
+      "year": 2017,
+      "act_number": "12 of 2017",
+      "category": "Tax / GST",
+      "domain": "gst",
+      "domains": [
+        "gst",
+        "tax"
+      ],
+      "gst_component": "CGST",
+      "sub_domains": [
+        "input_tax_credit",
+        "registration",
+        "returns"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Central Board of Indirect Taxes and Customs",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2167",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2017-07-01",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "cgst",
+        "cgst act",
+        "central goods and services tax act"
+      ],
+      "ingestion_status": "ingested",
+      "state": null,
+      "source_file": "Law_files/CGST2017.pdf",
+      "retrieval_date": "2026-08-29"
+    },
+    {
+      "act_id": "IGST2017",
+      "official_title": "The Integrated Goods and Services Tax Act, 2017",
+      "short_title": "IGST Act, 2017",
+      "year": 2017,
+      "act_number": "13 of 2017",
+      "category": "Tax / GST",
+      "domain": "gst",
+      "domains": [
+        "gst",
+        "tax"
+      ],
+      "gst_component": "IGST",
+      "sub_domains": [
+        "inter_state_supply",
+        "imports"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Central Board of Indirect Taxes and Customs",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2168",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2017-07-01",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "igst",
+        "igst act",
+        "integrated goods and services tax act"
+      ],
+      "ingestion_status": "ingested",
+      "state": null,
+      "source_file": "Law_files/IGST2017.pdf",
+      "retrieval_date": "2026-08-29"
+    },
+    {
+      "act_id": "CUSTOMS1962",
+      "official_title": "The Customs Act, 1962",
+      "short_title": "Customs Act, 1962",
+      "year": 1962,
+      "act_number": "52 of 1962",
+      "category": "Tax / Indirect Tax",
+      "domain": "tax",
+      "domains": [
+        "tax"
+      ],
+      "sub_domains": [
+        "customs",
+        "imports",
+        "exports"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Central Board of Indirect Taxes and Customs",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1577",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1962-12-13",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "customs act",
+        "customs act 1962"
+      ],
+      "ingestion_status": "ingested",
+      "state": null,
+      "source_file": "Law_files/CUSTOMS1962.pdf",
+      "retrieval_date": "2026-08-29"
+    },
+    {
+      "act_id": "WATER1974",
+      "official_title": "The Water (Prevention and Control of Pollution) Act, 1974",
+      "short_title": "Water Act, 1974",
+      "year": 1974,
+      "act_number": "6 of 1974",
+      "category": "Environmental",
+      "domain": "environment",
+      "domains": [
+        "environment"
+      ],
+      "sub_domains": [
+        "water_pollution",
+        "spcb"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1388",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1974-03-23",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "water act",
+        "water pollution act",
+        "water act 1974"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "AIR1981",
+      "official_title": "The Air (Prevention and Control of Pollution) Act, 1981",
+      "short_title": "Air Act, 1981",
+      "year": 1981,
+      "act_number": "14 of 1981",
+      "category": "Environmental",
+      "domain": "environment",
+      "domains": [
+        "environment"
+      ],
+      "sub_domains": [
+        "air_pollution",
+        "spcb"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1868",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1981-03-29",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "air act",
+        "air pollution act",
+        "air act 1981"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null,
+      "source_file": "Law_files/AIR1981.pdf",
+      "retrieval_date": "2026-08-29"
+    },
+    {
+      "act_id": "WPA1972",
+      "official_title": "The Wild Life (Protection) Act, 1972",
+      "short_title": "Wildlife Act, 1972",
+      "year": 1972,
+      "act_number": "53 of 1972",
+      "category": "Environmental",
+      "domain": "environment",
+      "domains": [
+        "environment"
+      ],
+      "sub_domains": [
+        "wildlife",
+        "sanctuaries",
+        "national_parks"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1393",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1972-09-09",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "wildlife act",
+        "wild life protection act",
+        "wildlife act 1972"
+      ],
+      "ingestion_status": "ingested",
+      "state": null,
+      "source_file": "Law_files/WPA1972.pdf",
+      "retrieval_date": "2026-08-29"
+    },
+    {
+      "act_id": "NGT2010",
+      "official_title": "The National Green Tribunal Act, 2010",
+      "short_title": "NGT Act, 2010",
+      "year": 2010,
+      "act_number": "19 of 2010",
+      "category": "Environmental / Tribunals",
+      "domain": "environment",
+      "domains": [
+        "environment",
+        "civil_procedure"
+      ],
+      "sub_domains": [
+        "ngt",
+        "environmental_disputes"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2095",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2010-10-18",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "ngt act",
+        "national green tribunal act",
+        "ngt act 2010"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "BDA2002",
+      "official_title": "The Biological Diversity Act, 2002",
+      "short_title": "Biodiversity Act, 2002",
+      "year": 2002,
+      "act_number": "18 of 2003",
+      "category": "Environmental",
+      "domain": "environment",
+      "domains": [
+        "environment"
+      ],
+      "sub_domains": [
+        "biodiversity",
+        "access_benefit_sharing"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2037",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2003-10-05",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "biodiversity act",
+        "biological diversity act",
+        "bda 2002"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "FCA1980",
+      "official_title": "The Forest (Conservation) Act, 1980",
+      "short_title": "Forest Conservation Act, 1980",
+      "year": 1980,
+      "act_number": "69 of 1980",
+      "category": "Environmental / Forest",
+      "domain": "environment",
+      "domains": [
+        "environment"
+      ],
+      "sub_domains": [
+        "forest",
+        "diversion"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Environment, Forest and Climate Change",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1867",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "1980-10-25",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "forest conservation act",
+        "fca 1980",
+        "forest act 1980"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "COW2019",
+      "official_title": "The Code on Wages, 2019",
+      "short_title": "Code on Wages, 2019",
+      "year": 2019,
+      "act_number": "29 of 2019",
+      "category": "Labour",
+      "domain": "labour_employment",
+      "domains": [
+        "labour_employment"
+      ],
+      "sub_domains": [
+        "wages",
+        "minimum_wages",
+        "payment_of_wages"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Labour and Employment",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/15254",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2025-11-21",
+      "implementation_notes": "Central Rules notified 8 May 2026; state rules vary",
+      "repeals": [
+        "Minimum Wages Act, 1948",
+        "Payment of Wages Act, 1936",
+        "Payment of Bonus Act, 1965",
+        "Equal Remuneration Act, 1976"
+      ],
+      "priority": "tier_1",
+      "ingestion_stage": "pilot",
+      "aliases": [
+        "code on wages",
+        "code on wages 2019",
+        "wages code"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "IRC2020",
+      "official_title": "The Industrial Relations Code, 2020",
+      "short_title": "Industrial Relations Code, 2020",
+      "year": 2020,
+      "act_number": "35 of 2020",
+      "category": "Labour",
+      "domain": "labour_employment",
+      "domains": [
+        "labour_employment"
+      ],
+      "sub_domains": [
+        "industrial_disputes",
+        "trade_unions",
+        "standing_orders"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Labour and Employment",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/15257",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2025-11-21",
+      "implementation_notes": "Central Rules notified 8 May 2026; state rules vary",
+      "repeals": [
+        "Industrial Disputes Act, 1947",
+        "Trade Unions Act, 1926",
+        "Industrial Employment (Standing Orders) Act, 1946"
+      ],
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "industrial relations code",
+        "irc 2020",
+        "industrial relations code 2020"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "CSS2020",
+      "official_title": "The Code on Social Security, 2020",
+      "short_title": "Code on Social Security, 2020",
+      "year": 2020,
+      "act_number": "36 of 2020",
+      "category": "Labour",
+      "domain": "labour_employment",
+      "domains": [
+        "labour_employment"
+      ],
+      "sub_domains": [
+        "epf",
+        "esi",
+        "gratuity",
+        "maternity",
+        "gig_workers"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Labour and Employment",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/15258",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2025-11-21",
+      "implementation_notes": "Central Rules notified 8 May 2026; state rules vary",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "code on social security",
+        "social security code 2020"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "OSH2020",
+      "official_title": "The Occupational Safety, Health and Working Conditions Code, 2020",
+      "short_title": "OSH Code, 2020",
+      "year": 2020,
+      "act_number": "37 of 2020",
+      "category": "Labour",
+      "domain": "labour_employment",
+      "domains": [
+        "labour_employment"
+      ],
+      "sub_domains": [
+        "factories",
+        "mines",
+        "contract_labour",
+        "occupational_safety"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Labour and Employment",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/15259",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2025-11-21",
+      "implementation_notes": "Central Rules notified 8 May 2026; state rules vary",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "osh code",
+        "occupational safety code",
+        "osh code 2020"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "DESIGNS2000",
+      "official_title": "The Designs Act, 2000",
+      "short_title": "Designs Act, 2000",
+      "year": 2000,
+      "act_number": "16 of 2000",
+      "category": "Intellectual Property",
+      "domain": "intellectual_property",
+      "domains": [
+        "intellectual_property"
+      ],
+      "sub_domains": [
+        "designs",
+        "registration",
+        "infringement"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / DPIIT",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1998",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2000-05-11",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "designs act",
+        "designs act 2000"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "GI1999",
+      "official_title": "The Geographical Indications of Goods (Registration and Protection) Act, 1999",
+      "short_title": "GI Act, 1999",
+      "year": 1999,
+      "act_number": "48 of 1999",
+      "category": "Intellectual Property",
+      "domain": "intellectual_property",
+      "domains": [
+        "intellectual_property"
+      ],
+      "sub_domains": [
+        "geographical_indications",
+        "registration"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / DPIIT",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/1994",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2003-09-15",
+      "priority": "tier_2",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "gi act",
+        "geographical indications act",
+        "gi act 1999"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
+    },
+    {
+      "act_id": "PPVFR2001",
+      "official_title": "The Protection of Plant Varieties and Farmers' Rights Act, 2001",
+      "short_title": "PPVFR Act, 2001",
+      "year": 2001,
+      "act_number": "53 of 2001",
+      "category": "Intellectual Property / Agriculture",
+      "domain": "intellectual_property",
+      "domains": [
+        "intellectual_property"
+      ],
+      "sub_domains": [
+        "plant_varieties",
+        "farmers_rights"
+      ],
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Agriculture",
+      "official_url": "https://www.indiacode.gov.in/handle/123456789/2040",
+      "source_type": "official_gazette",
+      "status": "in_force",
+      "effective_from": "2001-10-30",
+      "priority": "tier_3",
+      "ingestion_stage": "stage_1",
+      "aliases": [
+        "ppvfr act",
+        "plant varieties act",
+        "protection of plant varieties act"
+      ],
+      "ingestion_status": "pending_source",
+      "state": null
     }
   ]
 }

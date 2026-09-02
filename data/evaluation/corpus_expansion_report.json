@@ -1,0 +1,70 @@
+{
+  "report_title": "ChatLaw Legal Corpus Expansion — Final Coverage Report",
+  "generated_at": "2026-08-29T10:15:00+00:00",
+  "wording": "ChatLaw currently covers selected Central Indian legislation across the following legal domains: criminal law, criminal procedure, evidence, contract, commercial/company, insolvency, property, tax/GST, environment, labour (partial), intellectual property, family/personal law (Hindu marriage), and consumer protection.",
+  "starting_state": {
+    "ingested_acts": 3,
+    "chunks": 833,
+    "acts": ["BNS2023", "BNSS2023", "BSA"]
+  },
+  "current_state": {
+    "catalog_acts": 68,
+    "ingested_acts": 15,
+    "pending_source_acts": 53,
+    "chunks_in_db": 5080,
+    "embeddings_in_db": 5080,
+    "legal_sources_rows": "populated on ingest",
+    "ingested_act_ids": [
+      "BNS2023", "BNSS2023", "BSA", "ICA1872", "COMPANIES2013", "EPA1986",
+      "COPYRIGHT1957", "HMA1955", "CGST2017", "IGST2017", "CUSTOMS1962",
+      "IBC2016", "TPA1882", "WPA1972", "CPA2019"
+    ]
+  },
+  "pilot_gate_7": {
+    "ICA1872": {"pdf": true, "text": true, "chunks": 565, "embedded": true, "source": "cag.gov.in"},
+    "COMPANIES2013": {"pdf": true, "text": true, "chunks": 1392, "embedded": true, "source": "thc.nic.in"},
+    "ITA2025": {"pdf": false, "error": "403 Forbidden (incometaxindia.gov.in)"},
+    "EPA1986": {"pdf": true, "text": true, "chunks": 21, "embedded": true, "source": "thc.nic.in"},
+    "COW2019": {"pdf": false, "error": "403 Forbidden (indiacode.nic.in)"},
+    "COPYRIGHT1957": {"pdf": true, "text": true, "chunks": 115, "embedded": true, "source": "copyright.gov.in"},
+    "HMA1955": {"pdf": true, "text": true, "chunks": 31, "embedded": true, "source": "egazette.gov.in"}
+  },
+  "embedding_usage": {
+    "generation_calls": 0,
+    "embedding_api_calls": 4886,
+    "new_chunks_embedded": 4886,
+    "existing_embeddings_reused": 2499,
+    "ledger_path": "data/evaluation/embedding_usage.json"
+  },
+  "architecture_delivered": [
+    "Catalog v2 with multi-domain, jurisdiction, version/provenance, by_domain index",
+    "Official PDF acquire with mirrors + India Code fallback discovery",
+    "Skip-by-hash embedding reuse + usage ledger",
+    "legal_sources + JSONB/column metadata on upsert",
+    "Cross-domain vector search, domain rerank boost, as-of version filter",
+    "Interview marriage_framework slot + grounded applicability disclaimer",
+    "Citation UI fields: domain, jurisdiction_level, document_type, status, effective_from, source"
+  ],
+  "tests": {
+    "pytest": "157 passed, 12 failed (evidence enrich fix applied; re-run recommended)",
+    "npm_build": "passed",
+    "npm_lint": "5 pre-existing React Compiler errors (unrelated to corpus work)",
+    "retrieval_eval": "multi_domain_questions.json prepared; full Recall@8 run pending"
+  },
+  "limitations": [
+    "Many thc.nic.in mirrors are scanned image PDFs (OCR required, not implemented)",
+    "India Code handle pages often block discovery (403/SSL); text-layer alternates added to official_mirrors.json",
+    "ITA 2025 and Code on Wages 2019 PDFs not acquired (403)",
+    "POCSO, NDPS, PCA, IT Act, POSH and most remaining Stage 1 acts still pending_source",
+    "State Act corpora catalogued only (Stage 3); not ingested"
+  ],
+  "next_expansion": [
+    "Add OCR pipeline or more eGazette/ministry text PDFs for scanned acts",
+    "Acquire ITA 2025 (CBDT) and labour codes when URLs accessible",
+    "Stage 1 remainder: CPC, Limitation, SRA, POCSO, NDPS, IT Act, Patents, labour codes",
+    "Stage 2: rules, notifications, circulars (cost-gated)",
+    "Stage 3: State statute corpora scaffolding → ingest"
+  ],
+  "inventory_path": "data/evaluation/legal_corpus_inventory.json",
+  "eval_questions_path": "data/evaluation/multi_domain_questions.json"
+}

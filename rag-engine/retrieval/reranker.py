@@ -194,13 +194,32 @@ def document_score(signals: QuerySignals, result: RetrievalResult) -> float:
     return 1.0 if any(document_alias_matches(result.document_title, document) for document in signals.documents) else 0.0
 
 
+def domain_score(signals: QuerySignals, result: RetrievalResult) -> float:
+    if not signals.domain_hints:
+        return 0.0
+    meta = result.metadata if isinstance(result.metadata, dict) else {}
+    chunk_domain = str(meta.get("domain") or "")
+    chunk_domains = meta.get("domains") or []
+    if isinstance(chunk_domains, str):
+        chunk_domains = [chunk_domains]
+    matched = chunk_domain in signals.domain_hints or any(d in signals.domain_hints for d in chunk_domains)
+    return 1.0 if matched else 0.0
+
+
 def rerank_score(signals: QuerySignals, result: RetrievalResult, weights: RerankWeights) -> RetrievalResult:
     keyword = keyword_score(signals.keywords, result.content)
     concept = concept_score(signals, result)
     section = section_score(signals, result)
     document = document_score(signals, result)
+    domain = domain_score(signals, result)
     effective_keyword = max(keyword, concept * 0.85) if concept > 0 else keyword
-    final = result.similarity * weights.vector + effective_keyword * weights.keyword + section * weights.section + document * weights.document
+    final = (
+        result.similarity * weights.vector
+        + effective_keyword * weights.keyword
+        + section * weights.section
+        + document * weights.document
+        + domain * 0.05
+    )
     return result.with_scores(
         keyword_score=keyword,
         section_score=section,

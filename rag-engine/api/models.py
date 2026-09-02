@@ -155,6 +155,14 @@ class Citation(BaseModel):
     clause: str | None = None
     evidence: str | None = None
     source: dict[str, Any] | None = None
+    domain: str | None = None
+    domains: list[str] | None = None
+    jurisdiction_level: str | None = None
+    document_type: str | None = None
+    status: str | None = None
+    effective_from: str | None = None
+    effective_to: str | None = None
+    source_authority: str | None = None
 
 
 class GenerationDetails(BaseModel):

@@ -1,0 +1,116 @@
+{
+  "generation_calls": 0,
+  "embedding_api_calls": 4886,
+  "new_chunks_embedded": 4886,
+  "existing_embeddings_reused": 2499,
+  "runs": [
+    {
+      "timestamp": "2026-08-29T09:01:29.441361+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 1392,
+      "new_chunks_embedded": 1392,
+      "existing_embeddings_reused": 0,
+      "notes": "document=COMPANIES2013"
+    },
+    {
+      "timestamp": "2026-08-29T09:13:29.820166+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 21,
+      "new_chunks_embedded": 21,
+      "existing_embeddings_reused": 0,
+      "notes": "document=EPA1986"
+    },
+    {
+      "timestamp": "2026-08-29T09:26:21.133620+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 63,
+      "new_chunks_embedded": 63,
+      "existing_embeddings_reused": 0,
+      "notes": "document=CUSTOMS1962"
+    },
+    {
+      "timestamp": "2026-08-29T09:50:03.332542+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 1942,
+      "new_chunks_embedded": 1942,
+      "existing_embeddings_reused": 2309,
+      "notes": "document=all"
+    },
+    {
+      "timestamp": "2026-08-29T09:56:45.061058+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 565,
+      "new_chunks_embedded": 565,
+      "existing_embeddings_reused": 0,
+      "notes": "document=ICA1872"
+    },
+    {
+      "timestamp": "2026-08-29T09:57:20.312415+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 416,
+      "new_chunks_embedded": 416,
+      "existing_embeddings_reused": 149,
+      "notes": "document=ICA1872"
+    },
+    {
+      "timestamp": "2026-08-29T09:58:07.494167+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 115,
+      "new_chunks_embedded": 115,
+      "existing_embeddings_reused": 0,
+      "notes": "document=COPYRIGHT1957"
+    },
+    {
+      "timestamp": "2026-08-29T09:58:28.011921+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 96,
+      "new_chunks_embedded": 96,
+      "existing_embeddings_reused": 19,
+      "notes": "document=COPYRIGHT1957"
+    },
+    {
+      "timestamp": "2026-08-29T09:59:27.804440+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 118,
+      "new_chunks_embedded": 118,
+      "existing_embeddings_reused": 0,
+      "notes": "document=CPA2019"
+    },
+    {
+      "timestamp": "2026-08-29T09:59:37.022273+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 96,
+      "new_chunks_embedded": 96,
+      "existing_embeddings_reused": 22,
+      "notes": "document=CPA2019"
+    },
+    {
+      "timestamp": "2026-08-29T09:59:55.295327+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 31,
+      "new_chunks_embedded": 31,
+      "existing_embeddings_reused": 0,
+      "notes": "document=HMA1955"
+    },
+    {
+      "timestamp": "2026-08-29T10:00:04.659431+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 31,
+      "new_chunks_embedded": 31,
+      "existing_embeddings_reused": 0,
+      "notes": "document=HMA1955"
+    }
+  ]
+}

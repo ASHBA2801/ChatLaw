@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-08-29",
+  "description": "Multi-domain retrieval evaluation: direct Act queries and scenario queries",
+  "categories": [
+    "CIVIL",
+    "COMMERCIAL",
+    "FAMILY",
+    "PERSONAL_LAW",
+    "PROPERTY",
+    "TAX",
+    "ENVIRONMENT",
+    "LABOUR",
+    "IP",
+    "CYBER",
+    "CONSUMER",
+    "CRIMINAL",
+    "PROCEDURAL",
+    "EVIDENCE"
+  ],
+  "questions": [
+    {"id": "crim-theft-bns", "category": "CRIMINAL", "type": "scenario", "question": "What is the punishment for theft?", "expected_act_ids": ["BNS2023"]},
+    {"id": "proc-bnss", "category": "PROCEDURAL", "type": "scenario", "question": "What is the procedure for criminal proceedings?", "expected_act_ids": ["BNSS2023"]},
+    {"id": "evidence-bsa", "category": "EVIDENCE", "type": "scenario", "question": "What evidence is admissible in court?", "expected_act_ids": ["BSA"]},
+    {"id": "pocso-child", "category": "CRIMINAL", "type": "scenario", "question": "What law protects children from sexual offences?", "expected_act_ids": ["POCSO2012"]},
+    {"id": "ndps-narcotics", "category": "CRIMINAL", "type": "scenario", "question": "What is the law regarding narcotic possession?", "expected_act_ids": ["NDPS1985"]},
+    {"id": "pca-bribe", "category": "CRIMINAL", "type": "scenario", "question": "What happens if a public servant accepts a bribe?", "expected_act_ids": ["PCA1988"]},
+    {"id": "consumer-refund", "category": "CONSUMER", "type": "scenario", "question": "What are my rights when a seller refuses a refund?", "expected_act_ids": ["CPA2019"]},
+    {"id": "contract-rules", "category": "CIVIL", "type": "scenario", "question": "What are the rules regarding a contract?", "expected_act_ids": ["ICA1872"]},
+    {"id": "labour-wages", "category": "LABOUR", "type": "scenario", "question": "What happens if an employer refuses wages?", "expected_act_ids": ["COW2019", "POSH2013"]},
+    {"id": "ip-copyright", "category": "IP", "type": "scenario", "question": "Someone copied my copyrighted work.", "expected_act_ids": ["COPYRIGHT1957"]},
+    {"id": "ip-trademark", "category": "IP", "type": "scenario", "question": "I want to register a trademark.", "expected_act_ids": ["TRADEMARKS1999"]},
+    {"id": "tax-gst", "category": "TAX", "type": "scenario", "question": "What GST applies to this transaction?", "expected_act_ids": ["CGST2017", "IGST2017"]},
+    {"id": "tax-itc", "category": "TAX", "type": "scenario", "question": "Can I claim input tax credit?", "expected_act_ids": ["CGST2017"]},
+    {"id": "env-pollution", "category": "ENVIRONMENT", "type": "scenario", "question": "A company polluted the river near our village.", "expected_act_ids": ["EPA1986", "WATER1974"]},
+    {"id": "family-divorce", "category": "FAMILY", "type": "scenario", "question": "My spouse wants a divorce.", "expected_act_ids": ["HMA1955", "SMA1954"]},
+    {"id": "commercial-companies", "category": "COMMERCIAL", "type": "direct", "question": "What does Section 2 of the Companies Act say?", "expected_act_ids": ["COMPANIES2013"]},
+    {"id": "property-tpa", "category": "PROPERTY", "type": "scenario", "question": "My tenant refuses to vacate the flat.", "expected_act_ids": ["TPA1882", "REGISTRATION1908"]},
+    {"id": "cyber-leak", "category": "CYBER", "type": "scenario", "question": "My personal information was leaked by a company.", "expected_act_ids": ["DPDP2023", "ITACT2000", "CPA2019"]},
+    {"id": "cross-harassment", "category": "LABOUR", "type": "scenario", "question": "My employer fired me after I complained about sexual harassment.", "expected_act_ids": ["POSH2013", "IRC2020"]},
+    {"id": "cross-software", "category": "IP", "type": "scenario", "question": "A company copied my software and used it commercially.", "expected_act_ids": ["COPYRIGHT1957", "ICA1872"]}
+  ]
+}

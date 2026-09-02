@@ -14,8 +14,6 @@ import remarkGfm from "remark-gfm";
 
 import type { ChatResponse, Citation, InterviewState } from "@/lib/api/rag";
 
-import { isCaseDocumentCitation } from "@/lib/api/rag";
-
 import {
 
   domainToDocumentTemplate,
@@ -439,54 +437,6 @@ export function LegalAnswerCard({
 
 
 
-      {response.has_context && response.citations.length > 0 ? (
-
-        <div className="border border-[var(--line)] bg-[var(--surface)]">
-
-          <div className="module-tab">Sources</div>
-
-          <div className="grid gap-0 sm:grid-cols-2">
-
-            {response.citations.map((citation) => (
-
-              <button
-
-                key={`${citation.id}-${citation.chunk_id}`}
-
-                type="button"
-
-                onClick={() => onOpenCitation(citation)}
-
-                className="border-b border-[var(--line)] bg-white px-3 py-3 text-left text-xs hover:bg-[var(--signal-soft)] sm:odd:border-r"
-
-              >
-
-                <p className="font-semibold">
-
-                  [{citation.id}]{" "}
-
-                  {isCaseDocumentCitation(citation) ? "Case Document" : citation.document || "Source"}
-
-                </p>
-
-                <p className="mt-1 text-[var(--ink-muted)]">
-
-                  {citation.section ? `Section ${citation.section}` : citation.page != null ? `Page ${citation.page}` : "Passage"}
-
-                </p>
-
-              </button>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      ) : null}
-
-
-
       {landmarkCases.length > 0 ? (
 
         <div className="border-t border-[var(--line)] pt-4">
@@ -575,11 +525,11 @@ export function LegalAnswerCard({
 
           <ul className="mt-2 list-disc space-y-1 pl-5 text-[var(--ink-muted)]">
 
-            <li>ChatLaw currently indexes BNS, BNSS, and BSA (criminal law and evidence).</li>
+            <li>ChatLaw currently covers selected Central Indian legislation across criminal, civil, commercial, family, tax, environment, labour, IP, cyber, and consumer domains.</li>
 
-            <li>Ask a section, offence, or procedure from those codes.</li>
+            <li>Ask a section, offence, procedure, or describe your scenario in plain language.</li>
 
-            <li>Tenancy, employment, and consumer statutes are not in the library yet.</li>
+            <li>State-specific laws and case law are not fully indexed in this library.</li>
 
           </ul>
 
@@ -590,30 +540,6 @@ export function LegalAnswerCard({
 
 
       <div className="flex flex-wrap gap-2 border-t border-[var(--line)] pt-4">
-
-        {response.has_context && response.citations.length > 0 ? (
-
-          <button
-
-            type="button"
-
-            onClick={() => {
-
-              const first = response.citations[0];
-
-              if (first) onOpenCitation(first);
-
-            }}
-
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-semibold"
-
-          >
-
-            View sources
-
-          </button>
-
-        ) : null}
 
         {researchQuery ? (
 

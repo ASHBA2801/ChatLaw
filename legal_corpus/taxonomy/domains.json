@@ -1,0 +1,200 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-08-29",
+  "description": "Canonical legal domain taxonomy for ChatLaw Central Indian legislation corpus",
+  "domains": [
+    {
+      "id": "CRIMINAL",
+      "slug": "criminal_law",
+      "display_name": "Criminal Law",
+      "description": "Substantive criminal offences and punishments"
+    },
+    {
+      "id": "PROCEDURAL",
+      "slug": "criminal_procedure",
+      "display_name": "Criminal Procedure",
+      "description": "Investigation, trial, bail, and criminal court procedure (BNSS/CrPC)"
+    },
+    {
+      "id": "EVIDENCE",
+      "slug": "evidence",
+      "display_name": "Law of Evidence",
+      "description": "Admissibility, proof, witnesses, electronic evidence (BSA/IEA)"
+    },
+    {
+      "id": "CIVIL",
+      "slug": "civil_law",
+      "display_name": "Civil Law",
+      "description": "General civil rights, obligations, and non-criminal disputes"
+    },
+    {
+      "id": "CIVIL_PROCEDURE",
+      "slug": "civil_procedure",
+      "display_name": "Civil Procedure",
+      "description": "Civil suits, injunctions, execution, court fees (CPC, Limitation)"
+    },
+    {
+      "id": "PROPERTY",
+      "slug": "property",
+      "display_name": "Property Law",
+      "description": "Transfer, registration, easements, and immovable property (Central)"
+    },
+    {
+      "id": "CONTRACT",
+      "slug": "contract",
+      "display_name": "Contract Law",
+      "description": "Agreements, breach, damages, specific relief"
+    },
+    {
+      "id": "COMMERCIAL",
+      "slug": "commercial_law",
+      "display_name": "Commercial Law",
+      "description": "Sale of goods, partnership, negotiable instruments, arbitration"
+    },
+    {
+      "id": "CORPORATE",
+      "slug": "company_commercial_law",
+      "display_name": "Corporate Law",
+      "description": "Companies, LLP, insolvency, corporate governance"
+    },
+    {
+      "id": "INSOLVENCY",
+      "slug": "insolvency",
+      "display_name": "Insolvency & Bankruptcy",
+      "description": "IBC, CIRP, liquidation, NCLT"
+    },
+    {
+      "id": "FAMILY",
+      "slug": "family_law",
+      "display_name": "Family Law",
+      "description": "Marriage, divorce, custody, maintenance, domestic violence (statutory)"
+    },
+    {
+      "id": "PERSONAL_LAW",
+      "slug": "personal_law",
+      "display_name": "Personal Law",
+      "description": "Religion-specific or special marriage personal-law statutes; applicability never inferred"
+    },
+    {
+      "id": "CONSUMER",
+      "slug": "consumer_protection",
+      "display_name": "Consumer Protection",
+      "description": "Consumer disputes, product liability, e-commerce"
+    },
+    {
+      "id": "TAX",
+      "slug": "tax",
+      "display_name": "Taxation Law",
+      "description": "Income-tax, customs, direct and indirect Central tax statutes"
+    },
+    {
+      "id": "GST",
+      "slug": "gst",
+      "display_name": "Goods and Services Tax",
+      "description": "CGST, IGST, UTGST, compensation; rules and notifications as subordinate corpus",
+      "parent": "TAX"
+    },
+    {
+      "id": "ENVIRONMENT",
+      "slug": "environment",
+      "display_name": "Environmental Law",
+      "description": "Pollution control, wildlife, forests, NGT, biodiversity"
+    },
+    {
+      "id": "LABOUR",
+      "slug": "labour_employment",
+      "display_name": "Labour & Employment",
+      "description": "Wages, industrial relations, social security, OSH, POSH"
+    },
+    {
+      "id": "EMPLOYMENT",
+      "slug": "employment",
+      "display_name": "Employment",
+      "description": "Employer-employee relations, termination, workplace rights"
+    },
+    {
+      "id": "INTELLECTUAL_PROPERTY",
+      "slug": "intellectual_property",
+      "display_name": "Intellectual Property",
+      "description": "Copyright, patents, trademarks, designs, GI, plant varieties"
+    },
+    {
+      "id": "CYBER",
+      "slug": "cyber_law",
+      "display_name": "Cyber & Technology Law",
+      "description": "IT Act, data protection, cybercrime, digital commerce"
+    },
+    {
+      "id": "BANKING",
+      "slug": "banking_finance",
+      "display_name": "Banking & Financial Law",
+      "description": "Negotiable instruments, banking regulation, financial offences"
+    },
+    {
+      "id": "FINANCIAL",
+      "slug": "financial_regulation",
+      "display_name": "Financial Regulation",
+      "description": "PMLA, securities, regulatory finance"
+    },
+    {
+      "id": "HUMAN_RIGHTS",
+      "slug": "human_rights",
+      "display_name": "Human Rights",
+      "description": "NHRC, human rights courts, social justice statutes"
+    },
+    {
+      "id": "SOCIAL_WELFARE",
+      "slug": "social_welfare",
+      "display_name": "Social Welfare",
+      "description": "Legal aid, senior citizens, child protection, SC/ST protection"
+    },
+    {
+      "id": "EDUCATION",
+      "slug": "education",
+      "display_name": "Education Law",
+      "description": "Central education and related regulatory statutes"
+    },
+    {
+      "id": "HEALTH",
+      "slug": "health",
+      "display_name": "Health Law",
+      "description": "Central health and medical regulatory statutes"
+    },
+    {
+      "id": "TRANSPORT",
+      "slug": "motor_vehicle",
+      "display_name": "Transport & Motor Vehicles",
+      "description": "Motor Vehicles Act, traffic, MACT claims"
+    },
+    {
+      "id": "CONSTITUTIONAL",
+      "slug": "constitutional_law",
+      "display_name": "Constitutional & Administrative",
+      "description": "RTI, fundamental rights statutes, governance"
+    },
+    {
+      "id": "OTHER_REGULATORY",
+      "slug": "general_legal",
+      "display_name": "Other Regulatory",
+      "description": "Cross-cutting or general Central regulatory statutes"
+    }
+  ],
+  "personal_law_frameworks": [
+    "hindu",
+    "muslim_statutes",
+    "christian_statutes",
+    "parsi_statutes",
+    "special_marriage",
+    "secular_family"
+  ],
+  "jurisdiction_levels": ["CENTRAL", "STATE", "UNION_TERRITORY"],
+  "document_types": [
+    "STATUTE",
+    "RULE",
+    "REGULATION",
+    "NOTIFICATION",
+    "CIRCULAR",
+    "ORDER",
+    "SCHEDULE"
+  ]
+}

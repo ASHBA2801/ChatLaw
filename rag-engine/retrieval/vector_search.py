@@ -10,8 +10,10 @@ from typing import Any, Protocol
 from embeddings.base import EmbeddingProvider
 from embeddings.validation import validate_embedding
 
+from .domain_search import build_domain_filter_sql, resolve_search_domains
 from .models import RetrievalResponse, RetrievalResult
 from .reranker import RerankWeights, document_score, extract_query_signals, rerank, section_score
+from .version_filter import filter_results_by_version, parse_as_of_date
 
 
 DEFAULT_CANDIDATE_TOP_K = int(os.getenv("RETRIEVAL_CANDIDATE_TOP_K", "40"))
@@ -33,7 +35,7 @@ class Connection(Protocol):
     def cursor(self) -> Cursor: ...
 
 
-SEARCH_SQL = '''
+SEARCH_SQL_BASE = '''
 SELECT
   c."id" AS chunk_id,
   d."id" AS document_id,
@@ -46,9 +48,9 @@ SELECT
   c."pageNumber" AS page_number,
   c."chunkIndex" AS chunk_index,
   1 - (c."embedding" <=> %s::vector) AS similarity,
-  c."metadata" AS metadata
-    ,s.name AS source_name, s.url AS source_url, s."sourceType" AS source_type,
-    s."isOfficial" AS is_official
+  c."metadata" AS metadata,
+  s.name AS source_name, s.url AS source_url, s."sourceType" AS source_type,
+  s."isOfficial" AS is_official
 FROM "legal_chunks" AS c
 JOIN "legal_documents" AS d ON d."id" = c."documentId"
 LEFT JOIN LATERAL (
@@ -56,7 +58,10 @@ LEFT JOIN LATERAL (
     WHERE "documentId" = d."id" ORDER BY "isOfficial" DESC, id ASC LIMIT 1
 ) AS s ON TRUE
 WHERE c."embedding" IS NOT NULL
+  AND COALESCE(c.metadata->>'document_type', d."documentType", 'STATUTE') NOT IN ('CASE_LAW', 'case_law', 'case_document')
   AND 1 - (c."embedding" <=> %s::vector) >= %s
+{domain_filter}
+{version_filter}
 ORDER BY c."embedding" <=> %s::vector
 LIMIT %s
 '''
@@ -76,24 +81,6 @@ class VectorSearcher:
         self.default_top_k = default_top_k
         self.default_min_similarity = default_min_similarity
 
-    def search(self, query: str, *, top_k: int | None = None,
-               min_similarity: float | None = None, candidate_top_k: int | None = None,
-               debug: bool = False, weights: RerankWeights | None = None) -> RetrievalResponse:
-        normalized_query = query.strip()
-        if not normalized_query:
-            raise ValueError("query must not be empty")
-        resolved_top_k = self.default_top_k if top_k is None else top_k
-        if resolved_top_k <= 0:
-            raise ValueError("top_k must be positive")
-        threshold = self.default_min_similarity if min_similarity is None else min_similarity
-        if threshold is None:
-            threshold = -1.0
-        if not -1.0 <= threshold <= 1.0:
-            raise ValueError("min_similarity must be between -1 and 1")
-        resolved_candidate_top_k = candidate_top_k or max(DEFAULT_CANDIDATE_TOP_K, resolved_top_k)
-        if resolved_candidate_top_k < resolved_top_k:
-            raise ValueError("candidate_top_k must be at least top_k")
-
     def _get_embedding(self, text: str) -> list[float]:
         normalized = text.strip()
         if normalized in _query_embedding_cache:
@@ -107,6 +94,43 @@ class VectorSearcher:
         _query_embedding_cache[normalized] = validated
         return validated
 
+    def _run_search(
+        self,
+        vector_text: str,
+        threshold: float,
+        limit: int,
+        *,
+        domains: tuple[str, ...] = (),
+        as_of=None,
+    ) -> list[RetrievalResult]:
+        domain_sql, domain_params = build_domain_filter_sql(domains) if domains else ("", [])
+        version_sql = ""
+        version_params: list[Any] = []
+        if as_of is not None:
+            version_sql = """
+              AND (
+                c.metadata->>'effective_from' IS NULL OR (c.metadata->>'effective_from')::date <= %s
+              )
+              AND (
+                c.metadata->>'effective_to' IS NULL OR (c.metadata->>'effective_to')::date >= %s
+              )
+            """
+            version_params = [as_of, as_of]
+
+        sql = SEARCH_SQL_BASE.format(domain_filter=domain_sql, version_filter=version_sql)
+        params: list[Any] = [
+            vector_text,
+            vector_text,
+            threshold,
+            *domain_params,
+            *version_params,
+            vector_text,
+            limit,
+        ]
+        cursor = self.connection.cursor()
+        cursor.execute(sql, tuple(params))
+        return [RetrievalResult.from_row(_row_to_mapping(row)) for row in cursor.fetchall()]
+
     def search(self, query: str, *, top_k: int | None = None,
                min_similarity: float | None = None, candidate_top_k: int | None = None,
                debug: bool = False, weights: RerankWeights | None = None) -> RetrievalResponse:
@@ -125,7 +149,10 @@ class VectorSearcher:
         if resolved_candidate_top_k < resolved_top_k:
             raise ValueError("candidate_top_k must be at least top_k")
 
-        # Deterministic scenario analysis and query expansion
+        as_of = parse_as_of_date(normalized_query)
+        primary_domain, secondary_domains, confidence = resolve_search_domains(normalized_query)
+        routed_domains = (primary_domain, *secondary_domains)
+
         try:
             from scenario.expansion import expand_query
             expanded = expand_query(normalized_query)
@@ -142,27 +169,36 @@ class VectorSearcher:
         vector_text = "[" + ",".join(repr(float(value)) for value in vector) + "]"
         print("[RETRIEVAL] Searching pgvector", flush=True)
         database_started = time.perf_counter()
-        cursor = self.connection.cursor()
-        # Retrieve candidate pool
-        cursor.execute(SEARCH_SQL, (vector_text, vector_text, -1.0, vector_text, resolved_candidate_top_k))
-        rows = cursor.fetchall()
-        candidates = [RetrievalResult.from_row(_row_to_mapping(row)) for row in rows]
 
-        # Multi-query candidate merge if scenario query produced sparse candidates
+        # Cross-domain: domain-scoped pool when confident; always include global pool when uncertain
+        candidates: list[RetrievalResult] = []
+        seen_ids: set[str] = set()
+
+        def merge_pool(pool: list[RetrievalResult]) -> None:
+            for item in pool:
+                if item.chunk_id not in seen_ids:
+                    seen_ids.add(item.chunk_id)
+                    candidates.append(item)
+
+        if confidence >= 0.35 and primary_domain != "general_legal":
+            merge_pool(self._run_search(
+                vector_text, -1.0, resolved_candidate_top_k,
+                domains=routed_domains, as_of=as_of,
+            ))
+        merge_pool(self._run_search(vector_text, -1.0, resolved_candidate_top_k, as_of=as_of))
+
         if expanded and expanded.is_scenario and len(candidates) < resolved_top_k:
             orig_vector = self._get_embedding(normalized_query)
             if orig_vector != vector:
                 orig_vector_text = "[" + ",".join(repr(float(value)) for value in orig_vector) + "]"
-                cursor.execute(SEARCH_SQL, (orig_vector_text, orig_vector_text, -1.0, orig_vector_text, resolved_candidate_top_k))
-                seen_ids = {c.chunk_id for c in candidates}
-                for row in cursor.fetchall():
-                    c_res = RetrievalResult.from_row(_row_to_mapping(row))
-                    if c_res.chunk_id not in seen_ids:
-                        seen_ids.add(c_res.chunk_id)
-                        candidates.append(c_res)
+                merge_pool(self._run_search(orig_vector_text, -1.0, resolved_candidate_top_k, as_of=as_of))
 
-        resolved_weights = weights or RerankWeights(DEFAULT_VECTOR_WEIGHT, DEFAULT_KEYWORD_WEIGHT,
-                                DEFAULT_SECTION_WEIGHT, DEFAULT_DOCUMENT_WEIGHT)
+        candidates = filter_results_by_version(candidates, as_of)
+
+        resolved_weights = weights or RerankWeights(
+            DEFAULT_VECTOR_WEIGHT, DEFAULT_KEYWORD_WEIGHT,
+            DEFAULT_SECTION_WEIGHT, DEFAULT_DOCUMENT_WEIGHT,
+        )
         ranked = rerank(candidates, normalized_query, resolved_weights)
         signals = extract_query_signals(normalized_query)
         is_scenario = bool(expanded and expanded.is_scenario)

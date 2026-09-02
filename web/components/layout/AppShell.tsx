@@ -91,7 +91,7 @@ export default function AppShell({
       }
     >
       <aside
-        className={`hidden w-56 shrink-0 flex-col border-r border-[var(--line)] bg-[var(--surface)] lg:flex ${
+        className={`${isChatPage ? "hidden" : "hidden w-56 shrink-0 flex-col border-r border-[var(--line)] bg-[var(--surface)] lg:flex"} ${
           isNavMinimized ? "lg:hidden" : ""
         }`}
         aria-label="Product menu"
@@ -154,14 +154,14 @@ export default function AppShell({
       </aside>
 
       <div
-        className={`flex min-w-0 flex-1 flex-col pb-16 lg:pb-0 ${isChatPage ? "min-h-0 overflow-hidden" : ""}`}
+        className={`flex min-w-0 flex-1 flex-col ${isChatPage ? "min-h-0 overflow-hidden pb-0" : "pb-16 lg:pb-0"}`}
       >
         <header
           className={`z-30 shrink-0 border-b border-[var(--line)] bg-[var(--surface)] ${isChatPage ? "" : "sticky top-0"}`}
         >
-          <div className="flex h-12 items-center justify-between gap-2 px-3 sm:px-4">
+          <div className={`flex items-center justify-between gap-2 px-3 sm:px-4 ${isChatPage ? "h-11" : "h-12"}`}>
             <div className="flex min-w-0 items-center gap-2">
-              {isNavMinimized ? (
+              {!isChatPage && isNavMinimized ? (
                 <button
                   type="button"
                   onClick={() => setNavMinimized(false)}
@@ -171,6 +171,13 @@ export default function AppShell({
                   <MenuIcon className="h-4 w-4" />
                 </button>
               ) : null}
+              {isChatPage ? (
+                <Link href="/" className="flex items-center gap-2 text-sm font-bold">
+                  <span className="flex h-7 w-7 items-center justify-center bg-[var(--signal)] text-[10px] text-white">CL</span>
+                  <span className="hidden truncate sm:inline">ChatLaw</span>
+                </Link>
+              ) : (
+                <>
               <div className="min-w-0 lg:hidden">
                 <Link href="/" className="flex items-center gap-2 text-sm font-bold">
                   <span className="flex h-7 w-7 items-center justify-center bg-[var(--signal)] text-[10px] text-white">
@@ -183,9 +190,11 @@ export default function AppShell({
                 <h1 className="truncate text-sm font-bold tracking-tight">{pageTitle}</h1>
                 {subtitle ? <p className="truncate text-[11px] text-[var(--ink-muted)]">{subtitle}</p> : null}
               </div>
+                </>
+              )}
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
-              <LanguageSelector compact />
+              {!isChatPage ? <LanguageSelector compact /> : null}
               <Link
                 href="/account"
                 aria-current={pathname.startsWith("/account") ? "page" : undefined}
@@ -235,7 +244,7 @@ export default function AppShell({
 
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[var(--surface)] lg:hidden"
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[var(--surface)] lg:hidden ${isChatPage ? "" : ""}`}
       >
         <div className="grid grid-cols-4">
           {NAV.map((item) => {

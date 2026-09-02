@@ -12,7 +12,7 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
     if (!owned) redirect("/cases");
   }
   return (
-    <section className="mx-auto flex h-full min-h-0 w-full max-w-[1400px] flex-1 overflow-hidden px-0 sm:px-4 lg:px-6">
+    <section className="flex h-full min-h-0 w-full flex-1 overflow-hidden px-0">
       <ChatInterface caseId={caseId} />
     </section>
   );

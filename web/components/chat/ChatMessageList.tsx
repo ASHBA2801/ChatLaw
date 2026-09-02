@@ -206,7 +206,7 @@ const ChatMessageList = memo(function ChatMessageList({
   const priorUserTexts = useMemo(() => buildPriorUserTexts(messages), [messages]);
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+    <div className="mx-auto flex w-full flex-col gap-4">
       {messages.map((message, index) => (
         <ChatMessageItem
           key={message.id}

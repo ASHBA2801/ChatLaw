@@ -25,6 +25,7 @@ load_dotenv(rag_engine_dir / ".env")
 
 from embeddings.ingestion import EmbeddingIngestor
 from embeddings.provider import EmbeddingConfigurationError, create_embedding_provider, load_embedding_info
+from embeddings.usage_ledger import record_run
 from embeddings.validation import validate_chunk_record
 
 
@@ -137,10 +138,19 @@ def main() -> int:
             print("[EMBED] Creating Gemini client", flush=True)
             provider = create_embedding_provider()
             ingestor = EmbeddingIngestor(provider, expected_dimension=768, batch_size=batch_size)
-            vectors = ingestor.generate_embeddings(records)
-            report["chunks_embedded"] = len(vectors)
-            report["batches_processed"] = (len(records) + batch_size - 1) // batch_size
+            vectors, embed_stats = ingestor.generate_embeddings_with_reuse(records, reuse_lookup=_lookup_existing_embedding)
+            report["chunks_embedded"] = embed_stats["new_chunks_embedded"]
+            report["chunks_skipped"] = embed_stats["existing_embeddings_reused"]
+            report["batches_processed"] = (embed_stats["embedding_api_calls"] + batch_size - 1) // batch_size
             _execute_database_writes(records, vectors, provider.info, report)
+            record_run(
+                run_type="embed_execute",
+                generation_calls=0,
+                embedding_api_calls=embed_stats["embedding_api_calls"],
+                new_chunks_embedded=embed_stats["new_chunks_embedded"],
+                existing_embeddings_reused=embed_stats["existing_embeddings_reused"],
+                notes=f"document={args.document or 'all'}",
+            )
 
     except Exception as exc:
         report["errors"].append(str(exc))
@@ -164,6 +174,31 @@ class _ConfigurationOnlyProvider:
 
     def embed(self, text):
         raise RuntimeError("Dry-run provider must not embed")
+
+
+def _lookup_existing_embedding(chunk_id: str, chunk_hash: str) -> list[float] | None:
+    try:
+        import psycopg  # type: ignore
+    except ImportError:
+        return None
+    from database.upsert import ChunkUpserter
+
+    database_url = os.getenv("DATABASE_URL", "").strip()
+    if not database_url:
+        return None
+    try:
+        db_timeout = float(os.getenv("DATABASE_CONNECT_TIMEOUT_SECONDS", "30"))
+    except ValueError:
+        db_timeout = 30.0
+    with psycopg.connect(database_url, connect_timeout=int(db_timeout)) as connection:
+        upserter = ChunkUpserter(_PsycopgAdapter(connection))
+        existing = upserter.get_existing_chunk(chunk_id)
+        if existing is None:
+            return None
+        existing_hash, vector = existing
+        if existing_hash == chunk_hash and vector is not None:
+            return vector
+    return None
 
 
 def _execute_database_writes(records, vectors, info, report) -> None:

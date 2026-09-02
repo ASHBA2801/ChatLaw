@@ -3,6 +3,7 @@
 import json
 import time
 from collections.abc import Callable
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -93,6 +94,52 @@ class EmbeddingIngestor:
             batch = records[start:start + self.batch_size]
             vectors.extend(self._embed_batch_with_retry([record["content"] for record in batch]))
         return vectors
+
+    def generate_embeddings_with_reuse(
+        self,
+        records: list[dict[str, Any]],
+        *,
+        reuse_lookup: Callable[[str, str], list[float] | None] | None = None,
+    ) -> tuple[list[list[float]], dict[str, int]]:
+        """Embed records, reusing existing vectors when chunk_hash matches."""
+        vectors: list[list[float]] = []
+        stats = {
+            "embedding_api_calls": 0,
+            "new_chunks_embedded": 0,
+            "existing_embeddings_reused": 0,
+        }
+        pending_texts: list[str] = []
+        pending_indices: list[int] = []
+
+        def flush_pending() -> None:
+            nonlocal pending_texts, pending_indices
+            if not pending_texts:
+                return
+            batch_vectors = self._embed_batch_with_retry(pending_texts)
+            stats["embedding_api_calls"] += len(pending_texts)
+            stats["new_chunks_embedded"] += len(pending_texts)
+            for idx, vector in zip(pending_indices, batch_vectors):
+                vectors[idx] = vector
+            pending_texts = []
+            pending_indices = []
+
+        vectors = [[] for _ in records]
+        for index, record in enumerate(records):
+            chunk_id = str(record["chunk_id"])
+            chunk_hash = str(record.get("chunk_hash") or "")
+            reused = reuse_lookup(chunk_id, chunk_hash) if reuse_lookup else None
+            if reused is not None:
+                vectors[index] = reused
+                stats["existing_embeddings_reused"] += 1
+                continue
+            pending_texts.append(record["content"])
+            pending_indices.append(index)
+            if len(pending_texts) >= self.batch_size:
+                flush_pending()
+        flush_pending()
+        if any(not vector for vector in vectors):
+            raise RuntimeError("Embedding generation did not produce vectors for all records")
+        return vectors, stats
 
     def embed_records(self, records: list[dict[str, Any]]) -> list[list[float]]:
         """Generate vectors for records, preserving exact input content order."""

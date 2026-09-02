@@ -35,9 +35,9 @@ def test_catalog_find_by_alias():
 def test_catalog_ingested_acts_count():
     catalog = get_catalog()
     ingested = catalog.get_ingested()
-    assert len(ingested) == 3
+    assert len(ingested) == 15
     ingested_ids = {e.act_id for e in ingested}
-    assert ingested_ids == {"BNS2023", "BNSS2023", "BSA"}
+    assert {"BNS2023", "BNSS2023", "BSA", "COMPANIES2013", "ICA1872"}.issubset(ingested_ids)
 
 
 def test_catalog_priority_tiers():

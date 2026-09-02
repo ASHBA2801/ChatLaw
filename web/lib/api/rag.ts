@@ -103,6 +103,14 @@ export interface Citation {
   chapter?: string | null;
   clause?: string | null;
   evidence?: string | null;
+  domain?: string | null;
+  domains?: string[] | null;
+  jurisdiction_level?: string | null;
+  document_type?: string | null;
+  status?: string | null;
+  effective_from?: string | null;
+  effective_to?: string | null;
+  source_authority?: string | null;
   source?: {
     name?: string | null;
     url?: string | null;

@@ -99,6 +99,22 @@ DOMAINS_REGISTRY: dict[str, DomainDefinition] = {
         ),
         acts_and_statutes=("hindu marriage act", "special marriage act", "guardians and wards act", "hindu succession act"),
     ),
+    "personal_law": DomainDefinition(
+        id="personal_law",
+        display_name="Personal Law",
+        priority_keywords=(
+            "personal law", "hindu law", "muslim law", "christian marriage", "parsi marriage",
+            "which marriage law", "applicable personal law", "succession under personal law",
+            "triple talaq", "nikah", "hindu adoption",
+        ),
+        general_keywords=(
+            "religion", "community", "custom", "personal status",
+        ),
+        acts_and_statutes=(
+            "hindu marriage act", "hindu succession act", "special marriage act",
+            "muslim women protection of rights on marriage act",
+        ),
+    ),
     "labour_employment": DomainDefinition(
         id="labour_employment",
         display_name="Labour/Employment",
@@ -202,11 +218,40 @@ DOMAINS_REGISTRY: dict[str, DomainDefinition] = {
         priority_keywords=(
             "trademark", "copyright", "patent", "ip infringement", "passing off", "trade secret",
             "piracy", "design registration", "trademark objection", "licensing agreement",
+            "logo copied", "software copied", "invented a machine", "geographical indication",
         ),
         general_keywords=(
             "brand name", "logo copied", "stolen design", "counterfeit", "intellectual property",
         ),
         acts_and_statutes=("trade marks act", "copyright act", "patents act", "designs act"),
+    ),
+    "environment": DomainDefinition(
+        id="environment",
+        display_name="Environmental Law",
+        priority_keywords=(
+            "pollution", "environment protection", "water pollution", "air pollution",
+            "wildlife", "forest clearance", "ngt", "green tribunal", "river polluted",
+            "environmental clearance", "hazardous waste", "biodiversity",
+        ),
+        general_keywords=(
+            "factory discharge", "smoke", "effluent", "environment", "ecology",
+        ),
+        acts_and_statutes=(
+            "environment protection act", "water act", "air act", "wild life protection act",
+            "national green tribunal act",
+        ),
+    ),
+    "evidence": DomainDefinition(
+        id="evidence",
+        display_name="Law of Evidence",
+        priority_keywords=(
+            "admissible evidence", "electronic evidence", "witness", "hearsay", "proof",
+            "documentary evidence", "bsa", "indian evidence act", "examination of witness",
+        ),
+        general_keywords=(
+            "evidence", "admission", "proof", "testimony", "affidavit evidence",
+        ),
+        acts_and_statutes=("bharatiya sakshya adhiniyam", "bsa", "indian evidence act"),
     ),
     "banking_finance": DomainDefinition(
         id="banking_finance",
@@ -227,12 +272,15 @@ DOMAINS_REGISTRY: dict[str, DomainDefinition] = {
         priority_keywords=(
             "income tax", "gst", "goods and services tax", "tax notice", "scrutiny",
             "it return", "tds", "input tax credit", "advance tax", "tax penalty",
-            "assessment order", "itat", "gst tribunal",
+            "assessment order", "itat", "gst tribunal", "cgst", "igst", "customs duty",
         ),
         general_keywords=(
             "taxation", "revenue", "tax deduction", "pan card", "audit", "tax refund",
         ),
-        acts_and_statutes=("income tax act", "central goods and services tax act", "cgst"),
+        acts_and_statutes=(
+            "income tax act", "income-tax act 2025", "central goods and services tax act", "cgst",
+            "integrated goods and services tax act", "customs act",
+        ),
     ),
     "general_legal": DomainDefinition(
         id="general_legal",

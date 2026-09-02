@@ -29,6 +29,7 @@ class Evidence:
     is_official: bool | None = None
     similarity: float | None = None
     rerank_score: float | None = None
+    metadata: dict[str, Any] | None = None
 
     @property
     def id(self) -> int:
@@ -48,10 +49,14 @@ class Evidence:
 
     @classmethod
     def from_result(cls, result: RetrievalResult, citation_id: int) -> "Evidence":
-        return cls(citation_id, result.chunk_id, result.document_id, result.document_title,
-                   result.section_number, result.subsection, result.chapter, result.clause,
-                   result.page_number, result.content, result.source_name, result.source_url,
-                   result.source_type, result.is_official, result.similarity, result.rerank_score)
+        meta = dict(result.metadata) if isinstance(result.metadata, dict) else {}
+        return cls(
+            citation_id, result.chunk_id, result.document_id, result.document_title,
+            result.section_number, result.subsection, result.chapter, result.clause,
+            result.page_number, result.content, result.source_name, result.source_url,
+            result.source_type, result.is_official, result.similarity, result.rerank_score,
+            meta,
+        )
 
     def citation_dict(self) -> dict[str, Any]:
         value: dict[str, Any] = {
@@ -70,7 +75,20 @@ class Evidence:
         source = {key: item for key, item in source.items() if item is not None}
         if source:
             value["source"] = source
-        return value
+        return enrich_citation_dict(value, self.metadata)
+
+
+def enrich_citation_dict(base: dict[str, Any], metadata: dict[str, Any] | None) -> dict[str, Any]:
+    """Add domain/jurisdiction/version fields from chunk metadata."""
+    if not metadata:
+        return base
+    for key in (
+        "domain", "domains", "jurisdiction_level", "document_type",
+        "status", "effective_from", "effective_to", "source_authority",
+    ):
+        if metadata.get(key) is not None and key not in base:
+            base[key] = metadata.get(key)
+    return base
 
 
 @dataclass(frozen=True)
