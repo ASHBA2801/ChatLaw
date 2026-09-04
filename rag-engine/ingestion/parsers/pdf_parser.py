@@ -1,5 +1,6 @@
 """PDF Parser, Quality Analyzer, and Document Assembler using PyMuPDF."""
 
+import os
 import re
 import time
 from pathlib import Path
@@ -18,6 +19,10 @@ from ..models import (
 from ..structure.legal_structure import LegalStructureDetector
 
 
+def _ocr_enabled() -> bool:
+    return os.getenv("ENABLE_PDF_OCR", "").strip().lower() in {"1", "true", "yes"}
+
+
 class PDFParser:
     """Extracts, cleans, analyzes, and structures PDF documents page-by-page."""
 
@@ -26,10 +31,24 @@ class PDFParser:
         cleaner: Optional[TextCleaner] = None,
         header_footer_detector: Optional[HeaderFooterDetector] = None,
         structure_detector: Optional[LegalStructureDetector] = None,
+        enable_ocr: Optional[bool] = None,
     ):
         self.cleaner = cleaner or TextCleaner()
         self.header_footer_detector = header_footer_detector or HeaderFooterDetector()
         self.structure_detector = structure_detector or LegalStructureDetector()
+        self.enable_ocr = _ocr_enabled() if enable_ocr is None else enable_ocr
+
+    def _extract_page_text(self, page: "pymupdf.Page") -> str:
+        """Extract text; optionally OCR when native text layer is empty."""
+        raw_text = page.get_text() or ""
+        if raw_text.strip() or not self.enable_ocr:
+            return raw_text
+        try:
+            # Requires a local Tesseract installation (PyMuPDF OCR backend).
+            tp = page.get_textpage_ocr(dpi=200, full=True)
+            return page.get_text(textpage=tp) or ""
+        except Exception:
+            return raw_text
 
     def parse_pdf(self, file_info: FileHashInfo) -> DocumentData:
         """Parses a PDF file into a full structured DocumentData object.
@@ -53,7 +72,7 @@ class PDFParser:
         # 1. Page-by-page raw extraction
         for pno in range(page_count):
             page = doc[pno]
-            raw_text = page.get_text()
+            raw_text = self._extract_page_text(page)
             raw_pages_text.append(raw_text)
 
         doc.close()

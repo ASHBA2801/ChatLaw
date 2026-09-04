@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-08-29T10:04:22.016069+00:00",
+  "generated_at": "2026-09-04T17:13:43.359925+00:00",
   "audit_version": "2.0",
   "catalog_path": "C:\\Project Files\\ChatLaw\\legal_corpus\\acts\\catalog.json",
   "summary": {
-    "total_catalog_acts": 68,
+    "total_catalog_acts": 79,
     "ingested_acts": 15,
     "pending_source_acts": 53,
     "total_chunks_in_db": 5080,
-    "total_embeddings_in_db": 5080,
+    "total_embeddings_in_db": 0,
     "duplicate_source_hashes": 0,
-    "db_available": true
+    "db_available": false
   },
   "duplicate_hashes": {},
   "documents": [
@@ -44,8 +44,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "ingested",
       "chunk_count": 380,
-      "embeddings_count": 380,
-      "db_document_id": "ragdoc_765d4180e8a956f8e1b4822445c15d65c39ec3b6",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -81,8 +81,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "ingested",
       "chunk_count": 271,
-      "embeddings_count": 271,
-      "db_document_id": "ragdoc_6cae8953c3a00efd816982522381df7a033c30f7",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -119,8 +119,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "ingested",
       "chunk_count": 182,
-      "embeddings_count": 182,
-      "db_document_id": "ragdoc_a5af4fb50329c731b9f4e9f8a7e401fd5ae0509a",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -301,8 +301,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 118,
-      "embeddings_count": 118,
-      "db_document_id": "ragdoc_cc5488322b67de977de416ca6ad5c85bc952dd71",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -598,8 +598,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "pilot",
       "chunk_count": 565,
-      "embeddings_count": 565,
-      "db_document_id": "ragdoc_a548b4134766e6264a9657a2e835008099dfa509",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -674,8 +674,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 196,
-      "embeddings_count": 196,
-      "db_document_id": "ragdoc_3f1f1fd79a2c546137a5ee7bd0ba4a2374717c0b",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -860,8 +860,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "pilot",
       "chunk_count": 1392,
-      "embeddings_count": 1392,
-      "db_document_id": "ragdoc_af1fa33284193b93259abbd53c0ab061a049a772",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -900,8 +900,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 478,
-      "embeddings_count": 478,
-      "db_document_id": "ragdoc_2f09125c00df73bcb301e27c84bd7b193aad984c",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -974,8 +974,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "pilot",
       "chunk_count": 115,
-      "embeddings_count": 115,
-      "db_document_id": "ragdoc_3ece360a569cb3b3d7afc4a1611fa7a012d79bde",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -1125,8 +1125,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "pilot",
       "chunk_count": 21,
-      "embeddings_count": 21,
-      "db_document_id": "ragdoc_6dca8a0b0cab03dce8376f85bf2cb50fc4a2c986",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -1535,8 +1535,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "pilot",
       "chunk_count": 31,
-      "embeddings_count": 31,
-      "db_document_id": "ragdoc_586910e2606b95665445720a24bdacd0cbaa2849",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -1970,8 +1970,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 585,
-      "embeddings_count": 585,
-      "db_document_id": "ragdoc_ec5dedfe34e57e4f48d9f6cb2d5152f09dfa3d2f",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -2006,8 +2006,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 33,
-      "embeddings_count": 33,
-      "db_document_id": "ragdoc_53588b4e15110476ff72037446007d421202634c",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -2042,8 +2042,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 63,
-      "embeddings_count": 63,
-      "db_document_id": "ragdoc_cbc39b23941636c9d726c125ee0c31d91963ba3e",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -2148,8 +2148,8 @@
       "ingestion_status": "ingested",
       "ingestion_stage": "stage_1",
       "chunk_count": 650,
-      "embeddings_count": 650,
-      "db_document_id": "ragdoc_17a6a275269663233986e7519805b2a41a687c61",
+      "embeddings_count": 0,
+      "db_document_id": null,
       "is_duplicate_source": false
     },
     {
@@ -2506,6 +2506,395 @@
       "source_present": false,
       "ingestion_status": "pending_source",
       "ingestion_stage": "stage_1",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "CGSTRULES2017",
+      "official_title": "Central Goods and Services Tax Rules, 2017",
+      "short_title": "CGST Rules, 2017",
+      "year": 2017,
+      "act_number": "CGST Rules 2017",
+      "domains": [
+        "tax",
+        "gst"
+      ],
+      "domain": "tax",
+      "category": "Tax / GST Rules",
+      "sub_domains": [
+        "gst_rules",
+        "returns",
+        "registration"
+      ],
+      "document_type": "RULE",
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "status": "in_force",
+      "effective_from": "2017-07-01",
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "Central Board of Indirect Taxes and Customs",
+      "official_url": "https://cbic-gst.gov.in/",
+      "source_type": "ministry_notification",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_2",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "GSTNOTIFICATIONS",
+      "official_title": "GST Rate and Exemption Notifications (Central)",
+      "short_title": "GST Notifications",
+      "year": 2017,
+      "act_number": "GST Notifications",
+      "domains": [
+        "tax",
+        "gst"
+      ],
+      "domain": "tax",
+      "category": "Tax / GST Notifications",
+      "sub_domains": [
+        "rate_notifications",
+        "exemptions"
+      ],
+      "document_type": "NOTIFICATION",
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "status": "in_force",
+      "effective_from": "2017-07-01",
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "CBIC / Ministry of Finance",
+      "official_url": "https://cbic-gst.gov.in/",
+      "source_type": "ministry_notification",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_2",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "UTGST2017",
+      "official_title": "The Union Territory Goods and Services Tax Act, 2017",
+      "short_title": "UTGST Act, 2017",
+      "year": 2017,
+      "act_number": "14 of 2017",
+      "domains": [
+        "tax",
+        "gst"
+      ],
+      "domain": "tax",
+      "category": "Tax / GST",
+      "sub_domains": [
+        "utgst"
+      ],
+      "document_type": "STATUTE",
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "status": "in_force",
+      "effective_from": "2017-07-01",
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "Parliament of India / Ministry of Finance",
+      "official_url": "https://www.indiacode.gov.in/",
+      "source_type": "official_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_2",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "GSTCOMP2017",
+      "official_title": "The Goods and Services Tax (Compensation to States) Act, 2017",
+      "short_title": "GST Compensation Act, 2017",
+      "year": 2017,
+      "act_number": "15 of 2017",
+      "domains": [
+        "tax",
+        "gst"
+      ],
+      "domain": "tax",
+      "category": "Tax / GST",
+      "sub_domains": [
+        "compensation_cess"
+      ],
+      "document_type": "STATUTE",
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "status": "in_force",
+      "effective_from": "2017-07-01",
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "Parliament of India / Ministry of Finance",
+      "official_url": "https://www.indiacode.gov.in/",
+      "source_type": "official_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_2",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "ECOMRULES2020",
+      "official_title": "Consumer Protection (E-Commerce) Rules, 2020",
+      "short_title": "E-Commerce Rules, 2020",
+      "year": 2020,
+      "act_number": "E-Commerce Rules 2020",
+      "domains": [
+        "consumer_protection"
+      ],
+      "domain": "consumer_protection",
+      "category": "Consumer / Rules",
+      "sub_domains": [
+        "e_commerce",
+        "marketplace"
+      ],
+      "document_type": "RULE",
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "status": "in_force",
+      "effective_from": "2020-07-23",
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "Ministry of Consumer Affairs",
+      "official_url": "https://consumeraffairs.gov.in/",
+      "source_type": "ministry_notification",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_2",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "ENVNOTIFICATIONS",
+      "official_title": "Environment Protection Rules and Notifications (Central)",
+      "short_title": "EPA Rules/Notifications",
+      "year": 1986,
+      "act_number": "EPA Rules",
+      "domains": [
+        "environment"
+      ],
+      "domain": "environment",
+      "category": "Environment / Rules",
+      "sub_domains": [
+        "rules",
+        "notifications",
+        "standards"
+      ],
+      "document_type": "RULE",
+      "jurisdiction_level": "CENTRAL",
+      "jurisdiction": "India",
+      "status": "in_force",
+      "effective_from": "1986-11-19",
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "MoEFCC",
+      "official_url": "https://moef.gov.in/",
+      "source_type": "ministry_notification",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_2",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "STATE_RENT_PLACEHOLDER",
+      "official_title": "State Rent Control / Tenancy Acts (placeholder)",
+      "short_title": "State Rent/Tenancy Acts",
+      "year": 0,
+      "act_number": "STATE",
+      "domains": [
+        "property"
+      ],
+      "domain": "property",
+      "category": "Property / State",
+      "sub_domains": [
+        "rent_control",
+        "tenancy"
+      ],
+      "document_type": "STATUTE",
+      "jurisdiction_level": "STATE",
+      "jurisdiction": "None",
+      "status": "catalog_scaffold",
+      "effective_from": null,
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "State Legislature",
+      "official_url": "",
+      "source_type": "state_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_3",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "STATE_RERA_PLACEHOLDER",
+      "official_title": "State RERA Rules (placeholder)",
+      "short_title": "State RERA Rules",
+      "year": 0,
+      "act_number": "STATE",
+      "domains": [
+        "property"
+      ],
+      "domain": "property",
+      "category": "Property / State",
+      "sub_domains": [
+        "rera"
+      ],
+      "document_type": "RULE",
+      "jurisdiction_level": "STATE",
+      "jurisdiction": "None",
+      "status": "catalog_scaffold",
+      "effective_from": null,
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "State Government / RERA Authority",
+      "official_url": "",
+      "source_type": "state_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_3",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "STATE_LABOUR_PLACEHOLDER",
+      "official_title": "State Labour Rules under Labour Codes (placeholder)",
+      "short_title": "State Labour Rules",
+      "year": 0,
+      "act_number": "STATE",
+      "domains": [
+        "labour_employment"
+      ],
+      "domain": "labour_employment",
+      "category": "Labour / State",
+      "sub_domains": [
+        "state_rules",
+        "labour_codes"
+      ],
+      "document_type": "RULE",
+      "jurisdiction_level": "STATE",
+      "jurisdiction": "None",
+      "status": "catalog_scaffold",
+      "effective_from": null,
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "State Labour Department",
+      "official_url": "",
+      "source_type": "state_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_3",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "STATE_FAMILY_PLACEHOLDER",
+      "official_title": "State Family Court / Personal Law Rules (placeholder)",
+      "short_title": "State Family Rules",
+      "year": 0,
+      "act_number": "STATE",
+      "domains": [
+        "family_law",
+        "personal_law"
+      ],
+      "domain": "family_law",
+      "category": "Family / State",
+      "sub_domains": [
+        "family_courts",
+        "personal_law_rules"
+      ],
+      "document_type": "RULE",
+      "jurisdiction_level": "STATE",
+      "jurisdiction": "None",
+      "status": "catalog_scaffold",
+      "effective_from": null,
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "State High Court / State Government",
+      "official_url": "",
+      "source_type": "state_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_3",
+      "chunk_count": 0,
+      "embeddings_count": 0,
+      "db_document_id": null,
+      "is_duplicate_source": false
+    },
+    {
+      "act_id": "STATE_LAND_PLACEHOLDER",
+      "official_title": "State Land Revenue / Land Reform Acts (placeholder)",
+      "short_title": "State Land Acts",
+      "year": 0,
+      "act_number": "STATE",
+      "domains": [
+        "property"
+      ],
+      "domain": "property",
+      "category": "Property / State",
+      "sub_domains": [
+        "land_revenue",
+        "land_reforms"
+      ],
+      "document_type": "STATUTE",
+      "jurisdiction_level": "STATE",
+      "jurisdiction": "None",
+      "status": "catalog_scaffold",
+      "effective_from": null,
+      "effective_to": null,
+      "language": "en",
+      "source_authority": "State Legislature",
+      "official_url": "",
+      "source_type": "state_gazette",
+      "source_file": null,
+      "source_sha256": null,
+      "source_present": false,
+      "ingestion_status": "catalog_only",
+      "ingestion_stage": "stage_3",
       "chunk_count": 0,
       "embeddings_count": 0,
       "db_document_id": null,

@@ -184,12 +184,20 @@ def main() -> int:
         wanted = {a.upper() for a in args.act_ids}
         targets = [e for e in targets if e.act_id.upper() in wanted]
     elif args.stage == "pilot":
-        targets = [e for e in targets if e.ingestion_stage == "pilot" and e.ingestion_status != "ingested"]
+        targets = [
+            e for e in targets
+            if e.ingestion_stage == "pilot"
+            and e.ingestion_status not in {"ingested", "catalog_only"}
+        ]
     elif args.stage == "stage_1":
         targets = [
             e for e in targets
-            if e.ingestion_stage in {"pilot", "stage_1"} and e.ingestion_status != "ingested"
+            if e.ingestion_stage in {"pilot", "stage_1"}
+            and e.ingestion_status not in {"ingested", "catalog_only"}
         ]
+
+    # Never auto-acquire Stage 2/3 catalog-only scaffolding
+    targets = [e for e in targets if e.ingestion_status != "catalog_only"]
 
     results = []
     for entry in targets:

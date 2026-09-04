@@ -187,6 +187,19 @@
     "special_marriage",
     "secular_family"
   ],
+  "gst_catalog_tree": {
+    "parent": "TAX",
+    "branch": "GST",
+    "components": [
+      {"id": "CGST2017", "role": "parent_act", "ingestion_stage": "stage_1"},
+      {"id": "IGST2017", "role": "parent_act", "ingestion_stage": "stage_1"},
+      {"id": "UTGST2017", "role": "parent_act", "ingestion_stage": "stage_2"},
+      {"id": "GSTCOMP2017", "role": "parent_act", "ingestion_stage": "stage_2"},
+      {"id": "CGSTRULES2017", "role": "rules", "ingestion_stage": "stage_2"},
+      {"id": "GSTNOTIFICATIONS", "role": "notifications", "ingestion_stage": "stage_2"}
+    ],
+    "notes": "Parent Acts in Stage 1 when PDFs available; rules/notifications catalogued, not mass-ingested this phase."
+  },
   "jurisdiction_levels": ["CENTRAL", "STATE", "UNION_TERRITORY"],
   "document_types": [
     "STATUTE",

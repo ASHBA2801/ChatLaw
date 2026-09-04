@@ -74,14 +74,15 @@ DOMAINS_REGISTRY: dict[str, DomainDefinition] = {
         id="property",
         display_name="Property",
         priority_keywords=(
-            "landlord", "tenant", "tenancy", "rent", "security deposit", "eviction",
+            "landlord", "tenant", "tenancy", "house rent", "monthly rent", "rent arrears",
+            "security deposit", "eviction",
             "lease", "property dispute", "title deed", "sale deed", "mortgage", "partition",
             "possession", "trespass", "encroachment", "stamp duty", "registration of property",
             "मकान मालिक", "किरायेदार", "किराया", "जमा", "संपत्ति",
         ),
         general_keywords=(
             "flat", "house", "apartment", "land", "plot", "rented", "owner", "builder",
-            "possession delayed", "rera",
+            "possession delayed", "rera", "rent",
         ),
         acts_and_statutes=("transfer of property act", "rent control act", "rera"),
     ),

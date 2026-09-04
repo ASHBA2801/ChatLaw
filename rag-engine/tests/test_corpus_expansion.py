@@ -21,11 +21,22 @@ def _fresh_catalog():
 def test_catalog_v2_has_domains_and_by_domain_index():
     catalog_path = Path(__file__).resolve().parents[2] / "legal_corpus" / "acts" / "catalog.json"
     data = json.loads(catalog_path.read_text(encoding="utf-8"))
-    assert data["version"] == "2.0"
+    assert data["version"] in ("2.0", "2.1")
     assert "by_domain" in data
     assert len(data["acts"]) >= 60
     entry = next(a for a in data["acts"] if a["act_id"] == "BSA")
     assert "evidence" in entry.get("domains", [])
+
+
+def test_stage2_and_stage3_scaffolding_present():
+    catalog = get_catalog()
+    stage2 = {e.act_id for e in catalog.get_by_stage("stage_2")}
+    stage3 = {e.act_id for e in catalog.get_by_stage("stage_3")}
+    assert "CGSTRULES2017" in stage2
+    assert "ECOMRULES2020" in stage2
+    assert "STATE_RENT_PLACEHOLDER" in stage3
+    assert all(e.jurisdiction_level == "STATE" for e in catalog.get_by_stage("stage_3"))
+    assert all(e.ingestion_status == "catalog_only" for e in catalog.get_by_stage("stage_2"))
 
 
 def test_get_by_domain_matches_secondary_domains():

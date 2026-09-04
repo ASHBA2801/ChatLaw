@@ -67,7 +67,7 @@ class ActCatalogEntry:
             jurisdiction=str(data.get("jurisdiction", "India")),
             document_type=doc_type,
             source_authority=str(data.get("source_authority", "")),
-            official_url=str(data.get("official_url", "")),
+            official_url=str(data["official_url"]) if data.get("official_url") else "",
             status=str(data.get("status", "in_force")),
             effective_from=data.get("effective_from") if data.get("effective_from") else None,
             effective_to=data.get("effective_to") if data.get("effective_to") else None,
