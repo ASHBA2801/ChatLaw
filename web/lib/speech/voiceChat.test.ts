@@ -44,12 +44,12 @@ describe("voiceState", () => {
     expect(canTransition("idle", "listening")).toBe(true);
     expect(canTransition("listening", "transcribing")).toBe(true);
     expect(canTransition("transcribing", "ready_to_send")).toBe(true);
+    expect(canTransition("transcribing", "thinking")).toBe(true);
     expect(canTransition("ready_to_send", "thinking")).toBe(true);
     expect(canTransition("thinking", "speaking")).toBe(true);
     expect(canTransition("speaking", "idle")).toBe(true);
     expect(canTransition("speaking", "listening")).toBe(true);
     expect(canTransition("listening", "speaking")).toBe(false);
-    expect(canTransition("transcribing", "thinking")).toBe(false);
   });
 
   it("labels states for screen readers", () => {

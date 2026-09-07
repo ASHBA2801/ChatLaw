@@ -28,7 +28,27 @@ export {
   stripMarkdown,
   stripUrls,
 } from "./speechText";
+export {
+  normalizeTextForSpeech,
+  normalizeCurrency,
+  normalizeLegalSections,
+  normalizeLegalAbbreviations,
+  numberToIndianWords,
+  stripCitationsAndTechnicalMarkers,
+  stripMarkdownFormatting,
+  cleanPunctuationArtifacts,
+} from "./speechNormalizer";
 export { canStartVoiceListening, canTransition, isVoiceBusy, voiceStateLabel } from "./voiceState";
+export {
+  AudioRecorderSession,
+  getSupportedAudioMimeType,
+  isAudioRecordingSupported,
+} from "./audioRecorder";
+export type { AudioRecordingResult, AudioRecorderCallbacks } from "./audioRecorder";
+export { transcribeAudio } from "./transcribe";
+export type { TranscribeAudioResult } from "./transcribe";
+export { synthesizeSpeechAudio, playSynthesizedAudio } from "./synthesize";
+export type { SynthesizedAudioResult, AudioPlayHandle, PlaySpeechOptions } from "./synthesize";
 export { SpeechInputSession } from "./SpeechInputSession";
 export { SpeechOutputSession } from "./SpeechOutputSession";
 export { useSpeechInput } from "./useSpeechInput";

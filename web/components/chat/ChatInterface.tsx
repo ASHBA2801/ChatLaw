@@ -664,6 +664,13 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 onLanguageChange={voiceChat.setLanguage}
                 muted={voiceChat.muted}
                 onMutedChange={voiceChat.setMuted}
+                autoSend={voiceChat.autoSend}
+                onAutoSendChange={voiceChat.setAutoSend}
+                continuousMode={voiceChat.continuousMode}
+                onContinuousModeChange={voiceChat.setContinuousMode}
+                autoplayBlocked={voiceChat.autoplayBlocked}
+                onUnlockAutoplay={voiceChat.unlockAutoplay}
+                audioLevel={voiceChat.audioLevel}
                 error={voiceChat.error}
                 interimText={voiceChat.interimText}
                 draftText={voiceChat.draftText}
