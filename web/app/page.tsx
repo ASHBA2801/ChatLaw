@@ -2,31 +2,104 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div className="paper-grid pointer-events-none absolute inset-0 opacity-70" />
-      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-7 lg:px-10">
-        <Link href="/" className="flex items-center gap-3 font-bold tracking-tight">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--forest)] text-sm text-[var(--lime)]">CL</span>
-          <span className="text-lg">ChatLaw</span>
-        </Link>
-        <span className="hidden text-sm text-[var(--ink-muted)] sm:block">A clearer way to begin</span>
-      </nav>
-      <section className="relative mx-auto grid min-h-[calc(100vh-88px)] max-w-7xl items-center gap-16 px-6 pb-20 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:px-10 lg:pt-0">
-        <div className="max-w-3xl">
-          <p className="mb-7 flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--forest)]"><span className="h-px w-10 bg-[var(--warm)]" />Indian legal information</p>
-          <h1 className="max-w-3xl text-6xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-7xl lg:text-[6.5rem]">Understand the law.<br /><span className="text-[var(--forest)]">Know your next step.</span></h1>
-          <p className="mt-8 max-w-xl text-lg leading-8 text-[var(--ink-muted)]">Your multilingual AI assistant for understanding Indian law and legal rights.</p>
-          <Link href="/chat" className="mt-10 inline-flex items-center gap-5 rounded-full bg-[var(--forest)] px-7 py-4 font-semibold text-white transition-transform hover:-translate-y-1">Start Chatting <span className="text-xl text-[var(--lime)]">↗</span></Link>
-          <p className="mt-5 text-xs text-[var(--ink-muted)]">A starting point for information, not a substitute for professional advice.</p>
+    <main className="flex min-h-dvh flex-col bg-[var(--background)]">
+      <header className="shrink-0 border-b border-[var(--line)] bg-[var(--surface)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight">
+            <span className="flex h-7 w-7 items-center justify-center bg-[var(--signal)] text-[10px] text-white">CL</span>
+            ChatLaw
+          </Link>
+          <nav className="flex flex-wrap items-center gap-1 text-xs font-bold uppercase tracking-wide">
+            {[
+              ["/chat", "Chat"],
+              ["/documents", "Documents"],
+              ["/cases", "Cases"],
+              ["/research", "Research"],
+              ["/signin", "Sign in"],
+            ].map(([href, label]) => (
+              <Link
+                key={href}
+                href={href}
+                className="border border-transparent px-2.5 py-2 text-[var(--ink-muted)] hover:border-[var(--line)] hover:text-[var(--foreground)]"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
         </div>
-        <div className="relative mx-auto w-full max-w-md lg:mr-5">
-          <div className="absolute -right-5 -top-5 h-28 w-28 rounded-full bg-[var(--lime)]" />
-          <div className="relative rounded-[2rem] border border-[var(--line)] bg-white/80 p-5 shadow-[0_24px_70px_rgba(23,73,54,0.12)] backdrop-blur">
-            <div className="flex items-center justify-between border-b border-[var(--line)] pb-5"><span className="font-semibold">Ask ChatLaw</span><span className="rounded-full bg-[#eef5d0] px-3 py-1 text-xs font-semibold text-[var(--forest)]">Ready when you are</span></div>
-            <div className="space-y-4 py-8"><div className="ml-auto max-w-[78%] rounded-2xl rounded-br-sm bg-[var(--forest)] px-4 py-3 text-sm leading-6 text-white">What does a legal notice mean?</div><div className="max-w-[86%] rounded-2xl rounded-bl-sm bg-[#edf2ec] px-4 py-3 text-sm leading-6 text-[var(--foreground)]">Start with the basics, in a language that works for you.</div></div>
-            <div className="flex items-center gap-3 rounded-xl border border-[var(--line)] px-4 py-3 text-sm text-[var(--ink-muted)]">Type a question <span className="ml-auto text-lg text-[var(--forest)]">→</span></div>
+      </header>
+
+      <section className="grid min-h-0 flex-1 lg:grid-cols-2">
+        <div className="flex flex-col justify-center border-b border-[var(--line)] bg-[var(--surface)] p-6 sm:p-10 lg:border-b-0 lg:border-r lg:p-12 xl:p-16">
+          <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
+            ChatLaw
+            <span className="mt-2 block text-[var(--signal)]">Your legal assistant.</span>
+          </h1>
+          <p className="mt-5 max-w-prose text-sm leading-7 text-[var(--ink-muted)] sm:text-base lg:text-lg">
+            Understand Indian law in 22+ languages. Describe your situation in English or an Indian language. ChatLaw asks
+            focused follow-ups, then explains the law in plain language with sources you can check.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2">
+            <Link
+              href="/chat"
+              className="inline-flex min-h-11 items-center bg-[var(--signal)] px-5 text-sm font-bold uppercase tracking-wide text-white"
+            >
+              Start with Chat
+            </Link>
+            <Link
+              href="/research"
+              className="inline-flex min-h-11 items-center border border-[var(--line)] bg-white px-5 text-sm font-bold uppercase tracking-wide text-[var(--foreground)]"
+            >
+              Search sources
+            </Link>
+            <Link
+              href="/documents"
+              className="inline-flex min-h-11 items-center border border-[var(--line)] bg-white px-5 text-sm font-bold uppercase tracking-wide text-[var(--foreground)]"
+            >
+              Draft a document
+            </Link>
           </div>
-          <div className="absolute -bottom-8 -left-8 hidden rounded-2xl bg-[var(--warm)] px-5 py-4 text-sm font-semibold shadow-lg sm:block">Built for everyday questions.</div>
+          <p className="mt-4 max-w-prose text-[11px] text-[var(--ink-muted)]">
+            Informational assistance only — not a substitute for a lawyer or court.
+          </p>
+        </div>
+
+        <div className="flex min-h-[min(420px,50vh)] flex-col lg:min-h-0">
+          <div className="module-tab shrink-0">Structured answer · demo</div>
+          <div className="flex flex-1 flex-col border-b border-[var(--line)] bg-[var(--surface)] p-4 sm:p-6 lg:p-8">
+            <p className="text-xs font-bold text-[var(--ink-muted)]">You</p>
+            <p className="mt-1 border border-[var(--line)] bg-[var(--module-fill)] px-3 py-2 text-sm sm:text-base">
+              My landlord is refusing to return my deposit.
+            </p>
+            <p className="mt-4 text-xs font-bold text-[var(--ink-muted)]">ChatLaw</p>
+            <p className="mt-1 max-w-prose text-sm leading-6 sm:text-base">
+              Which state are you in, and has the tenancy ended? After that I can point to the sections that usually
+              govern deposit return.
+            </p>
+            <div className="mt-4 flex-1 border border-[var(--line)]">
+              <div className="module-tab">Citations</div>
+              <ul className="divide-y divide-[var(--line)] text-xs sm:text-sm">
+                <li className="flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
+                  <span>Transfer of Property Act · related tenancy terms</span>
+                  <span className="shrink-0 bg-[var(--signal-soft)] px-1.5 py-0.5 text-[10px] font-bold uppercase text-[var(--signal)] sm:text-xs">
+                    Act
+                  </span>
+                </li>
+                <li className="flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
+                  <span>State rent / tenancy rules (after location)</span>
+                  <span className="shrink-0 bg-[var(--module-fill)] px-1.5 py-0.5 text-[10px] font-bold uppercase text-[var(--ink-muted)] sm:text-xs">
+                    Next
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid shrink-0 grid-cols-4 divide-x divide-[var(--line)] border-t border-[var(--line)] bg-[var(--surface)] text-center text-[10px] font-bold uppercase tracking-wide sm:text-xs">
+            <span className="px-1 py-3 text-[var(--signal)] sm:py-4">Chat</span>
+            <span className="px-1 py-3 text-[var(--ink-muted)] sm:py-4">Documents</span>
+            <span className="px-1 py-3 text-[var(--ink-muted)] sm:py-4">Cases</span>
+            <span className="px-1 py-3 text-[var(--ink-muted)] sm:py-4">Research</span>
+          </div>
         </div>
       </section>
     </main>

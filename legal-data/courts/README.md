@@ -1,5 +1,8 @@
 # legal-data/courts
 
-Court directories, jurisdiction metadata, and court-specific resources.
+Curated official court and forum directory used when `COURT_PROVIDER_URL` is unset.
 
-Empty until manually curated.
+Source of truth: [`directory.json`](./directory.json)
+
+Entries use official judiciary / eCourts HTTPS URLs only. Do not add unverified
+or invented courts.

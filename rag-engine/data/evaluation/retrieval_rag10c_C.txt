@@ -1,0 +1,472 @@
+========================================
+CHATLAW RETRIEVAL RERANKED
+========================================
+
+Questions: 30
+
+Recall@1: 0.6071
+Recall@3: 0.7500
+Recall@5: 0.7857
+Recall@8: 0.8571
+
+MRR: 0.6926
+
+Irrelevant Query Detection
+Precision: 0.0000
+Recall:    0.0000
+Accuracy:  0.9333
+
+Average latency: 0.6044 s
+Median latency: 0.5769 s
+
+Per-question results
+
+[RAG10-001]
+Question: What is the punishment for theft under the Bharatiya Nyaya Sanhita?
+Expected: BNS2023 / Section 303
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.7197)
+  2. BNSS2023 / Section — (similarity=0.6767)
+  3. BNSS2023 / Section — (similarity=0.6711)
+  4. BNSS2023 / Section — (similarity=0.6692)
+  5. BNSS2023 / Section — (similarity=0.6684)
+  6. BNSS2023 / Section — (similarity=0.6664)
+  7. BNSS2023 / Section — (similarity=0.6652)
+  8. BNSS2023 / Section — (similarity=0.6637)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: NO
+RR: 0.0000
+
+[RAG10-002]
+Question: Which section of the BNS deals with cheating?
+Expected: BNS2023 / Section 318
+Retrieved:
+  1. BNS2023 / Section 318 (similarity=0.6423)
+  2. BNSS2023 / Section — (similarity=0.6367)
+  3. BNSS2023 / Section — (similarity=0.6117)
+  4. BNSS2023 / Section — (similarity=0.6046)
+  5. BNS2023 / Section 318 (similarity=0.6358)
+  6. BNSS2023 / Section — (similarity=0.5987)
+  7. BNSS2023 / Section — (similarity=0.5965)
+  8. BNSS2023 / Section — (similarity=0.5932)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-003]
+Question: What does BNS section 109 cover?
+Expected: BNS2023 / Section 109
+Retrieved:
+  1. BNS2023 / Section 109 (similarity=0.5889)
+  2. BSA / Section 109 (similarity=0.6160)
+  3. BNSS2023 / Section — (similarity=0.5991)
+  4. BNSS2023 / Section — (similarity=0.5975)
+  5. BNSS2023 / Section — (similarity=0.5951)
+  6. BNSS2023 / Section — (similarity=0.5944)
+  7. BNS2023 / Section 209 (similarity=0.5919)
+  8. BNSS2023 / Section — (similarity=0.5833)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-004]
+Question: What punishment is provided for voluntarily causing hurt?
+Expected: BNS2023 / Section 115
+Retrieved:
+  1. BNS2023 / Section 115 (similarity=0.8254)
+  2. BNS2023 / Section 118 (similarity=0.7716)
+  3. BNS2023 / Section 117 (similarity=0.7383)
+  4. BNSS2023 / Section — (similarity=0.7490)
+  5. BNS2023 / Section 119 (similarity=0.7546)
+  6. BNS2023 / Section 120 (similarity=0.7206)
+  7. BNS2023 / Section 122 (similarity=0.7451)
+  8. BNS2023 / Section 124 (similarity=0.6843)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-005]
+Question: What is the offence involving a personation of another person?
+Expected: BNS2023 / Section 319
+Retrieved:
+  1. BNS2023 / Section 319 (similarity=0.7636)
+  2. BNS2023 / Section 172 (similarity=0.7401)
+  3. BNS2023 / Section 204 (similarity=0.7394)
+  4. BNS2023 / Section 242 (similarity=0.7330)
+  5. BNS2023 / Section 174 (similarity=0.7018)
+  6. BNS2023 / Section 182 (similarity=0.6294)
+  7. BNSS2023 / Section — (similarity=0.5950)
+  8. BNS2023 / Section 268 (similarity=0.6497)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-006]
+Question: What does the Sanhita say about criminal breach of trust?
+Expected: BNS2023 / Section 316
+Retrieved:
+  1. BNS2023 / Section 316 (similarity=0.7148)
+  2. BNS2023 / Section 316 (similarity=0.7069)
+  3. BNS2023 / Section 315 (similarity=0.6947)
+  4. BNSS2023 / Section — (similarity=0.6725)
+  5. BNSS2023 / Section — (similarity=0.6422)
+  6. BNSS2023 / Section — (similarity=0.6422)
+  7. BNS2023 / Section 2 (similarity=0.6823)
+  8. BNSS2023 / Section — (similarity=0.6552)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-007]
+Question: If someone attempts to commit murder, which provision is relevant?
+Expected: BNS2023 / Section 109
+Retrieved:
+  1. BNS2023 / Section 62 (similarity=0.6740)
+  2. BSA / Section 12 (similarity=0.6670)
+  3. BNS2023 / Section 55 (similarity=0.6613)
+  4. BNS2023 / Section 3 (similarity=0.6610)
+  5. BNS2023 / Section 310 (similarity=0.6580)
+  6. BNSS2023 / Section — (similarity=0.6571)
+  7. BNS2023 / Section 109 (similarity=0.6752)
+  8. BNS2023 / Section 40 (similarity=0.6736)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: YES
+RR: 0.1429
+
+[RAG10-008]
+Question: Which BNS provision concerns organised crime?
+Expected: BNS2023 / Section 111
+Retrieved:
+  1. BNS2023 / Section 111 (similarity=0.6413)
+  2. BNSS2023 / Section — (similarity=0.6306)
+  3. BNS2023 / Section 111 (similarity=0.6178)
+  4. BNS2023 / Section 112 (similarity=0.5879)
+  5. BNSS2023 / Section — (similarity=0.5982)
+  6. BNSS2023 / Section — (similarity=0.6116)
+  7. BNSS2023 / Section — (similarity=0.5817)
+  8. BNSS2023 / Section — (similarity=0.6006)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-009]
+Question: Which section addresses criminal intimidation in the BNS?
+Expected: BNS2023 / Section 351
+Retrieved:
+  1. BNS2023 / Section 351 (similarity=0.6737)
+  2. BNSS2023 / Section — (similarity=0.6095)
+  3. BNSS2023 / Section — (similarity=0.6015)
+  4. BNS2023 / Section 350 (similarity=0.5938)
+  5. BNSS2023 / Section — (similarity=0.5894)
+  6. BNSS2023 / Section — (similarity=0.6322)
+  7. BNSS2023 / Section — (similarity=0.6030)
+  8. BNSS2023 / Section — (similarity=0.6020)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-010]
+Question: What does BNS section 356 concern?
+Expected: BNS2023 / Section 356
+Retrieved:
+  1. BNS2023 / Section 356 (similarity=0.5960)
+  2. BNSS2023 / Section — (similarity=0.6246)
+  3. BNSS2023 / Section — (similarity=0.5968)
+  4. BNSS2023 / Section — (similarity=0.5966)
+  5. BNSS2023 / Section — (similarity=0.5861)
+  6. BNSS2023 / Section — (similarity=0.5821)
+  7. BNSS2023 / Section — (similarity=0.5807)
+  8. BNSS2023 / Section — (similarity=0.5771)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-011]
+Question: What is meant by evidence under the Bharatiya Sakshya Adhiniyam?
+Expected: BSA / Section 2
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.6768)
+  2. BSA / Section 2 (similarity=0.7294)
+  3. BSA / Section 1 (similarity=0.6852)
+  4. BNSS2023 / Section — (similarity=0.6385)
+  5. BSA / Section — (similarity=0.7492)
+  6. BSA / Section 2 (similarity=0.6892)
+  7. BSA / Section 6 (similarity=0.6611)
+  8. BSA / Section 63 (similarity=0.6565)
+Hit@1: NO | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 0.5000
+
+[RAG10-012]
+Question: Which BSA section concerns admissions?
+Expected: BSA / Section 15
+Retrieved:
+  1. BSA / Section 19 (similarity=0.5907)
+  2. BSA / Section 25 (similarity=0.6068)
+  3. BSA / Section 18 (similarity=0.5926)
+  4. BSA / Section 14 (similarity=0.5884)
+  5. BSA / Section 16 (similarity=0.5831)
+  6. BSA / Section 20 (similarity=0.5817)
+  7. BSA / Section 26 (similarity=0.5425)
+  8. BSA / Section 21 (similarity=0.5683)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: NO
+RR: 0.0000
+
+[RAG10-013]
+Question: What rules apply to confessions made by an accused?
+Expected: BSA / Section 22
+Retrieved:
+  1. BSA / Section 22 (similarity=0.7187)
+  2. BNSS2023 / Section — (similarity=0.6773)
+  3. BNSS2023 / Section — (similarity=0.6317)
+  4. BSA / Section 23 (similarity=0.6631)
+  5. BNSS2023 / Section — (similarity=0.6229)
+  6. BSA / Section 24 (similarity=0.6478)
+  7. BNSS2023 / Section — (similarity=0.6103)
+  8. BNSS2023 / Section — (similarity=0.6427)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-014]
+Question: Which provision deals with electronic or digital records?
+Expected: BSA / Section 63
+Retrieved:
+  1. BSA / Section 81 (similarity=0.7216)
+  2. BSA / Section 62 (similarity=0.7480)
+  3. BSA / Section 61 (similarity=0.7328)
+  4. BSA / Section 63 (similarity=0.6987)
+  5. BSA / Section 85 (similarity=0.7060)
+  6. BSA / Section 86 (similarity=0.6557)
+  7. BSA / Section 2 (similarity=0.6380)
+  8. BSA / Section 66 (similarity=0.6927)
+Hit@1: NO | Hit@3: NO | Hit@5: YES | Hit@8: YES
+RR: 0.2500
+
+[RAG10-015]
+Question: Who has the burden of proving a fact?
+Expected: BSA / Section 104
+Retrieved:
+  1. BSA / Section 104 (similarity=0.7493)
+  2. BSA / Section 107 (similarity=0.7088)
+  3. BSA / Section 106 (similarity=0.7576)
+  4. BSA / Section 109 (similarity=0.7086)
+  5. BSA / Section 112 (similarity=0.7063)
+  6. BSA / Section 111 (similarity=0.6973)
+  7. BSA / Section 113 (similarity=0.7262)
+  8. BSA / Section 114 (similarity=0.6440)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-016]
+Question: Can a judge ask questions to discover relevant facts?
+Expected: BSA / Section 168
+Retrieved:
+  1. BSA / Section 168 (similarity=0.6671)
+  2. BSA / Section 154 (similarity=0.7103)
+  3. BSA / Section 141 (similarity=0.6338)
+  4. BSA / Section 127 (similarity=0.6521)
+  5. BNSS2023 / Section — (similarity=0.6041)
+  6. BSA / Section 151 (similarity=0.6364)
+  7. BSA / Section 143 (similarity=0.6357)
+  8. BSA / Section 150 (similarity=0.6515)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-017]
+Question: What is the rule about evidence of a witness's character?
+Expected: BSA / Section 48
+Retrieved:
+  1. BSA / Section 156 (similarity=0.6717)
+  2. BSA / Section 145 (similarity=0.7260)
+  3. BSA / Section 151 (similarity=0.6509)
+  4. BSA / Section 46 (similarity=0.7006)
+  5. BSA / Section 158 (similarity=0.6608)
+  6. BSA / Section 47 (similarity=0.6777)
+  7. BSA / Section 147 (similarity=0.6136)
+  8. BSA / Section 159 (similarity=0.6359)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: NO
+RR: 0.0000
+
+[RAG10-018]
+Question: Which BSA provision covers the examination of witnesses?
+Expected: BSA / Section 142
+Retrieved:
+  1. BSA / Section 139 (similarity=0.6655)
+  2. BNSS2023 / Section — (similarity=0.6542)
+  3. BSA / Section 143 (similarity=0.6468)
+  4. BSA / Section 140 (similarity=0.6636)
+  5. BNSS2023 / Section — (similarity=0.6269)
+  6. BNSS2023 / Section — (similarity=0.6215)
+  7. BNSS2023 / Section — (similarity=0.6186)
+  8. BNSS2023 / Section — (similarity=0.6462)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: NO
+RR: 0.0000
+
+[RAG10-019]
+Question: What happens when a person is arrested and cannot be detained beyond twenty-four hours?
+Expected: BNSS2023 / Section —
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.7269)
+  2. BNSS2023 / Section — (similarity=0.6788)
+  3. BNSS2023 / Section — (similarity=0.6919)
+  4. BNSS2023 / Section — (similarity=0.6878)
+  5. BNSS2023 / Section — (similarity=0.6815)
+  6. BNSS2023 / Section — (similarity=0.6582)
+  7. BNSS2023 / Section — (similarity=0.6823)
+  8. BNSS2023 / Section — (similarity=0.6773)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-020]
+Question: Which BNSS clause concerns recording confessions and statements?
+Expected: BNSS2023 / Section —
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.6966)
+  2. BNSS2023 / Section — (similarity=0.6404)
+  3. BNSS2023 / Section — (similarity=0.6689)
+  4. BNSS2023 / Section — (similarity=0.6903)
+  5. BNSS2023 / Section — (similarity=0.6548)
+  6. BNSS2023 / Section — (similarity=0.6498)
+  7. BNSS2023 / Section — (similarity=0.6228)
+  8. BNSS2023 / Section — (similarity=0.6450)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-021]
+Question: What is the procedure for a search by a police officer?
+Expected: BNSS2023 / Section —
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.6375)
+  2. BNSS2023 / Section — (similarity=0.6599)
+  3. BNSS2023 / Section — (similarity=0.6521)
+  4. BNSS2023 / Section — (similarity=0.6073)
+  5. BNSS2023 / Section — (similarity=0.6403)
+  6. BNSS2023 / Section — (similarity=0.6316)
+  7. BNSS2023 / Section — (similarity=0.5955)
+  8. BNSS2023 / Section — (similarity=0.6302)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-022]
+Question: What does BNSS provide about examination of a complainant?
+Expected: BNSS2023 / Section —
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.6156)
+  2. BNSS2023 / Section — (similarity=0.6672)
+  3. BNSS2023 / Section — (similarity=0.6054)
+  4. BNSS2023 / Section — (similarity=0.6596)
+  5. BNSS2023 / Section — (similarity=0.6303)
+  6. BNSS2023 / Section — (similarity=0.6295)
+  7. BNSS2023 / Section — (similarity=0.6189)
+  8. BNSS2023 / Section — (similarity=0.6161)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-023]
+Question: Which criminal-law provision defines theft, and which evidence provision governs electronic records?
+Expected: BNS2023 / Section 303, BSA / Section 63
+Retrieved:
+  1. BSA / Section 62 (similarity=0.7086)
+  2. BSA / Section 63 (similarity=0.6404)
+  3. BSA / Section 81 (similarity=0.6548)
+  4. BSA / Section 61 (similarity=0.6472)
+  5. BSA / Section 66 (similarity=0.6643)
+  6. BSA / Section 2 (similarity=0.6222)
+  7. BSA / Section 90 (similarity=0.6555)
+  8. BSA / Section 93 (similarity=0.6127)
+Hit@1: NO | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 0.5000
+
+[RAG10-024]
+Question: For cheating supported by electronic records, which provisions should be consulted?
+Expected: BNS2023 / Section 318, BSA / Section 63
+Retrieved:
+  1. BSA / Section 62 (similarity=0.7289)
+  2. BSA / Section 63 (similarity=0.6787)
+  3. BNS2023 / Section 340 (similarity=0.7048)
+  4. BNS2023 / Section 337 (similarity=0.6845)
+  5. BSA / Section 81 (similarity=0.6601)
+  6. BNS2023 / Section 336 (similarity=0.6592)
+  7. BSA / Section 66 (similarity=0.6748)
+  8. BSA / Section 90 (similarity=0.6728)
+Hit@1: NO | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 0.5000
+
+[RAG10-025]
+Question: What is the BNS provision for criminal intimidation?
+Expected: BNS2023 / Section 351
+Retrieved:
+  1. BNS2023 / Section 351 (similarity=0.6748)
+  2. BNSS2023 / Section — (similarity=0.6070)
+  3. BNSS2023 / Section — (similarity=0.6053)
+  4. BNS2023 / Section 350 (similarity=0.5960)
+  5. BNS2023 / Section 111 (similarity=0.5867)
+  6. BNSS2023 / Section — (similarity=0.5848)
+  7. BNSS2023 / Section — (similarity=0.5841)
+  8. BNS2023 / Section 225 (similarity=0.6536)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-026]
+Question: Returning to evidence: which provision addresses burden of proof?
+Expected: BSA / Section 104
+Retrieved:
+  1. BSA / Section 105 (similarity=0.7038)
+  2. BSA / Section 106 (similarity=0.7051)
+  3. BSA / Section 104 (similarity=0.6944)
+  4. BSA / Section 108 (similarity=0.6628)
+  5. BSA / Section 107 (similarity=0.6775)
+  6. BSA / Section 113 (similarity=0.6856)
+  7. BSA / Section 110 (similarity=0.6766)
+  8. BSA / Section 111 (similarity=0.6753)
+Hit@1: NO | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 0.3333
+
+[RAG10-027]
+Question: Which BNS section covers robbery or dacoity?
+Expected: BNS2023 / Section 309
+Retrieved:
+  1. BNS2023 / Section 310 (similarity=0.6838)
+  2. BNS2023 / Section 254 (similarity=0.6511)
+  3. BNS2023 / Section 311 (similarity=0.6663)
+  4. BNS2023 / Section 308 (similarity=0.6487)
+  5. BNSS2023 / Section — (similarity=0.6486)
+  6. BNS2023 / Section 309 (similarity=0.6602)
+  7. BNS2023 / Section 312 (similarity=0.6222)
+  8. BNSS2023 / Section — (similarity=0.6179)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: YES
+RR: 0.1667
+
+[RAG10-028]
+Question: What is the provision concerning a public nuisance under BNSS?
+Expected: BNSS2023 / Section —
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.6771)
+  2. BNS2023 / Section 292 (similarity=0.6579)
+  3. BNSS2023 / Section — (similarity=0.6026)
+  4. BNS2023 / Section 270 (similarity=0.6259)
+  5. BNSS2023 / Section — (similarity=0.6244)
+  6. BNSS2023 / Section — (similarity=0.6218)
+  7. BNSS2023 / Section — (similarity=0.6087)
+  8. BNSS2023 / Section — (similarity=0.5989)
+Hit@1: YES | Hit@3: YES | Hit@5: YES | Hit@8: YES
+RR: 1.0000
+
+[RAG10-029]
+Question: What is the capital of France?
+Expected: 
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.4531)
+  2. BNSS2023 / Section — (similarity=0.4455)
+  3. BNSS2023 / Section — (similarity=0.4428)
+  4. BNSS2023 / Section — (similarity=0.4386)
+  5. BSA / Section 1 (similarity=0.4631)
+  6. BSA / Section 155 (similarity=0.4606)
+  7. BNSS2023 / Section — (similarity=0.4585)
+  8. BSA / Section 111 (similarity=0.4582)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: NO
+RR: 0.0000
+
+[RAG10-030]
+Question: What is the recipe for biryani?
+Expected: 
+Retrieved:
+  1. BNSS2023 / Section — (similarity=0.4921)
+  2. BSA / Section — (similarity=0.4865)
+  3. BNSS2023 / Section — (similarity=0.4847)
+  4. BNSS2023 / Section — (similarity=0.4841)
+  5. BNSS2023 / Section — (similarity=0.4809)
+  6. BNSS2023 / Section — (similarity=0.4806)
+  7. BSA / Section 116 (similarity=0.4799)
+  8. BSA / Section 56 (similarity=0.4791)
+Hit@1: NO | Hit@3: NO | Hit@5: NO | Hit@8: NO
+RR: 0.0000

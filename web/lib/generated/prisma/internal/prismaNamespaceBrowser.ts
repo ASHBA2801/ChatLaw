@@ -55,7 +55,19 @@ export const ModelName = {
   LegalChunk: 'LegalChunk',
   LegalSource: 'LegalSource',
   Conversation: 'Conversation',
-  Message: 'Message'
+  Message: 'Message',
+  User: 'User',
+  Case: 'Case',
+  CaseDocument: 'CaseDocument',
+  CaseTimelineEvent: 'CaseTimelineEvent',
+  CaseImportantDate: 'CaseImportantDate',
+  Account: 'Account',
+  Session: 'Session',
+  VerificationToken: 'VerificationToken',
+  UserDocument: 'UserDocument',
+  UserDocumentVersion: 'UserDocumentVersion',
+  CourtCase: 'CourtCase',
+  CourtCaseChunk: 'CourtCaseChunk'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -128,6 +140,8 @@ export type LegalSourceScalarFieldEnum = (typeof LegalSourceScalarFieldEnum)[key
 
 export const ConversationScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
+  caseId: 'caseId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -148,6 +162,211 @@ export const MessageScalarFieldEnum = {
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+export const UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  preferredLanguage: 'preferredLanguage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CaseScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  subCategory: 'subCategory',
+  jurisdiction: 'jurisdiction',
+  city: 'city',
+  state: 'state',
+  country: 'country',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  archivedAt: 'archivedAt'
+} as const
+
+export type CaseScalarFieldEnum = (typeof CaseScalarFieldEnum)[keyof typeof CaseScalarFieldEnum]
+
+
+export const CaseDocumentScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  userId: 'userId',
+  fileName: 'fileName',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  storageKey: 'storageKey',
+  checksum: 'checksum',
+  extractedTextStatus: 'extractedTextStatus',
+  extractedText: 'extractedText',
+  pageCount: 'pageCount',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type CaseDocumentScalarFieldEnum = (typeof CaseDocumentScalarFieldEnum)[keyof typeof CaseDocumentScalarFieldEnum]
+
+
+export const CaseTimelineEventScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  type: 'type',
+  title: 'title',
+  description: 'description',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type CaseTimelineEventScalarFieldEnum = (typeof CaseTimelineEventScalarFieldEnum)[keyof typeof CaseTimelineEventScalarFieldEnum]
+
+
+export const CaseImportantDateScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  title: 'title',
+  description: 'description',
+  date: 'date',
+  reminderPreference: 'reminderPreference',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CaseImportantDateScalarFieldEnum = (typeof CaseImportantDateScalarFieldEnum)[keyof typeof CaseImportantDateScalarFieldEnum]
+
+
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  provider: 'provider',
+  providerAccountId: 'providerAccountId',
+  refresh_token: 'refresh_token',
+  access_token: 'access_token',
+  expires_at: 'expires_at',
+  token_type: 'token_type',
+  scope: 'scope',
+  id_token: 'id_token',
+  session_state: 'session_state',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  sessionToken: 'sessionToken',
+  userId: 'userId',
+  expires: 'expires',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const VerificationTokenScalarFieldEnum = {
+  identifier: 'identifier',
+  token: 'token',
+  expires: 'expires'
+} as const
+
+export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+export const UserDocumentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  conversationId: 'conversationId',
+  title: 'title',
+  templateId: 'templateId',
+  documentType: 'documentType',
+  jurisdictionCountry: 'jurisdictionCountry',
+  jurisdictionRegion: 'jurisdictionRegion',
+  status: 'status',
+  currentVersionNumber: 'currentVersionNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserDocumentScalarFieldEnum = (typeof UserDocumentScalarFieldEnum)[keyof typeof UserDocumentScalarFieldEnum]
+
+
+export const UserDocumentVersionScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  versionNumber: 'versionNumber',
+  status: 'status',
+  title: 'title',
+  input: 'input',
+  sections: 'sections',
+  warnings: 'warnings',
+  citations: 'citations',
+  evidence: 'evidence',
+  generation: 'generation',
+  createdAt: 'createdAt'
+} as const
+
+export type UserDocumentVersionScalarFieldEnum = (typeof UserDocumentVersionScalarFieldEnum)[keyof typeof UserDocumentVersionScalarFieldEnum]
+
+
+export const CourtCaseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  court: 'court',
+  courtLevel: 'courtLevel',
+  jurisdiction: 'jurisdiction',
+  caseNumber: 'caseNumber',
+  caseType: 'caseType',
+  judgmentDate: 'judgmentDate',
+  bench: 'bench',
+  judgeNames: 'judgeNames',
+  petitioner: 'petitioner',
+  respondent: 'respondent',
+  citation: 'citation',
+  officialSource: 'officialSource',
+  sourceAuthority: 'sourceAuthority',
+  sourceUrl: 'sourceUrl',
+  sourceType: 'sourceType',
+  acts: 'acts',
+  sections: 'sections',
+  legalTopics: 'legalTopics',
+  primaryIssue: 'primaryIssue',
+  factsSummary: 'factsSummary',
+  holding: 'holding',
+  disposition: 'disposition',
+  contentHash: 'contentHash',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CourtCaseScalarFieldEnum = (typeof CourtCaseScalarFieldEnum)[keyof typeof CourtCaseScalarFieldEnum]
+
+
+export const CourtCaseChunkScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  chunkIndex: 'chunkIndex',
+  chunkType: 'chunkType',
+  content: 'content',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type CourtCaseChunkScalarFieldEnum = (typeof CourtCaseChunkScalarFieldEnum)[keyof typeof CourtCaseChunkScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -162,6 +381,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

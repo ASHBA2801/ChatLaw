@@ -1,0 +1,1883 @@
+{
+  "question_count": 30,
+  "category_distribution": {
+    "direct": 5,
+    "natural-language": 3,
+    "indirect": 2,
+    "follow-up-style": 3,
+    "BNS": 3,
+    "specific-factual": 2,
+    "BSA": 3,
+    "BNSS": 5,
+    "cross-section": 2,
+    "irrelevant": 2
+  },
+  "metrics": {
+    "recall_at_1": 0.5357142857142857,
+    "recall_at_3": 0.75,
+    "recall_at_5": 0.7857142857142857,
+    "recall_at_8": 0.8214285714285714,
+    "mrr": 0.650297619047619
+  },
+  "irrelevant_query_detection": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "accuracy": 0.9333333333333333
+  },
+  "latency": {
+    "average_seconds": 0.6005143166666812,
+    "median_seconds": 0.5828699500000312
+  },
+  "failed_recall_at_8": [
+    "RAG10-001",
+    "RAG10-007",
+    "RAG10-012",
+    "RAG10-017",
+    "RAG10-018"
+  ],
+  "incorrect_top_ranked": [
+    "RAG10-001",
+    "RAG10-007",
+    "RAG10-011",
+    "RAG10-012",
+    "RAG10-013",
+    "RAG10-014",
+    "RAG10-015",
+    "RAG10-017",
+    "RAG10-018",
+    "RAG10-023",
+    "RAG10-024",
+    "RAG10-026",
+    "RAG10-027"
+  ],
+  "results": [
+    {
+      "id": "RAG10-001",
+      "question": "What is the punishment for theft under the Bharatiya Nyaya Sanhita?",
+      "category": "direct",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "303"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.7196840643882751
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.676656564374464
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.671141584447529
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6691837310791016
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.668446958065033
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6664001941680908
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6652436256408691
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6637184419464148
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.8393541000000369,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    },
+    {
+      "id": "RAG10-002",
+      "question": "Which section of the BNS deals with cheating?",
+      "category": "direct",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "318"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "318",
+          "similarity": 0.642333984375
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6367166638374329
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6117191497003781
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6046472552208467
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5987379550933838
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5965472459793091
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5932232141494751
+        },
+        {
+          "document": "BNS2023",
+          "section": "317",
+          "similarity": 0.5919924974441528
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6145171999999093,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-003",
+      "question": "What does BNS section 109 cover?",
+      "category": "direct",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "109"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "109",
+          "similarity": 0.588856136134642
+        },
+        {
+          "document": "BSA",
+          "section": "109",
+          "similarity": 0.6159770810569968
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5991352675799024
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5975135263075743
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5950793495916168
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5944145434396957
+        },
+        {
+          "document": "BNS2023",
+          "section": "209",
+          "similarity": 0.5919162144561112
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5832616786076681
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5718555999999353,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-004",
+      "question": "What punishment is provided for voluntarily causing hurt?",
+      "category": "natural-language",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "115"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "115",
+          "similarity": 0.8254412412643433
+        },
+        {
+          "document": "BNS2023",
+          "section": "117",
+          "similarity": 0.7383092641830444
+        },
+        {
+          "document": "BNS2023",
+          "section": "118",
+          "similarity": 0.7716109752655029
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.7489926218986511
+        },
+        {
+          "document": "BNS2023",
+          "section": "124",
+          "similarity": 0.6843068599700928
+        },
+        {
+          "document": "BNS2023",
+          "section": "120",
+          "similarity": 0.7205528020858765
+        },
+        {
+          "document": "BNS2023",
+          "section": "119",
+          "similarity": 0.7546144577631044
+        },
+        {
+          "document": "BNS2023",
+          "section": "122",
+          "similarity": 0.7450695037841797
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5894381000000521,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-005",
+      "question": "What is the offence involving a personation of another person?",
+      "category": "indirect",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "319"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "319",
+          "similarity": 0.7636159203281464
+        },
+        {
+          "document": "BNS2023",
+          "section": "172",
+          "similarity": 0.7401006972729758
+        },
+        {
+          "document": "BNS2023",
+          "section": "174",
+          "similarity": 0.7017882644064282
+        },
+        {
+          "document": "BNS2023",
+          "section": "204",
+          "similarity": 0.7394053495284719
+        },
+        {
+          "document": "BNS2023",
+          "section": "242",
+          "similarity": 0.7329938570860722
+        },
+        {
+          "document": "BNS2023",
+          "section": "182",
+          "similarity": 0.6293643337867072
+        },
+        {
+          "document": "BNS2023",
+          "section": "54",
+          "similarity": 0.6193266141816023
+        },
+        {
+          "document": "BNS2023",
+          "section": "335",
+          "similarity": 0.614632070064549
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5770279000000755,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-006",
+      "question": "What does the Sanhita say about criminal breach of trust?",
+      "category": "natural-language",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "316"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "316",
+          "similarity": 0.714771292053798
+        },
+        {
+          "document": "BNS2023",
+          "section": "316",
+          "similarity": 0.706875366382324
+        },
+        {
+          "document": "BNS2023",
+          "section": "315",
+          "similarity": 0.6947277784347534
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6422457098960876
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6421706676483154
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6725071869047641
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.655200639677087
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6536585092544556
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5813428999999815,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-007",
+      "question": "If someone attempts to commit murder, which provision is relevant?",
+      "category": "follow-up-style",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "109"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "62",
+          "similarity": 0.6739849253883925
+        },
+        {
+          "document": "BSA",
+          "section": "12",
+          "similarity": 0.6669549147459826
+        },
+        {
+          "document": "BNS2023",
+          "section": "55",
+          "similarity": 0.6612539291381883
+        },
+        {
+          "document": "BNS2023",
+          "section": "3",
+          "similarity": 0.6609552896592206
+        },
+        {
+          "document": "BNS2023",
+          "section": "310",
+          "similarity": 0.6579623614527215
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6571228895856684
+        },
+        {
+          "document": "BNS2023",
+          "section": "61",
+          "similarity": 0.6458462861684743
+        },
+        {
+          "document": "BNS2023",
+          "section": "49",
+          "similarity": 0.6412632465362594
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5714130000001205,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    },
+    {
+      "id": "RAG10-008",
+      "question": "Which BNS provision concerns organised crime?",
+      "category": "BNS",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "111"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "111",
+          "similarity": 0.6413170672640588
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6306244730949402
+        },
+        {
+          "document": "BNS2023",
+          "section": "111",
+          "similarity": 0.6178106665611267
+        },
+        {
+          "document": "BNS2023",
+          "section": "112",
+          "similarity": 0.5878649249237907
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5982321500778198
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5817071372779353
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6115753832928953
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6005737543448074
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5959205999999995,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-009",
+      "question": "Which section addresses criminal intimidation in the BNS?",
+      "category": "BNS",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "351"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "351",
+          "similarity": 0.6736666164894887
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6094933152198792
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6014660596847534
+        },
+        {
+          "document": "BNS2023",
+          "section": "350",
+          "similarity": 0.5937743782997131
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5894162899603681
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6029520630836487
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6020084619522095
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5926951766014099
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5999010000000453,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-010",
+      "question": "What does BNS section 356 concern?",
+      "category": "BNS",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "356"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "356",
+          "similarity": 0.5959919691085815
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.624552845954895
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5967519638986577
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5965893268585205
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5861461758613586
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5820945501327515
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5806928873062134
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5771122574806213
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5750290999999379,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-011",
+      "question": "What is meant by evidence under the Bharatiya Sakshya Adhiniyam?",
+      "category": "direct",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "2"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6768237948417664
+        },
+        {
+          "document": "BSA",
+          "section": "2",
+          "similarity": 0.7294247150421143
+        },
+        {
+          "document": "BSA",
+          "section": "1",
+          "similarity": 0.6852469852713946
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6384800507450089
+        },
+        {
+          "document": "BSA",
+          "section": "2",
+          "similarity": 0.6892157793045044
+        },
+        {
+          "document": "BSA",
+          "section": null,
+          "similarity": 0.7492079288239535
+        },
+        {
+          "document": "BSA",
+          "section": "6",
+          "similarity": 0.6610513925552368
+        },
+        {
+          "document": "BSA",
+          "section": "63",
+          "similarity": 0.6564573049545288
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6291788000000906,
+      "hit_at_1": false,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.5
+    },
+    {
+      "id": "RAG10-012",
+      "question": "Which BSA section concerns admissions?",
+      "category": "direct",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "15"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "19",
+          "similarity": 0.5906929969787598
+        },
+        {
+          "document": "BSA",
+          "section": "25",
+          "similarity": 0.6067823533286077
+        },
+        {
+          "document": "BSA",
+          "section": "26",
+          "similarity": 0.5424622893333435
+        },
+        {
+          "document": "BSA",
+          "section": "18",
+          "similarity": 0.5925794839859009
+        },
+        {
+          "document": "BSA",
+          "section": "14",
+          "similarity": 0.5884295877346276
+        },
+        {
+          "document": "BSA",
+          "section": "16",
+          "similarity": 0.5830655445495583
+        },
+        {
+          "document": "BSA",
+          "section": "20",
+          "similarity": 0.5816683769226074
+        },
+        {
+          "document": "BSA",
+          "section": "21",
+          "similarity": 0.5682523589284644
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.572432899999967,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    },
+    {
+      "id": "RAG10-013",
+      "question": "What rules apply to confessions made by an accused?",
+      "category": "natural-language",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "22"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6772501468658495
+        },
+        {
+          "document": "BSA",
+          "section": "22",
+          "similarity": 0.7187175750732473
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6317212958169767
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6229367813113437
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6102613938166372
+        },
+        {
+          "document": "BSA",
+          "section": "23",
+          "similarity": 0.6630791224884476
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6039379599057423
+        },
+        {
+          "document": "BSA",
+          "section": "24",
+          "similarity": 0.6478413922644909
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5607783999998901,
+      "hit_at_1": false,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.5
+    },
+    {
+      "id": "RAG10-014",
+      "question": "Which provision deals with electronic or digital records?",
+      "category": "indirect",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "63"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "81",
+          "similarity": 0.7216322422027588
+        },
+        {
+          "document": "BSA",
+          "section": "62",
+          "similarity": 0.7480461001396179
+        },
+        {
+          "document": "BSA",
+          "section": "63",
+          "similarity": 0.6986554861068726
+        },
+        {
+          "document": "BSA",
+          "section": "61",
+          "similarity": 0.7327873110771179
+        },
+        {
+          "document": "BSA",
+          "section": "85",
+          "similarity": 0.7059950057265179
+        },
+        {
+          "document": "BSA",
+          "section": "86",
+          "similarity": 0.6557101011276245
+        },
+        {
+          "document": "BSA",
+          "section": "2",
+          "similarity": 0.6379525661468506
+        },
+        {
+          "document": "BSA",
+          "section": "136",
+          "similarity": 0.654825747013092
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6230298000000403,
+      "hit_at_1": false,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.3333333333333333
+    },
+    {
+      "id": "RAG10-015",
+      "question": "Who has the burden of proving a fact?",
+      "category": "specific-factual",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "104"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "107",
+          "similarity": 0.7087969779968262
+        },
+        {
+          "document": "BSA",
+          "section": "104",
+          "similarity": 0.7493491918236512
+        },
+        {
+          "document": "BSA",
+          "section": "109",
+          "similarity": 0.7086397620630197
+        },
+        {
+          "document": "BSA",
+          "section": "112",
+          "similarity": 0.7063376482523902
+        },
+        {
+          "document": "BSA",
+          "section": "106",
+          "similarity": 0.7576361894607544
+        },
+        {
+          "document": "BSA",
+          "section": "114",
+          "similarity": 0.6439552499042529
+        },
+        {
+          "document": "BSA",
+          "section": "111",
+          "similarity": 0.6973492503166199
+        },
+        {
+          "document": "BSA",
+          "section": "113",
+          "similarity": 0.7261848286500484
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6258236999999554,
+      "hit_at_1": false,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.5
+    },
+    {
+      "id": "RAG10-016",
+      "question": "Can a judge ask questions to discover relevant facts?",
+      "category": "BSA",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "168"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "168",
+          "similarity": 0.6671072840690613
+        },
+        {
+          "document": "BSA",
+          "section": "154",
+          "similarity": 0.7103452682495117
+        },
+        {
+          "document": "BSA",
+          "section": "141",
+          "similarity": 0.6337959170341492
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6041033267974854
+        },
+        {
+          "document": "BSA",
+          "section": "127",
+          "similarity": 0.6521463990211487
+        },
+        {
+          "document": "BSA",
+          "section": "151",
+          "similarity": 0.6363519430160522
+        },
+        {
+          "document": "BSA",
+          "section": "143",
+          "similarity": 0.6357336423238314
+        },
+        {
+          "document": "BSA",
+          "section": "159",
+          "similarity": 0.6218423843383789
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6400828999999248,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-017",
+      "question": "What is the rule about evidence of a witness's character?",
+      "category": "BSA",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "48"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "156",
+          "similarity": 0.6717374529525629
+        },
+        {
+          "document": "BSA",
+          "section": "151",
+          "similarity": 0.6509310603141785
+        },
+        {
+          "document": "BSA",
+          "section": "145",
+          "similarity": 0.7259711623191833
+        },
+        {
+          "document": "BSA",
+          "section": "158",
+          "similarity": 0.6607998609542847
+        },
+        {
+          "document": "BSA",
+          "section": "46",
+          "similarity": 0.7005891234209378
+        },
+        {
+          "document": "BSA",
+          "section": "147",
+          "similarity": 0.6136047426940426
+        },
+        {
+          "document": "BSA",
+          "section": "159",
+          "similarity": 0.6359309554100037
+        },
+        {
+          "document": "BSA",
+          "section": "47",
+          "similarity": 0.6777496741860923
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.559506600000077,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    },
+    {
+      "id": "RAG10-018",
+      "question": "Which BSA provision covers the examination of witnesses?",
+      "category": "BSA",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "142"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "139",
+          "similarity": 0.665513177678382
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6541504458829897
+        },
+        {
+          "document": "BSA",
+          "section": "143",
+          "similarity": 0.6467725020741676
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6269327588955393
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6215197033142957
+        },
+        {
+          "document": "BSA",
+          "section": "140",
+          "similarity": 0.6635973055242692
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6185558395286658
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6156784341622867
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5789552000001095,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    },
+    {
+      "id": "RAG10-019",
+      "question": "What happens when a person is arrested and cannot be detained beyond twenty-four hours?",
+      "category": "BNSS",
+      "expected": [
+        {
+          "document": "BNSS2023",
+          "section": null
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.7268969849882726
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6788417100906372
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6919424533843994
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6878423094749451
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6581852632220171
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6815410852432251
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.682315468788147
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6773080825805664
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6078038000000561,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-020",
+      "question": "Which BNSS clause concerns recording confessions and statements?",
+      "category": "BNSS",
+      "expected": [
+        {
+          "document": "BNSS2023",
+          "section": null
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6965916752815297
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.640440702438359
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6688535215425663
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6903421509673775
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6228318585653232
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.619414545262728
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6548265609041798
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6143690713864022
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6265264000001025,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-021",
+      "question": "What is the procedure for a search by a police officer?",
+      "category": "BNSS",
+      "expected": [
+        {
+          "document": "BNSS2023",
+          "section": null
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6375362277030945
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6073051691055298
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6598542928695679
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6520662903785706
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5955228450582727
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.640252985969365
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6315760392890011
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6302407383918762
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.6083785999999236,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-022",
+      "question": "What does BNSS provide about examination of a complainant?",
+      "category": "BNSS",
+      "expected": [
+        {
+          "document": "BNSS2023",
+          "section": null
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6155983393072589
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6054131153472134
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6302995273560148
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6294588038164024
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6671868165489085
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6188926285175275
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6596246754899427
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6161145155463971
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.7038168999999925,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-023",
+      "question": "Which criminal-law provision defines theft, and which evidence provision governs electronic records?",
+      "category": "cross-section",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "303"
+        },
+        {
+          "document": "BSA",
+          "section": "63"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "62",
+          "similarity": 0.7086247032061055
+        },
+        {
+          "document": "BSA",
+          "section": "63",
+          "similarity": 0.6404075408224797
+        },
+        {
+          "document": "BSA",
+          "section": "81",
+          "similarity": 0.6548051032307817
+        },
+        {
+          "document": "BSA",
+          "section": "2",
+          "similarity": 0.6221982015489471
+        },
+        {
+          "document": "BSA",
+          "section": "61",
+          "similarity": 0.6471833376397703
+        },
+        {
+          "document": "BSA",
+          "section": "93",
+          "similarity": 0.6127343543013556
+        },
+        {
+          "document": "BSA",
+          "section": "66",
+          "similarity": 0.6642805733847972
+        },
+        {
+          "document": "BSA",
+          "section": "90",
+          "similarity": 0.6554851922682053
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5656658000000334,
+      "hit_at_1": false,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.5
+    },
+    {
+      "id": "RAG10-024",
+      "question": "For cheating supported by electronic records, which provisions should be consulted?",
+      "category": "cross-section",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "318"
+        },
+        {
+          "document": "BSA",
+          "section": "63"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "62",
+          "similarity": 0.7289103107994993
+        },
+        {
+          "document": "BSA",
+          "section": "63",
+          "similarity": 0.6787131237216678
+        },
+        {
+          "document": "BNS2023",
+          "section": "340",
+          "similarity": 0.7047971907137163
+        },
+        {
+          "document": "BSA",
+          "section": "81",
+          "similarity": 0.6600591337716075
+        },
+        {
+          "document": "BNS2023",
+          "section": "336",
+          "similarity": 0.6591847931852826
+        },
+        {
+          "document": "BNS2023",
+          "section": "337",
+          "similarity": 0.684517305166562
+        },
+        {
+          "document": "BSA",
+          "section": "66",
+          "similarity": 0.6747704550487086
+        },
+        {
+          "document": "BSA",
+          "section": "136",
+          "similarity": 0.6435518648357322
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.570989499999996,
+      "hit_at_1": false,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.5
+    },
+    {
+      "id": "RAG10-025",
+      "question": "What is the BNS provision for criminal intimidation?",
+      "category": "follow-up-style",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "351"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "351",
+          "similarity": 0.6747847996587995
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6069960594177246
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6052771210670471
+        },
+        {
+          "document": "BNS2023",
+          "section": "350",
+          "similarity": 0.5959802269935608
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6134221736616546
+        },
+        {
+          "document": "BNS2023",
+          "section": "129",
+          "similarity": 0.6030962467193604
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6004971444754944
+        },
+        {
+          "document": "BNS2023",
+          "section": "225",
+          "similarity": 0.6535648107528687
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.570080199999893,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-026",
+      "question": "Returning to evidence: which provision addresses burden of proof?",
+      "category": "follow-up-style",
+      "expected": [
+        {
+          "document": "BSA",
+          "section": "104"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BSA",
+          "section": "105",
+          "similarity": 0.7038024277628194
+        },
+        {
+          "document": "BSA",
+          "section": "106",
+          "similarity": 0.7051304578781128
+        },
+        {
+          "document": "BSA",
+          "section": "108",
+          "similarity": 0.6628197431564331
+        },
+        {
+          "document": "BSA",
+          "section": "104",
+          "similarity": 0.6943707052248308
+        },
+        {
+          "document": "BSA",
+          "section": "107",
+          "similarity": 0.677471399307251
+        },
+        {
+          "document": "BSA",
+          "section": "113",
+          "similarity": 0.6855856588831949
+        },
+        {
+          "document": "BSA",
+          "section": "110",
+          "similarity": 0.6765911175852359
+        },
+        {
+          "document": "BSA",
+          "section": "111",
+          "similarity": 0.6753429174423218
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5505935000001045,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 0.25
+    },
+    {
+      "id": "RAG10-027",
+      "question": "Which BNS section covers robbery or dacoity?",
+      "category": "specific-factual",
+      "expected": [
+        {
+          "document": "BNS2023",
+          "section": "309"
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNS2023",
+          "section": "254",
+          "similarity": 0.6510646731295998
+        },
+        {
+          "document": "BNS2023",
+          "section": "310",
+          "similarity": 0.6838387250900269
+        },
+        {
+          "document": "BNS2023",
+          "section": "311",
+          "similarity": 0.6662609179693737
+        },
+        {
+          "document": "BNS2023",
+          "section": "308",
+          "similarity": 0.6486819982528687
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6485500335693359
+        },
+        {
+          "document": "BNS2023",
+          "section": "312",
+          "similarity": 0.6221581326628856
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6179020404815674
+        },
+        {
+          "document": "BNS2023",
+          "section": "309",
+          "similarity": 0.660190224647522
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5843970000000809,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": true,
+      "rr": 0.125
+    },
+    {
+      "id": "RAG10-028",
+      "question": "What is the provision concerning a public nuisance under BNSS?",
+      "category": "BNSS",
+      "expected": [
+        {
+          "document": "BNSS2023",
+          "section": null
+        }
+      ],
+      "relevant": true,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.677077054977417
+        },
+        {
+          "document": "BNS2023",
+          "section": "292",
+          "similarity": 0.6578532057360773
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6025559306144714
+        },
+        {
+          "document": "BNS2023",
+          "section": "270",
+          "similarity": 0.625855565071106
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6243750229105378
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.6217532753944397
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.608709669632297
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.5988602281296128
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5858957999998893,
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "hit_at_8": true,
+      "rr": 1.0
+    },
+    {
+      "id": "RAG10-029",
+      "question": "What is the capital of France?",
+      "category": "irrelevant",
+      "expected": [],
+      "relevant": false,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.45312718627993953
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.4454922047550809
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.4427668716172508
+        },
+        {
+          "document": "BSA",
+          "section": "1",
+          "similarity": 0.4630831734041183
+        },
+        {
+          "document": "BSA",
+          "section": "155",
+          "similarity": 0.4605852640023993
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.45847621312595765
+        },
+        {
+          "document": "BSA",
+          "section": "111",
+          "similarity": 0.4582146977314181
+        },
+        {
+          "document": "BNS2023",
+          "section": "1",
+          "similarity": 0.456913333259225
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5715104000000792,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    },
+    {
+      "id": "RAG10-030",
+      "question": "What is the recipe for biryani?",
+      "category": "irrelevant",
+      "expected": [],
+      "relevant": false,
+      "retrieved": [
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.4920676199217924
+        },
+        {
+          "document": "BSA",
+          "section": null,
+          "similarity": 0.486498384863042
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.4846553648905567
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.48412157547836254
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.4809380913060337
+        },
+        {
+          "document": "BNSS2023",
+          "section": null,
+          "similarity": 0.48064751980759335
+        },
+        {
+          "document": "BSA",
+          "section": "116",
+          "similarity": 0.4798789763414557
+        },
+        {
+          "document": "BSA",
+          "section": "56",
+          "similarity": 0.47912810680652007
+        }
+      ],
+      "no_context": false,
+      "latency_seconds": 0.5641838000001371,
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "hit_at_8": false,
+      "rr": 0.0
+    }
+  ]
+}

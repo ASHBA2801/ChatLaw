@@ -1,21 +1,19 @@
-# ChatLaw Web Application
+# ChatLaw Web Application - Phase 22
 
-The Next.js web/PWA application for ChatLaw — a multilingual legal-information
-assistant for Indian citizens.
+The Next.js web application for ChatLaw: an AI-powered legal assistant for
+ordinary Indian users, with regional-language chat, document drafts, personal
+case workspaces, and statute research.
 
-## Scope
+## Product surfaces
 
-This application owns the **user-facing** experience:
-
-- Chat interface
-- PWA
-- Voice interface
-- Multilingual interface
-- Legal-resource interface
-- Court interface
-
-It does **not** implement RAG logic. It communicates with the RAG Engine
-(`rag-engine/`) over the HTTP API contract documented in `docs/api/`.
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing |
+| `/chat` | Conversational legal assistant (interview + grounded answers) |
+| `/documents` | AI draft generator workspace |
+| `/cases` | Personal case workspaces (your matters) |
+| `/research` | Statute/source search over the corpus |
+| `/account` | Profile and language preference |
 
 ## Stack
 
@@ -24,39 +22,22 @@ It does **not** implement RAG logic. It communicates with the RAG Engine
 - Prisma client (generated from `database/`) + PostgreSQL + pgvector
 - Zod (validation)
 
-## Layout
+## Language
 
-| Path | Purpose |
-| --- | --- |
-| `app/` | App Router pages and layouts |
-| `components/` | React components (chat, layout, ui) |
-| `lib/` | Server-side helpers (db client, validation, etc.) |
-| `public/` | Static assets |
-| `types/` | Shared TypeScript types |
+Chat supports English plus the 22 Eighth Schedule languages. Preference is stored
+in `localStorage` (`chatlaw-language`) and, when signed in, `User.preferredLanguage`.
+Clarifications and answers use the selected language in a single generation call.
+Official Act/section names stay in authoritative form.
 
 ## Run locally
 
 1. Copy `web/.env.example` to `web/.env` and fill in values.
-2. Install dependencies (from the repo root or this directory).
-3. Start the shared database:
-   ```bash
-   docker compose -f docker/postgres/compose.yml up -d
-   ```
-4. Apply migrations (from `database/`):
-   ```bash
-   cd ../database
-   npm run db:init
-   npm run db:migrate
-   ```
-5. Start the dev server (from `web/`):
-   ```bash
-   npm run dev
-   ```
+2. Install dependencies.
+3. Start Postgres and apply migrations (including `preferredLanguage`).
+4. Start the RAG engine and `npm run dev` from `web/`.
 
-The `/chat` route is intentionally UI-only. AI, RAG, voice, multilingual
-behavior, authentication, and persistence are not implemented yet.
+## Notes
 
-## Environment
-
-See `.env.example`. `DATABASE_URL` points to the shared database. Never commit
-real keys.
+- `/chat?caseId=…` remains the case-scoped assistant.
+- Voice uses the browser Web Speech API; availability varies by language/browser.
+- Informational assistance only — not a substitute for professional legal advice.

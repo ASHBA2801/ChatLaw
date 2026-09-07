@@ -1,0 +1,155 @@
+{
+  "title": "Choose ChatLaw’s visual world",
+  "question": "The roll assigned DigiLocker Civic Portal for Chat (citizen Operate). Keep it, take an alternate, re-roll, or play the category straight.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "DigiLocker Civic Portal",
+      "kicker": "THE ROLL",
+      "lineage": "DigiLocker, passport e-services, and bilingual Indian gov portals",
+      "thesis": "ChatLaw as the civic service desk citizens already trust: issued answers, stamped citations, bilingual chrome.",
+      "palette": ["#0B2D5C", "#F7F8FA", "#FFFFFF", "#1A5FB4", "#D8DEE6", "#C47A12"],
+      "materials": ["flat portal chrome", "bilingual label plates", "status chips", "hairline rules", "issued-document wells"],
+      "viewport": "Desktop Chat: navy service rail left, white content well with interview thread, answer card as an issued document with section citations as stamped fields, language chip in the header.",
+      "risk": "Feels bureaucratic or cold if citizen warmth is lost to portal seriousness.",
+      "raised": [
+        {
+          "from": "alphabet-storm",
+          "raise": "Statute text and section numbers are the visual matter — citations form the answer body, not bolted-on badges."
+        },
+        {
+          "from": "industrial-quote-grammar",
+          "raise": "Every zone carries a literal functional name; wayfinding is reading."
+        },
+        {
+          "from": "flash-scrawl-club-sleeve",
+          "raise": "Conversation history stays visible as marks on the surface, not a disposable thread."
+        },
+        {
+          "from": "arcade-pixel-glow",
+          "raise": "Strict modular grid — no off-grid decorative chrome."
+        },
+        {
+          "from": "nixie-laboratory-counter",
+          "raise": "Interview and loading steps read as fixed-place status counters."
+        }
+      ],
+      "comp": ".impeccable/mocks/decision/assigned.png"
+    },
+    {
+      "id": "model-pick",
+      "label": "India Code Section Browser",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "India Code / Legislative Department statute browsers",
+      "thesis": "The assistant that looks like reading the Code itself: hierarchical sections beside the interview.",
+      "palette": ["#FFFFFF", "#1A1A1A", "#003366", "#E8EEF4", "#B35C00"],
+      "materials": ["TOC rails", "section anchors", "link blue ink", "quiet paper ground"],
+      "viewport": "Chat with a live Code rail of retrieved sections flanking the plain-language interview.",
+      "risk": "Also the direction most legal-assistant runs land on — familiar and effective.",
+      "comp": ".impeccable/mocks/decision/model-pick.png"
+    },
+    {
+      "id": "challenger-japanese-high-density-web",
+      "label": "High-Density Module Mosaic",
+      "verdict": "competitive",
+      "lineage": "Japanese contemporary high-density web",
+      "thesis": "Legal chat as a packed mosaic of ruled modules: questions, citations, and actions each own a box.",
+      "palette": ["#FFFFFF", "#111111", "#E60012", "#F0F0F0", "#6B6B6B"],
+      "materials": ["hairline boxes", "utility-red tabs", "compact gothic sans", "edge-to-edge modules"],
+      "viewport": "Chat as a dense CSS mosaic: history, answer, citations, and composer as abutting ruled modules with red state tabs.",
+      "case": "Holds Operate clarity through density; loses audience identification to DigiLocker for Indian citizens.",
+      "risk": "Crowds a stressed citizen if modules shout at equal scale.",
+      "comp": ".impeccable/mocks/decision/challenger-japanese-high-density-web.png",
+      "hero": "https://impeccable.style/worlds/cards/japanese-high-density-web-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/japanese-high-density-web.webp"
+    },
+    {
+      "id": "challenger-alphabet-storm",
+      "label": "Alphabet Storm",
+      "verdict": "declined",
+      "lineage": "surreal letter-weather worlds",
+      "thesis": "Letters condense into legal answers like weather systems.",
+      "palette": ["#FFFFFF", "#111111", "#C0C0C0", "#A8B0B8"],
+      "materials": ["paper white", "storm-letter black", "silver flash"],
+      "viewport": "Chat where typed words gather into citation clouds.",
+      "case": "Loses audience identification and Operate clarity for a stressed legal task.",
+      "kept": "Statute text treated as visual matter.",
+      "risk": "Spectacle over task.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-alphabet-storm-hero.webp"
+    },
+    {
+      "id": "challenger-industrial-quote-grammar",
+      "label": "Industrial Quote Grammar",
+      "verdict": "declined",
+      "lineage": "industrial streetwear label grammar",
+      "thesis": "Every zone named in straight quotes with hazard structure.",
+      "palette": ["#FFFFFF", "#111111", "#FF5A00", "#E8E8E8"],
+      "materials": ["hazard diagonals", "zip-tie tags", "stencil caps"],
+      "viewport": "Quoted zone labels over a stockroom-white chat.",
+      "case": "Loses both axes for citizen legal trust.",
+      "kept": "Literal zone naming; wayfinding is reading.",
+      "risk": "Fashion grammar, not civic help.",
+      "hero": "https://impeccable.style/worlds/cards/textiles-weave-drape-fashion-industrial-quote-grammar-hero.webp"
+    },
+    {
+      "id": "challenger-flash-scrawl-club-sleeve",
+      "label": "Flash Scrawl Sleeve",
+      "verdict": "declined",
+      "lineage": "French house label sleeves",
+      "thesis": "Defaced flash photo as the chat surface.",
+      "palette": ["#1A1A1A", "#FF2BD6", "#FFFFFF"],
+      "materials": ["blown flash", "marker scrawl", "sticker stock"],
+      "viewport": "A defaced surface where marks accumulate as history.",
+      "case": "Wrong cultural home for Indian legal assistance.",
+      "kept": "History as visible marks on the surface.",
+      "risk": "Club energy destroys trust.",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-flash-scrawl-club-sleeve-hero.webp"
+    },
+    {
+      "id": "challenger-arcade-pixel-glow",
+      "label": "Arcade Pixel Glow",
+      "verdict": "declined",
+      "lineage": "CRT arcade cabinet screens",
+      "thesis": "Legal chat as a luminous pixel playfield.",
+      "palette": ["#000000", "#33FF66", "#FFD700", "#FFFFFF"],
+      "materials": ["phosphor black", "scanlines", "sprite tiles"],
+      "viewport": "Tile-grid chat with scoreboard chrome.",
+      "case": "Loses both axes for legal Operate.",
+      "kept": "Strict modular grid discipline.",
+      "risk": "Gamifies a serious task.",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-crt-arcade-pixel-glow-hero.webp"
+    },
+    {
+      "id": "challenger-nixie-laboratory-counter",
+      "label": "Nixie Laboratory Counter",
+      "verdict": "declined",
+      "lineage": "nixie-tube laboratory counters",
+      "thesis": "Quantities glow as plasma digits in glass.",
+      "palette": ["#0A0A0A", "#FF6A00", "#3A3A3A"],
+      "materials": ["glass envelopes", "neon orange digits", "steel chassis"],
+      "viewport": "Metrics as tube banks beside the thread.",
+      "case": "Instrument fetish over citizen task.",
+      "kept": "Fixed-place status counters for steps.",
+      "risk": "Lab toy, not a legal desk.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-nixie-laboratory-counter-hero.webp"
+    }
+  ],
+  "reroll": {
+    "registers": ["safer", "bolder"]
+  },
+  "buildPath": {
+    "value": "comp",
+    "toggle": true
+  },
+  "canon": true,
+  "canonCard": {
+    "label": "Category-standard legal assistant",
+    "thesis": "Clean SaaS legal-chat chrome executed at full craft — the familiar competitor path.",
+    "palette": ["#FFFFFF", "#111827", "#2563EB", "#F3F4F6"],
+    "materials": ["soft cards", "blue primary", "sidebar nav", "rounded controls"],
+    "viewport": "Left nav, centered chat column, citation chips — what visitors expect from AI legal tools.",
+    "risk": "Indistinguishable from neighboring products by design.",
+    "comp": ".impeccable/mocks/decision/canon.png"
+  },
+  "steer": true
+}

@@ -1,0 +1,109 @@
+============================================================
+CHATLAW SCENARIO-BASED LEGAL RETRIEVAL EVALUATION REPORT
+============================================================
+Total Test Queries:              13
+Legal Scenario Queries:          11
+Irrelevant Queries:              2
+Domain Routing Accuracy:         100.0%
+Legal Concept Recall:            95.5%
+Statutory Expansion Rate:        81.8%
+Type Classification Accuracy:    100.0%
+Irrelevant Detection Accuracy:   100.0%
+Average Latency:                 11.74 ms
+Gemini API Calls Made:           0
+Embeddings Generated:            0
+============================================================
+
+DETAILED QUERY RESULTS:
+------------------------------------------------------------
+[SCENARIO-001] (scenario)
+Query:    I bought a product on an e-commerce website. The product was defective when I received it, and the seller refused to accept a return or provide a refund.
+Domain:   consumer_protection (matched: True)
+Concepts: defective_goods, refund_return_dispute, ecommerce_transaction
+Statute:  Enriched = True
+Latency:  13.23 ms
+------------------------------------------------------------
+[SCENARIO-002] (scenario)
+Query:    I bought a defective phone online and the seller refuses to refund me.
+Domain:   consumer_protection (matched: True)
+Concepts: defective_goods, refund_return_dispute, ecommerce_transaction
+Statute:  Enriched = True
+Latency:  11.61 ms
+------------------------------------------------------------
+[SCENARIO-003] (scenario)
+Query:    The online shop sent me a completely different product and won't replace it.
+Domain:   consumer_protection (matched: True)
+Concepts: refund_return_dispute, ecommerce_transaction, wrong_product_delivery
+Statute:  Enriched = True
+Latency:  14.07 ms
+------------------------------------------------------------
+[SCENARIO-004] (scenario)
+Query:    I paid for a product but the seller never delivered it.
+Domain:   consumer_protection (matched: True)
+Concepts: non_delivery_goods
+Statute:  Enriched = True
+Latency:  12.58 ms
+------------------------------------------------------------
+[SCENARIO-005] (scenario)
+Query:    The seller refuses to honour the warranty.
+Domain:   consumer_protection (matched: True)
+Concepts: warranty_guarantee_breach
+Statute:  Enriched = True
+Latency:  12.84 ms
+------------------------------------------------------------
+[SCENARIO-006] (scenario)
+Query:    I was charged money twice for the same online order.
+Domain:   consumer_protection (matched: True)
+Concepts: ecommerce_transaction, double_charging_unauthorized_payment
+Statute:  Enriched = True
+Latency:  13.70 ms
+------------------------------------------------------------
+[SCENARIO-007] (scenario)
+Query:    The company advertised a product with features that it does not actually have.
+Domain:   consumer_protection (matched: True)
+Concepts: misleading_advertisement
+Statute:  Enriched = True
+Latency:  14.04 ms
+------------------------------------------------------------
+[SCENARIO-008] (scenario)
+Query:    I bought something online and the seller refuses to return it even though it arrived damaged.
+Domain:   consumer_protection (matched: True)
+Concepts: defective_goods, refund_return_dispute, ecommerce_transaction
+Statute:  Enriched = True
+Latency:  12.64 ms
+------------------------------------------------------------
+[SCENARIO-009] (scenario)
+Query:    I was cheated by someone who took my money online.
+Domain:   cyber_law (matched: True)
+Concepts: ecommerce_transaction, criminal_cheating_fraud, cyber_fraud_online_theft
+Statute:  Enriched = True
+Latency:  13.73 ms
+------------------------------------------------------------
+[DIRECT-001] (direct_lookup)
+Query:    What is Section 303 of BNS?
+Domain:   criminal_law (matched: True)
+Concepts: theft_stealing
+Statute:  Enriched = False
+Latency:  10.49 ms
+------------------------------------------------------------
+[DIRECT-002] (direct_lookup)
+Query:    What is the punishment for theft?
+Domain:   criminal_law (matched: True)
+Concepts: theft_stealing
+Statute:  Enriched = False
+Latency:  11.50 ms
+------------------------------------------------------------
+[IRRELEVANT-001] (irrelevant)
+Query:    What is the capital of France?
+Domain:   general_legal (matched: True)
+Concepts: None
+Statute:  Enriched = True
+Latency:  5.92 ms
+------------------------------------------------------------
+[IRRELEVANT-002] (irrelevant)
+Query:    What is the recipe for biryani?
+Domain:   general_legal (matched: True)
+Concepts: None
+Statute:  Enriched = True
+Latency:  6.23 ms
+------------------------------------------------------------

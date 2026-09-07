@@ -10,8 +10,8 @@ Defines the boundary between the **Next.js application** (`web/`) and the
 
 ## Contents
 
-- [RAG API contract](./rag-api.md) — the `POST /query` endpoint and response
-  shape.
+- [RAG API contract](./rag-api.md) — search, chat, conversations, and document generation on the RAG engine.
+- [Document generator](./document-generator.md) — user-owned drafts, versions, and export.
 
 ## Guiding rules
 

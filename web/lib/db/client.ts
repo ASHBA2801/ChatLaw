@@ -10,7 +10,8 @@ import { loadEnv } from "@/lib/validation/env";
  *
  * A single PrismaClient is shared across the server runtime. In development
  * the client is cached on `globalThis` so hot-reloading does not exhaust the
- * connection pool.
+ * connection pool. Construction is lazy so importing this module during
+ * `next build` does not require DATABASE_URL until a query actually runs.
  *
  * Prisma 7 uses driver adapters: the connection string is supplied to the
  * adapter here (not via the datasource block), and the adapter is passed to
@@ -34,11 +35,16 @@ function createClient(): PrismaClient {
   return new PrismaClient({ adapter });
 }
 
-export const prisma = globalForPrisma.prisma ?? createClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+function getClient(): PrismaClient {
+  globalForPrisma.prisma ??= createClient();
+  return globalForPrisma.prisma;
 }
+
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, property, receiver) {
+    return Reflect.get(getClient(), property, receiver);
+  },
+});
 
 /** Alias kept for callers that referenced the old boundary name. */
 export const database = prisma;

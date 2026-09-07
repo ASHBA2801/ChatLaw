@@ -1,0 +1,120 @@
+[
+  {
+    "id": "CASE-BENCH-001",
+    "query": "I bought a defective product from an e-commerce website and the seller refused to refund me.",
+    "domain": "CONSUMER",
+    "expected_case_ids": ["sc-2021-insc-598", "del-2020-wp-3362", "sc-1993-insc-368"],
+    "prohibited_domains": ["CRIMINAL", "FAMILY", "PROPERTY", "IP", "TAX"],
+    "expected_acts": ["Consumer Protection Act, 2019"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-002",
+    "query": "My employer terminated me after I complained about workplace harassment.",
+    "domain": "EMPLOYMENT",
+    "expected_case_ids": ["sc-2023-insc-544", "sc-1997-insc-745"],
+    "prohibited_domains": ["CONSUMER", "PROPERTY", "TAX", "IP", "CRIMINAL"],
+    "expected_acts": ["Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-003",
+    "query": "My landlord refuses to return my security deposit.",
+    "domain": "PROPERTY",
+    "expected_case_ids": ["del-2018-rfa-112", "mad-2018-crp-2489"],
+    "prohibited_domains": ["CONSUMER", "EMPLOYMENT", "TAX", "CYBER", "IP"],
+    "expected_acts": ["Transfer of Property Act, 1882"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-004",
+    "query": "The company breached the agreement and refused compensation.",
+    "domain": "CONTRACT",
+    "expected_case_ids": ["sc-2015-insc-25"],
+    "prohibited_domains": ["FAMILY", "CRIMINAL", "ENVIRONMENT", "TAX"],
+    "expected_acts": ["Indian Contract Act, 1872"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-005",
+    "query": "My spouse filed for divorce and I want to understand my rights.",
+    "domain": "FAMILY",
+    "expected_case_ids": ["sc-2020-insc-629"],
+    "prohibited_domains": ["CONSUMER", "CONTRACT", "IP", "TAX", "ENVIRONMENT"],
+    "expected_acts": ["Hindu Marriage Act, 1955"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-006",
+    "query": "Someone used my personal information without permission.",
+    "domain": "CYBER",
+    "expected_case_ids": ["sc-2017-insc-798"],
+    "prohibited_domains": ["CONSUMER", "PROPERTY", "FAMILY", "ENVIRONMENT"],
+    "expected_acts": ["Constitution of India", "Information Technology Act, 2000"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-007",
+    "query": "Another company is using my registered trademark.",
+    "domain": "IP",
+    "expected_case_ids": ["sc-2001-insc-182"],
+    "prohibited_domains": ["FAMILY", "ENVIRONMENT", "PROPERTY", "TAX"],
+    "expected_acts": ["Trade Marks Act, 1999"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-008",
+    "query": "I received a tax demand and believe the calculation is wrong.",
+    "domain": "TAX",
+    "expected_case_ids": ["sc-2022-insc-592"],
+    "prohibited_domains": ["CONSUMER", "FAMILY", "PROPERTY", "ENVIRONMENT"],
+    "expected_acts": ["Central Goods and Services Tax Act, 2017"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-009",
+    "query": "I was accused of theft and want to know what courts have said about similar cases.",
+    "domain": "CRIMINAL",
+    "expected_case_ids": ["sc-1957-insc-15", "sc-2013-insc-1184"],
+    "prohibited_domains": ["CONSUMER", "PROPERTY", "IP", "TAX"],
+    "expected_acts": ["Indian Penal Code, 1860", "Bharatiya Nyaya Sanhita, 2023"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-010",
+    "query": "A factory is polluting a nearby water source.",
+    "domain": "ENVIRONMENT",
+    "expected_case_ids": ["sc-1996-insc-965", "sc-1986-insc-272"],
+    "prohibited_domains": ["CONSUMER", "FAMILY", "TAX", "IP"],
+    "expected_acts": ["Water (Prevention and Control of Pollution) Act, 1974"],
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-011",
+    "query": "Can I challenge this property order in Tamil Nadu?",
+    "domain": "PROPERTY",
+    "expected_case_ids": ["mad-2018-crp-2489"],
+    "prohibited_domains": ["CRIMINAL", "CONSUMER", "IP", "TAX"],
+    "expected_acts": ["Transfer of Property Act, 1882"],
+    "jurisdiction": "TAMIL_NADU",
+    "is_relevant_query": true
+  },
+  {
+    "id": "CASE-BENCH-012",
+    "query": "What is the recipe for biryani?",
+    "domain": "UNKNOWN",
+    "expected_case_ids": [],
+    "prohibited_domains": [],
+    "expected_acts": [],
+    "is_relevant_query": false
+  },
+  {
+    "id": "CASE-BENCH-013",
+    "query": "Who won the cricket match yesterday?",
+    "domain": "UNKNOWN",
+    "expected_case_ids": [],
+    "prohibited_domains": [],
+    "expected_acts": [],
+    "is_relevant_query": false
+  }
+]

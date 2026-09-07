@@ -1,22 +1,23 @@
-# RAG Engine — Python dependencies (PLACEHOLDER)
-#
-# NOTE: This file is intentionally minimal. The RAG engine implementation and
-# its full dependency set (document loaders, embedding client, vector store
-# client, etc.) will be determined during manual development.
-#
-# The engine talks to PostgreSQL + pgvector. Add the libraries actually used
-# when implementing the engine.
+# RAG Engine — Python dependencies
 
-# --- Core ---
-# fastapi            # HTTP API server
-# uvicorn[standard]  # ASGI server
+# --- Core & Ingestion (Phase RAG-01) ---
+pymupdf>=1.23.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+pytest>=7.0.0
 
-# --- Database ---
-# psycopg[binary]    # PostgreSQL driver
+# --- Core API (Future Phases) ---
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# --- Database (Future Phases) ---
+psycopg[binary,pool]>=3.1
 # pgvector           # pgvector client support
 
-# --- Retrieval ---
-# google-generativeai # Gemini embeddings + generation
+# --- Retrieval & Generation (Future Phases) ---
+# google-generativeai # Legacy SDK; not used
+google-genai         # Gemini embeddings + grounded generation
 
 # --- Text / parsing ---
 # pypdf              # PDF parsing for Law_files sources

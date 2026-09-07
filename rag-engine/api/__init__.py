@@ -1,0 +1,1 @@
+"""FastAPI HTTP boundary for the ChatLaw RAG engine."""

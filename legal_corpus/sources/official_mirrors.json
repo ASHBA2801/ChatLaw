@@ -1,0 +1,100 @@
+{
+  "description": "Official government PDF mirrors used when India Code handle fetch is blocked. Sources: indiacode.nic.in, thc.nic.in (NIC-hosted), ministry sites.",
+  "mirrors": {
+    "ICA1872": [
+      "https://cag.gov.in/uploads/media/Indian-Contract-Act-1872-20200816140128.pdf",
+      "https://thc.nic.in/Central%20Governmental%20Acts/Contract%20Act,%201872.pdf"
+    ],
+    "COPYRIGHT1957": [
+      "https://copyright.gov.in/Documents/Copyright_Act_1957.pdf",
+      "https://thc.nic.in/Central%20Governmental%20Acts/Copyright%20Act,%201957.pdf"
+    ],
+    "EPA1986": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Environment%20(Protection)%20Act,%201986.pdf"
+    ],
+    "HMA1955": [
+      "https://egazette.gov.in/WriteReadData/1955/E-2210-1955-0035-101571.pdf",
+      "https://thc.nic.in/Central%20Governmental%20Acts/Hindu%20Marriage%20Act,%201955.pdf"
+    ],
+    "COMPANIES2013": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Companies%20Act,%202013.pdf"
+    ],
+    "COW2019": [
+      "https://www.indiacode.nic.in/bitstream/123456789/15254/1/code_on_wages_2019.pdf"
+    ],
+    "POCSO2012": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Protection%20of%20Children%20from%20Sexual%20Offences%20Act,%202012.pdf"
+    ],
+    "NDPS1985": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Narcotic%20Drugs%20and%20Psychotropic%20Substances%20Act,%201985.pdf"
+    ],
+    "PCA1988": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Prevention%20of%20Corruption%20Act,%201988.pdf"
+    ],
+    "CPA2019": [
+      "https://egazette.gov.in/WriteReadData/2019/210422.pdf",
+      "https://judicialacademy.nic.in/sites/default/files/THE%20CONSUMER%20PROTECTION%20ACT%2C%202019.pdf",
+      "https://thc.nic.in/Central%20Governmental%20Acts/Consumer%20Protection%20Act,%202019.pdf"
+    ],
+    "ITACT2000": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Information%20Technology%20Act,%202000.pdf"
+    ],
+    "POSH2013": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Sexual%20Harassment%20of%20Women%20at%20Workplace%20(Prevention,%20Prohibition%20and%20Redressal)%20Act,%202013.pdf"
+    ],
+    "DVACT2005": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Protection%20of%20Women%20from%20Domestic%20Violence%20Act,%202005.pdf"
+    ],
+    "TPA1882": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Transfer%20of%20Property%20Act,%201882.pdf"
+    ],
+    "LIMITATION1963": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Limitation%20Act,%201963.pdf"
+    ],
+    "SRA1963": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Specific%20Relief%20Act,%201963.pdf"
+    ],
+    "REGISTRATION1908": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Registration%20Act,%201908.pdf"
+    ],
+    "CPC1908": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Code%20of%20Civil%20Procedure,%201908.pdf"
+    ],
+    "COMPANIES2013": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Companies%20Act,%202013.pdf"
+    ],
+    "IBC2016": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Insolvency%20and%20Bankruptcy%20Code,%202016.pdf"
+    ],
+    "PATENTS1970": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Patents%20Act,%201970.pdf"
+    ],
+    "TRADEMARKS1999": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Trade%20Marks%20Act,%201999.pdf"
+    ],
+    "CGST2017": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Central%20Goods%20and%20Services%20Tax%20Act,%202017.pdf"
+    ],
+    "IGST2017": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Integrated%20Goods%20and%20Services%20Tax%20Act,%202017.pdf"
+    ],
+    "CUSTOMS1962": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Customs%20Act,%201962.pdf"
+    ],
+    "WATER1974": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Water%20(Prevention%20and%20Control%20of%20Pollution)%20Act,%201974.pdf"
+    ],
+    "AIR1981": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Air%20(Prevention%20and%20Control%20of%20Pollution)%20Act,%201981.pdf"
+    ],
+    "WPA1972": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Wild%20Life%20(Protection)%20Act,%201972.pdf"
+    ],
+    "NGT2010": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/National%20Green%20Tribunal%20Act,%202010.pdf"
+    ],
+    "DPDP2023": [
+      "https://thc.nic.in/Central%20Governmental%20Acts/Digital%20Personal%20Data%20Protection%20Act,%202023.pdf"
+    ]
+  }
+}
