@@ -334,3 +334,67 @@ model UserDocumentVersion {
   @@index([documentId])
   @@map("user_document_versions")
 }
+
+// ---------------------------------------------------------------------------
+// court_cases — official court judgments and authoritative case law
+// ---------------------------------------------------------------------------
+model CourtCase {
+  id              String   @id
+  title           String
+  court           String
+  courtLevel      String   // e.g. "SUPREME_COURT", "HIGH_COURT", "TRIBUNAL"
+  jurisdiction    String   // e.g. "NATIONAL", "TAMIL_NADU", "DELHI"
+  caseNumber      String
+  caseType        String
+  judgmentDate    DateTime
+  bench           String?
+  judgeNames      Json     // Array of judge names
+  petitioner      String?
+  respondent      String?
+  citation        String?
+  officialSource  Boolean  @default(true)
+  sourceAuthority String   // e.g. "Supreme Court of India (DigiSCR)", "eCourts"
+  sourceUrl       String
+  sourceType      String   @default("JUDGMENT")
+  acts            Json     // Array of canonical Acts
+  sections        Json     // Array of sections discussed
+  legalTopics     Json     // Array of topics
+  primaryIssue    String
+  factsSummary    String
+  holding         String
+  disposition     String?
+  contentHash     String   @unique
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  chunks          CourtCaseChunk[]
+
+  @@index([courtLevel])
+  @@index([jurisdiction])
+  @@index([judgmentDate])
+  @@index([contentHash])
+  @@map("court_cases")
+}
+
+// ---------------------------------------------------------------------------
+// court_case_chunks — structured chunks of court judgments with embeddings
+// ---------------------------------------------------------------------------
+model CourtCaseChunk {
+  id         String   @id
+  caseId     String
+  chunkIndex Int
+  chunkType  String   // "HOLDING" | "FACTS" | "ISSUE" | "REASONING" | "ORDER"
+  content    String
+  embedding  Unsupported("vector(768)")?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  courtCase  CourtCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+  @@index([chunkType])
+  @@index([chunkIndex])
+  @@map("court_case_chunks")
+}
+

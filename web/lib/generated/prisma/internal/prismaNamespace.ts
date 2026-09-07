@@ -411,7 +411,9 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   UserDocument: 'UserDocument',
-  UserDocumentVersion: 'UserDocumentVersion'
+  UserDocumentVersion: 'UserDocumentVersion',
+  CourtCase: 'CourtCase',
+  CourtCaseChunk: 'CourtCaseChunk'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -427,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "legalDocument" | "legalChunk" | "legalSource" | "conversation" | "message" | "user" | "case" | "caseDocument" | "caseTimelineEvent" | "caseImportantDate" | "account" | "session" | "verificationToken" | "userDocument" | "userDocumentVersion"
+    modelProps: "legalDocument" | "legalChunk" | "legalSource" | "conversation" | "message" | "user" | "case" | "caseDocument" | "caseTimelineEvent" | "caseImportantDate" | "account" | "session" | "verificationToken" | "userDocument" | "userDocumentVersion" | "courtCase" | "courtCaseChunk"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1541,6 +1543,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CourtCase: {
+      payload: Prisma.$CourtCasePayload<ExtArgs>
+      fields: Prisma.CourtCaseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CourtCaseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CourtCaseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>
+        }
+        findFirst: {
+          args: Prisma.CourtCaseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CourtCaseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>
+        }
+        findMany: {
+          args: Prisma.CourtCaseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>[]
+        }
+        create: {
+          args: Prisma.CourtCaseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>
+        }
+        createMany: {
+          args: Prisma.CourtCaseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CourtCaseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>[]
+        }
+        delete: {
+          args: Prisma.CourtCaseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>
+        }
+        update: {
+          args: Prisma.CourtCaseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>
+        }
+        deleteMany: {
+          args: Prisma.CourtCaseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CourtCaseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CourtCaseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>[]
+        }
+        upsert: {
+          args: Prisma.CourtCaseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCasePayload>
+        }
+        aggregate: {
+          args: Prisma.CourtCaseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCourtCase>
+        }
+        groupBy: {
+          args: Prisma.CourtCaseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CourtCaseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CourtCaseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CourtCaseCountAggregateOutputType> | number
+        }
+      }
+    }
+    CourtCaseChunk: {
+      payload: Prisma.$CourtCaseChunkPayload<ExtArgs>
+      fields: Prisma.CourtCaseChunkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CourtCaseChunkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CourtCaseChunkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>
+        }
+        findFirst: {
+          args: Prisma.CourtCaseChunkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CourtCaseChunkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>
+        }
+        findMany: {
+          args: Prisma.CourtCaseChunkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>[]
+        }
+        create: {
+          args: Prisma.CourtCaseChunkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>
+        }
+        createMany: {
+          args: Prisma.CourtCaseChunkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CourtCaseChunkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>[]
+        }
+        delete: {
+          args: Prisma.CourtCaseChunkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>
+        }
+        update: {
+          args: Prisma.CourtCaseChunkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>
+        }
+        deleteMany: {
+          args: Prisma.CourtCaseChunkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CourtCaseChunkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CourtCaseChunkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>[]
+        }
+        upsert: {
+          args: Prisma.CourtCaseChunkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseChunkPayload>
+        }
+        aggregate: {
+          args: Prisma.CourtCaseChunkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCourtCaseChunk>
+        }
+        groupBy: {
+          args: Prisma.CourtCaseChunkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CourtCaseChunkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CourtCaseChunkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CourtCaseChunkCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1812,6 +1962,53 @@ export const UserDocumentVersionScalarFieldEnum = {
 } as const
 
 export type UserDocumentVersionScalarFieldEnum = (typeof UserDocumentVersionScalarFieldEnum)[keyof typeof UserDocumentVersionScalarFieldEnum]
+
+
+export const CourtCaseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  court: 'court',
+  courtLevel: 'courtLevel',
+  jurisdiction: 'jurisdiction',
+  caseNumber: 'caseNumber',
+  caseType: 'caseType',
+  judgmentDate: 'judgmentDate',
+  bench: 'bench',
+  judgeNames: 'judgeNames',
+  petitioner: 'petitioner',
+  respondent: 'respondent',
+  citation: 'citation',
+  officialSource: 'officialSource',
+  sourceAuthority: 'sourceAuthority',
+  sourceUrl: 'sourceUrl',
+  sourceType: 'sourceType',
+  acts: 'acts',
+  sections: 'sections',
+  legalTopics: 'legalTopics',
+  primaryIssue: 'primaryIssue',
+  factsSummary: 'factsSummary',
+  holding: 'holding',
+  disposition: 'disposition',
+  contentHash: 'contentHash',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CourtCaseScalarFieldEnum = (typeof CourtCaseScalarFieldEnum)[keyof typeof CourtCaseScalarFieldEnum]
+
+
+export const CourtCaseChunkScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  chunkIndex: 'chunkIndex',
+  chunkType: 'chunkType',
+  content: 'content',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type CourtCaseChunkScalarFieldEnum = (typeof CourtCaseChunkScalarFieldEnum)[keyof typeof CourtCaseChunkScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2110,6 +2307,8 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   userDocument?: Prisma.UserDocumentOmit
   userDocumentVersion?: Prisma.UserDocumentVersionOmit
+  courtCase?: Prisma.CourtCaseOmit
+  courtCaseChunk?: Prisma.CourtCaseChunkOmit
 }
 
 /* Types for Logging */

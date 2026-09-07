@@ -116,3 +116,13 @@ export type UserDocument = Prisma.UserDocumentModel
  * 
  */
 export type UserDocumentVersion = Prisma.UserDocumentVersionModel
+/**
+ * Model CourtCase
+ * 
+ */
+export type CourtCase = Prisma.CourtCaseModel
+/**
+ * Model CourtCaseChunk
+ * 
+ */
+export type CourtCaseChunk = Prisma.CourtCaseChunkModel

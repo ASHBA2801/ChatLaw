@@ -65,7 +65,9 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   UserDocument: 'UserDocument',
-  UserDocumentVersion: 'UserDocumentVersion'
+  UserDocumentVersion: 'UserDocumentVersion',
+  CourtCase: 'CourtCase',
+  CourtCaseChunk: 'CourtCaseChunk'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -316,6 +318,53 @@ export const UserDocumentVersionScalarFieldEnum = {
 } as const
 
 export type UserDocumentVersionScalarFieldEnum = (typeof UserDocumentVersionScalarFieldEnum)[keyof typeof UserDocumentVersionScalarFieldEnum]
+
+
+export const CourtCaseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  court: 'court',
+  courtLevel: 'courtLevel',
+  jurisdiction: 'jurisdiction',
+  caseNumber: 'caseNumber',
+  caseType: 'caseType',
+  judgmentDate: 'judgmentDate',
+  bench: 'bench',
+  judgeNames: 'judgeNames',
+  petitioner: 'petitioner',
+  respondent: 'respondent',
+  citation: 'citation',
+  officialSource: 'officialSource',
+  sourceAuthority: 'sourceAuthority',
+  sourceUrl: 'sourceUrl',
+  sourceType: 'sourceType',
+  acts: 'acts',
+  sections: 'sections',
+  legalTopics: 'legalTopics',
+  primaryIssue: 'primaryIssue',
+  factsSummary: 'factsSummary',
+  holding: 'holding',
+  disposition: 'disposition',
+  contentHash: 'contentHash',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CourtCaseScalarFieldEnum = (typeof CourtCaseScalarFieldEnum)[keyof typeof CourtCaseScalarFieldEnum]
+
+
+export const CourtCaseChunkScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  chunkIndex: 'chunkIndex',
+  chunkType: 'chunkType',
+  content: 'content',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type CourtCaseChunkScalarFieldEnum = (typeof CourtCaseChunkScalarFieldEnum)[keyof typeof CourtCaseChunkScalarFieldEnum]
 
 
 export const SortOrder = {

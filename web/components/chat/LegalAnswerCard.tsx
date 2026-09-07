@@ -25,7 +25,8 @@ import {
 } from "@/lib/chat/answerSections";
 
 import { detectCaseIntent } from "@/lib/cases/intent";
-import { searchLandmarkCases } from "@/lib/legal-data/landmarkCases";
+import { searchOfficialJudgments } from "@/lib/cases/official-cases";
+import { extractLegalIssues } from "@/lib/cases/query-understanding";
 
 import AnswerPlaybackControls from "@/components/chat/AnswerPlaybackControls";
 
@@ -337,6 +338,27 @@ export function DocumentDraftCard({
 
 
 
+function getRelevanceBadgeClass(level: string): string {
+  switch (level) {
+    case "Highly relevant":
+      return "bg-[#e8f5e9] text-[#1b5e20] border-[#a5d6a7]";
+    case "Relevant":
+      return "bg-[#e3f2fd] text-[#0d47a1] border-[#90caf9]";
+    default:
+      return "bg-[#f5f5f5] text-[#424242] border-[#e0e0e0]";
+  }
+}
+
+function formatJudgmentDate(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+  } catch {
+    return dateStr;
+  }
+}
+
 export function LegalAnswerCard({
 
   messageId,
@@ -394,10 +416,13 @@ export function LegalAnswerCard({
   const queryText = interview?.original_query || priorUserText || "";
   const researchQuery = encodeURIComponent(queryText.slice(0, 200));
   const intentResult = useMemo(() => detectCaseIntent(queryText, false), [queryText]);
-  const landmarkCases = useMemo(
-    () => (intentResult.requiresCases ? searchLandmarkCases(queryText, 3, 2) : []),
-    [intentResult.requiresCases, queryText],
+  const issueRep = useMemo(() => extractLegalIssues(queryText), [queryText]);
+  const shouldConsiderCases = intentResult.requiresCases || issueRep.isDisputeScenario;
+  const officialJudgments = useMemo(
+    () => (shouldConsiderCases ? searchOfficialJudgments(queryText, { limit: 3 }) : []),
+    [shouldConsiderCases, queryText],
   );
+  const showFallback = intentResult.requiresCases && officialJudgments.length === 0;
 
 
 
@@ -437,82 +462,87 @@ export function LegalAnswerCard({
 
 
 
-      {landmarkCases.length > 0 ? (
-
+      {officialJudgments.length > 0 ? (
         <div className="border-t border-[var(--line)] pt-4">
-
-          <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--ink-muted)]">Relevant cases</h3>
-
-          <ul className="mt-3 space-y-2">
-
-            {landmarkCases.map((item) => {
-
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--ink-muted)]">
+              Relevant Official Judgments
+            </h3>
+            <span className="text-[11px] font-medium text-[var(--forest)]">
+              Official Indian Judiciary
+            </span>
+          </div>
+          <ul className="mt-3 space-y-3">
+            {officialJudgments.map((item) => {
               const sourceUrl = isSafeExternalUrl(item.source_url);
-
+              const badgeClass = getRelevanceBadgeClass(item.relevance_level);
               return (
-
-                <li key={item.id} className="rounded-sm border border-[var(--line)] bg-[var(--background)] px-3 py-3 text-sm">
-
+                <li key={item.id} className="rounded-sm border border-[var(--line)] bg-[var(--background)] p-3 sm:p-4 text-sm space-y-2.5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
-
                     <div className="min-w-0">
-
-                      <p className="font-semibold">{item.title}</p>
-
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-semibold text-base">{item.title}</h4>
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold border ${badgeClass}`}>
+                          {item.relevance_score}% · {item.relevance_level}
+                        </span>
+                      </div>
                       <p className="mt-1 text-xs text-[var(--ink-muted)]">
-
-                        {item.court} · {item.year} · {item.citation}
-
+                        {item.court} · {formatJudgmentDate(item.judgment_date)} · {item.citation}
                       </p>
-
                     </div>
-
                     {sourceUrl ? (
-
                       <a
-
                         href={sourceUrl}
-
                         target="_blank"
-
                         rel="noreferrer"
-
-                        className="min-h-10 shrink-0 rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--forest)] hover:border-[var(--forest)]"
-
+                        className="min-h-9 shrink-0 inline-flex items-center rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--forest)] hover:border-[var(--forest)] bg-white"
                       >
-
-                        Open source
-
+                        Official judgment ↗
                       </a>
-
                     ) : null}
-
                   </div>
 
-                  <p className="mt-2 text-xs leading-5 text-[var(--ink-muted)]">{item.why_relevant}</p>
-
+                  <div className="pt-2 text-xs space-y-1.5 border-t border-[var(--line)] text-[var(--ink)]">
+                    <div>
+                      <span className="font-semibold text-[var(--signal)]">Relevant issue: </span>
+                      <span>{item.legal_issue}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-[var(--signal)]">Relevant law: </span>
+                      <span className="text-[var(--ink-muted)]">{item.relevant_law}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-[var(--signal)]">Why this case is relevant: </span>
+                      <span className="leading-5 text-[var(--ink-muted)]">{item.why_relevant}</span>
+                    </div>
+                    <div className="text-[11px] text-[var(--ink-muted)]">
+                      <span className="font-medium">Source: </span>
+                      <span>{item.source_authority}</span>
+                    </div>
+                  </div>
                 </li>
-
               );
-
             })}
-
           </ul>
-
           <Link
-
             href={`/research?q=${researchQuery}`}
-
             className="mt-3 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--forest)] underline-offset-2 hover:underline"
-
           >
-
             View all in Research →
-
           </Link>
-
         </div>
-
+      ) : showFallback ? (
+        <div className="border-t border-[var(--line)] pt-4">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--ink-muted)]">
+              Relevant cases
+            </h3>
+            <span className="text-[11px] font-medium text-[var(--ink-muted)]">Official Sources</span>
+          </div>
+          <p className="mt-2 text-xs text-[var(--ink-muted)] rounded-sm border border-[var(--line)] bg-[var(--background)] p-3">
+            No sufficiently relevant judgment was found in the available official case-law sources.
+          </p>
+        </div>
       ) : null}
 
 
