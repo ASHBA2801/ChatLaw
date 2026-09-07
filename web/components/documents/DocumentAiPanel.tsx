@@ -87,17 +87,36 @@ export default function DocumentAiPanel({
         ) : null}
         <form onSubmit={submit} className="mt-3 space-y-2">
           <label htmlFor="doc-ai-instruction" className="sr-only">Document change instruction</label>
+          <div className="flex flex-wrap gap-1.5 pb-1">
+            <span className="text-[10px] uppercase font-semibold text-[var(--ink-muted)] w-full">Quick suggestions:</span>
+            {[
+              "Add a 60-day notice period",
+              "Include a pet restriction clause",
+              "Add late payment interest of 18% p.a.",
+              "Add lock-in period of 6 months",
+              "Translate active clause to Tamil",
+            ].map((tip) => (
+              <button
+                key={tip}
+                type="button"
+                onClick={() => setInstruction(tip)}
+                className="rounded-xs border border-[var(--line)] bg-[var(--canvas)] px-2 py-1 text-[11px] text-[var(--ink-muted)] hover:border-[var(--forest)] hover:text-[var(--foreground)]"
+              >
+                {tip}
+              </button>
+            ))}
+          </div>
           <textarea
             id="doc-ai-instruction"
             value={instruction}
             onChange={(event) => setInstruction(event.target.value)}
             rows={3}
-            placeholder="Describe the change…"
-            className="w-full rounded-sm border border-[var(--line)] p-3 text-sm"
+            placeholder="Describe the clause change (e.g. 'Add a pet restriction clause' or 'Make notice period 2 months')…"
+            className="w-full rounded-sm border border-[var(--line)] p-3 text-sm focus:border-[var(--forest)] focus:outline-none"
             disabled={busy !== null}
           />
           <button type="submit" disabled={busy !== null || !instruction.trim()} className="min-h-11 w-full rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
-            {busy === "revise" ? "Working…" : "Propose changes"}
+            {busy === "revise" ? "Working…" : "Propose targeted changes"}
           </button>
         </form>
       </div>

@@ -1,5 +1,6 @@
 import { DISPUTE_OPTIONS, INDIA_REGIONS, PARTY_TYPE_OPTIONS } from "./constants";
 import { EXTRA_TEMPLATES } from "./extraTemplates";
+import { MODEL_TEMPLATES } from "./modelTemplates";
 import type { FieldSpec, TemplateSpec } from "./types";
 
 const REGION_OPTIONS = INDIA_REGIONS.map((region) => ({ value: region, label: region }));
@@ -220,7 +221,7 @@ export const RENT_LEASE_TEMPLATE: TemplateSpec = {
 
 export const AFFIDAVIT_TEMPLATE: TemplateSpec = {
   id: "affidavit",
-  category: "legal_document",
+  category: "affidavit",
   title: "Affidavit",
   description: "A sworn statement of facts for use in India. Notary or oath formalities are not completed by this draft.",
   documentType: "Affidavit",
@@ -263,7 +264,7 @@ export const AFFIDAVIT_TEMPLATE: TemplateSpec = {
 
 export const LEGAL_NOTICE_TEMPLATE: TemplateSpec = {
   id: "legal_notice",
-  category: "legal_document",
+  category: "notice",
   title: "Legal Notice",
   description: "A formal notice of demand or grievance under Indian practice. Sending and service formalities are not completed by this draft.",
   documentType: "Legal Notice",
@@ -311,7 +312,7 @@ export const LEGAL_NOTICE_TEMPLATE: TemplateSpec = {
 
 export const AUTHORIZATION_LETTER_TEMPLATE: TemplateSpec = {
   id: "authorization_letter",
-  category: "legal_document",
+  category: "affidavit",
   title: "Authorization Letter",
   description: "A letter authorizing another person to act on the principal's behalf in India for a stated purpose.",
   documentType: "Authorization Letter",
@@ -357,7 +358,7 @@ export const AUTHORIZATION_LETTER_TEMPLATE: TemplateSpec = {
 
 export const CONSUMER_COMPLAINT_TEMPLATE: TemplateSpec = {
   id: "consumer_complaint",
-  category: "legal_document",
+  category: "complaint",
   title: "Consumer Complaint",
   description: "A consumer dispute complaint draft for India. Forum filing and fee formalities are not completed by this draft.",
   documentType: "Consumer Complaint",
@@ -409,7 +410,7 @@ export const CONSUMER_COMPLAINT_TEMPLATE: TemplateSpec = {
 
 export const COMPLAINT_TEMPLATE: TemplateSpec = {
   id: "complaint",
-  category: "legal_document",
+  category: "complaint",
   title: "General Complaint / Police Complaint",
   description: "A draft complaint or police complaint narrative for India. Filing with police or any authority is not completed by this draft.",
   documentType: "Complaint",
@@ -472,6 +473,7 @@ export const TEMPLATES: Record<string, TemplateSpec> = {
   [CONSUMER_COMPLAINT_TEMPLATE.id]: CONSUMER_COMPLAINT_TEMPLATE,
   [COMPLAINT_TEMPLATE.id]: COMPLAINT_TEMPLATE,
   ...EXTRA_TEMPLATES,
+  ...MODEL_TEMPLATES,
 };
 
 export function listTemplates(): TemplateSpec[] {

@@ -10,7 +10,14 @@ export type FieldType =
   | "checkbox"
   | "email"
   | "tel";
-export type DocumentCategory = "agreement" | "legal_document";
+export type DocumentCategory =
+  | "agreement"
+  | "deed"
+  | "complaint"
+  | "notice"
+  | "affidavit"
+  | "application"
+  | "legal_document";
 export type DocumentStatus = "draft" | "review" | "final";
 
 export type FieldOption = { value: string; label: string };
@@ -48,6 +55,27 @@ export interface PartySpec {
   addressField: string;
 }
 
+export interface WitnessSpec {
+  id: string;
+  role: string;
+  nameField: string;
+  addressField: string;
+}
+
+export interface ScheduleSpec {
+  id: string;
+  title: string;
+  descriptionField?: string;
+  boundariesFields?: Record<string, string>;
+}
+
+export interface TemplateSource {
+  authority: string;
+  url?: string;
+  document_name?: string;
+  reference_date?: string;
+}
+
 export interface ClauseSpec {
   id: string;
   title: string;
@@ -65,7 +93,15 @@ export interface TemplateSpec {
   description: string;
   documentType: string;
   jurisdictionCountry: "IN";
+  jurisdictionRegion?: string;
+  language?: string[];
+  source?: TemplateSource;
+  version?: string;
+  applicability?: string;
+  executionRequirements?: string[];
   parties: PartySpec[];
+  witnesses?: WitnessSpec[];
+  schedules?: ScheduleSpec[];
   steps: StepSpec[];
   fields: FieldSpec[];
   clauses: ClauseSpec[];
@@ -117,10 +153,21 @@ export interface GeneratedDocumentPayload {
   jurisdiction_region: string;
   sections: DocumentSection[];
   signatures: SignatureBlock[];
+  schedules?: Array<{
+    id: string;
+    title: string;
+    description: string;
+    boundaries?: Record<string, string>;
+  }>;
   warnings: DocumentWarning[];
   citations: Array<Record<string, unknown>>;
   model_used?: boolean;
   disclaimer?: string;
+  source?: TemplateSource;
+  version?: string;
+  category?: DocumentCategory;
+  language?: string[];
+  execution_requirements?: string[];
 }
 
 export type DocumentValues = Record<string, string | number | boolean | "">;

@@ -57,3 +57,12 @@ export const STATUS_LABELS = {
   review: "Review",
   final: "Final",
 } as const;
+
+export const DOCUMENT_CATEGORIES = [
+  { value: "agreement", label: "Agreements & Contracts" },
+  { value: "deed", label: "Deeds & Property" },
+  { value: "complaint", label: "Complaints & Petitions" },
+  { value: "notice", label: "Legal Notices" },
+  { value: "affidavit", label: "Affidavits & Declarations" },
+  { value: "application", label: "Statutory Applications" },
+] as const;

@@ -22,9 +22,37 @@ def test_looks_like_document_request():
 
 
 def test_unsupported_document_type():
-    result = process_document_turn("Please draft a power of attorney for my mother")
+    result = process_document_turn("Please draft a will and testament for my property")
     assert result.action == "unsupported"
     assert result.state.get("unsupported") is True
+
+
+def test_power_of_attorney_is_now_supported():
+    result = process_document_turn("Please draft a power of attorney for my mother")
+    assert result.action == "clarify"
+    assert result.state["template_id"] == "general_power_of_attorney"
+
+
+def test_multi_entity_extraction_from_prompt():
+    prompt = (
+        "I need a rental agreement for my flat in Coimbatore. Rent is 18,000 per month, "
+        "deposit is 1 Lakh, tenant is Vignesh and landlord is Senthil Kumar for 11 months."
+    )
+    result = process_document_turn(prompt)
+    assert result.action == "clarify"
+    assert result.state["template_id"] == "rental_agreement_tamil_nadu"
+    vals = result.state["values"]
+    assert vals["jurisdiction_region"] == "Tamil Nadu"
+    assert vals["governing_law_seat"] == "Coimbatore"
+    assert vals["landlord_name"] == "Senthil Kumar"
+    assert vals["tenant_name"] == "Vignesh"
+    assert vals["rent_amount"] == 18000
+    assert vals["deposit_amount"] == 100000
+    assert vals["duration_months"] == 11
+    # Check that grouped clarification includes recorded summary and asks remaining required fields
+    assert "Senthil Kumar" in result.message
+    assert "Vignesh" in result.message
+    assert "18,000" in result.message
 
 
 def test_clarifies_jurisdiction_and_reaches_ready():

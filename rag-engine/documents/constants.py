@@ -50,3 +50,13 @@ DISPUTE_OPTIONS = (
     {"value": "courts", "label": "Courts at the chosen seat"},
     {"value": "arbitration", "label": "Arbitration, then courts for enforcement"},
 )
+
+DOCUMENT_CATEGORIES = (
+    {"value": "agreement", "label": "Agreements & Contracts"},
+    {"value": "deed", "label": "Deeds & Conveyance"},
+    {"value": "complaint", "label": "Complaints & Grievances"},
+    {"value": "notice", "label": "Legal & Demand Notices"},
+    {"value": "affidavit", "label": "Affidavits & Declarations"},
+    {"value": "application", "label": "Applications & Petitions"},
+)
+

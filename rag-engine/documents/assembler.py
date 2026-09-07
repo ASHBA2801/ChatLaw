@@ -62,9 +62,9 @@ def fill_body(template: TemplateSpec, values: Mapping[str, Any], body: str) -> s
     return filled.strip()
 
 
-def signature_blocks(template: TemplateSpec, values: Mapping[str, Any]) -> list[dict[str, str]]:
+def signature_blocks(template: TemplateSpec, values: Mapping[str, Any]) -> list[dict[str, Any]]:
     blocks = []
-    for party in template["parties"]:
+    for party in template.get("parties", []):
         blocks.append({
             "party_id": party["id"],
             "role": party["role"],
@@ -76,7 +76,61 @@ def signature_blocks(template: TemplateSpec, values: Mapping[str, Any]) -> list[
                 "Date: ______________________________",
             ],
         })
+    for witness in template.get("witnesses", []):
+        blocks.append({
+            "party_id": witness["id"],
+            "role": witness.get("role", "Witness"),
+            "name": _value_text(template, values, witness.get("name_field", "")),
+            "lines": [
+                f"{witness.get('role', 'WITNESS').upper()}",
+                f"Name: {_value_text(template, values, witness.get('name_field', ''))}",
+                f"Address: {_value_text(template, values, witness.get('address_field', ''))}",
+                "Signature: ______________________________",
+            ],
+        })
     return blocks
+
+
+UNNUMBERED_CLAUSE_IDS = {
+    "title",
+    "heading",
+    "court_heading",
+    "notice_header",
+    "cause_title",
+    "preamble",
+    "recitals",
+    "testatum",
+    "parties",
+    "subject",
+    "statutory_mode",
+    "advocate_statement",
+    "signatures",
+    "verification",
+    "attestation",
+    "jurat",
+    "solemn_affirmation",
+    "notary_jurat",
+    "schedule",
+    "schedule_property",
+    "schedule_a",
+    "schedule_b",
+}
+
+
+def assemble_schedules(template: TemplateSpec, values: Mapping[str, Any]) -> list[dict[str, Any]]:
+    schedules = []
+    for sched in template.get("schedules", []):
+        desc = _value_text(template, values, sched.get("description_field", "")) if sched.get("description_field") else ""
+        boundaries = {}
+        for bound_key, field_name in (sched.get("boundaries_fields") or {}).items():
+            boundaries[bound_key] = _value_text(template, values, field_name)
+        schedules.append({
+            "id": sched["id"],
+            "title": sched["title"],
+            "description": desc,
+            "boundaries": boundaries,
+        })
+    return schedules
 
 
 def resolve_provision_class(clause: Mapping[str, Any]) -> str:
@@ -96,6 +150,11 @@ def assemble_document(template: TemplateSpec, values: Mapping[str, Any]) -> dict
     number = 1
     for clause in clauses:
         body = fill_body(template, values, clause["body"])
+        is_unnumbered = (
+            clause.get("unnumbered")
+            or clause["id"] in UNNUMBERED_CLAUSE_IDS
+            or clause["id"].startswith("schedule")
+        )
         section = {
             "id": clause["id"],
             "title": clause["title"],
@@ -107,7 +166,7 @@ def assemble_document(template: TemplateSpec, values: Mapping[str, Any]) -> dict
             "citation_ids": [],
             "legal_basis": [],
             "include_signature": bool(clause.get("include_signature")),
-            "number": None if clause["id"] in {"title", "signatures"} else number,
+            "number": None if is_unnumbered else number,
         }
         if section["number"] is not None:
             number += 1
@@ -125,6 +184,12 @@ def assemble_document(template: TemplateSpec, values: Mapping[str, Any]) -> dict
             "code": "jurisdiction_review",
             "message": "Jurisdiction-specific clauses are marked for review until verified legal sources are attached.",
         })
+    exec_reqs = template.get("execution_requirements") or []
+    if exec_reqs:
+        warnings.append({
+            "code": "execution_requirements",
+            "message": "Execution requirements to verify: " + "; ".join(exec_reqs) + ".",
+        })
     return {
         "template_id": template["id"],
         "title": title,
@@ -133,7 +198,13 @@ def assemble_document(template: TemplateSpec, values: Mapping[str, Any]) -> dict
         "jurisdiction_region": values.get("jurisdiction_region") or "",
         "sections": sections,
         "signatures": signature_blocks(template, values),
+        "schedules": assemble_schedules(template, values),
         "warnings": warnings,
         "citations": [],
         "model_used": False,
+        "source": template.get("source"),
+        "version": template.get("version", "1.0"),
+        "category": template.get("category", "agreement"),
+        "language": template.get("language", ["English"]),
+        "execution_requirements": exec_reqs,
     }

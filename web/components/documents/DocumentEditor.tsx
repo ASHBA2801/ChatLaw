@@ -397,29 +397,170 @@ export default function DocumentEditor({
             )}
           </div>
 
-          <div className={`overflow-hidden rounded-sm border border-[var(--line)] bg-white p-5 ${pane === "preview" ? "block" : "hidden xl:block"} print:border-0 print:p-0`}>
-            <h2 className="text-sm font-semibold print:hidden">Document preview</h2>
-            <article className="document-sheet document-print-root mt-3 max-h-[70vh] overflow-auto pr-2 print:max-h-none print:overflow-visible">
-              <h3 className="font-serif text-xl">{payload.title}</h3>
-              <p className="mt-1 text-xs text-[var(--ink-muted)]">Jurisdiction: India{payload.jurisdiction_region ? ` — ${payload.jurisdiction_region}` : ""}</p>
-              {payload.sections.map((section) => (
-                <section key={section.id} className="mt-5">
-                  <h4 className="font-serif text-sm font-semibold tracking-wide">
-                    {(section.number ? `${section.number}. ` : "") + section.title}
-                  </h4>
-                  <p className="mt-2 whitespace-pre-wrap font-serif text-[15px] leading-7">{section.body}</p>
-                  {section.legal_basis?.length ? (
-                    <p className="mt-2 text-xs text-[var(--ink-muted)]">Legal basis: {section.legal_basis.map((item) => item.label).join("; ")}</p>
-                  ) : null}
-                  {section.include_signature ? payload.signatures.map((block) => (
-                    <pre key={block.party_id} className="mt-4 font-serif text-sm leading-7">{block.lines.join("\n")}</pre>
-                  )) : null}
-                </section>
-              ))}
-              {payload.disclaimer ? (
-                <p className="mt-8 border-t border-[var(--line)] pt-4 text-xs text-[var(--ink-muted)]">{payload.disclaimer}</p>
-              ) : null}
-            </article>
+          {/* A4 Legal Sheet Document Preview */}
+          <div className={`overflow-hidden rounded-sm border border-[var(--line)] bg-[var(--canvas)] p-2 sm:p-4 ${pane === "preview" ? "block" : "hidden xl:block"} print:border-0 print:p-0 print:bg-white`}>
+            <div className="flex items-center justify-between pb-3 px-2 print:hidden">
+              <h2 className="text-sm font-semibold text-[var(--foreground)]">A4 Legal Sheet Preview</h2>
+              <span className="text-xs text-[var(--ink-muted)]">ISO A4 • 1-inch Legal Margins</span>
+            </div>
+
+            <div className="max-h-[75vh] overflow-y-auto rounded-xs bg-neutral-200/60 p-3 sm:p-6 print:max-h-none print:overflow-visible print:bg-white print:p-0">
+              <article className="document-sheet document-print-root mx-auto max-w-[794px] min-h-[1050px] bg-white p-8 sm:p-14 shadow-sm border border-neutral-200 text-neutral-900 font-serif print:border-0 print:shadow-none print:p-0">
+                {/* Formal Centered Uppercase Document Title */}
+                <h3 className="text-center text-xl sm:text-2xl font-bold uppercase tracking-wider text-neutral-900">
+                  {payload.title}
+                </h3>
+                <p className="mt-1.5 text-center text-xs italic text-neutral-600">
+                  Jurisdiction: India{payload.jurisdiction_region ? ` — State / UT: ${payload.jurisdiction_region}` : ""}
+                </p>
+
+                {/* Execution Requirements & Stamp Advisory */}
+                {payload.execution_requirements && payload.execution_requirements.length > 0 && (
+                  <div className="mt-4 rounded-xs border border-amber-200 bg-amber-50/70 p-3 text-xs text-neutral-800 print:hidden">
+                    <p className="font-semibold uppercase tracking-wider text-amber-900 text-[11px]">
+                      Statutory Execution Requirements:
+                    </p>
+                    <ul className="mt-1 list-disc list-inside space-y-0.5 text-[11px] text-neutral-700">
+                      {payload.execution_requirements.map((req, idx) => (
+                        <li key={idx}>{req}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Document Clauses */}
+                {payload.sections.map((section) => {
+                  const isUnnumbered = section.number === null || section.number === undefined;
+                  const isMajorHeader =
+                    section.title.includes("TITLE") ||
+                    section.title.includes("PREAMBLE") ||
+                    section.title.includes("RECITALS") ||
+                    section.title.includes("TESTATUM") ||
+                    section.title.includes("VERIFICATION") ||
+                    section.title.includes("ATTESTATION") ||
+                    section.title.includes("SCHEDULE") ||
+                    section.title.includes("BEFORE THE");
+
+                  return (
+                    <section key={section.id} className="mt-5">
+                      {isUnnumbered ? (
+                        <h4
+                          className={`font-serif tracking-wide text-neutral-900 ${
+                            isMajorHeader
+                              ? "text-center text-sm font-bold uppercase tracking-widest mt-6"
+                              : "text-sm font-bold"
+                          }`}
+                        >
+                          {section.title}
+                        </h4>
+                      ) : (
+                        <h4 className="font-serif text-sm font-bold tracking-wide text-neutral-900">
+                          {section.number}. {section.title}
+                        </h4>
+                      )}
+
+                      <p className="mt-2 text-[14px] leading-relaxed text-justify text-neutral-800 whitespace-pre-wrap font-serif">
+                        {section.body}
+                      </p>
+
+                      {section.legal_basis?.length ? (
+                        <p className="mt-1 text-xs italic text-neutral-500">
+                          Legal basis: {section.legal_basis.map((item) => item.label).join("; ")}
+                        </p>
+                      ) : null}
+
+                      {/* Signatures & Witness Section */}
+                      {section.include_signature && payload.signatures?.length ? (
+                        <div className="mt-8 pt-4 border-t border-neutral-300">
+                          {/* Parties Signatures */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                            {payload.signatures
+                              .filter((b) => !b.role.toLowerCase().includes("witness"))
+                              .map((block) => (
+                                <div key={block.party_id} className="space-y-1.5 pt-2">
+                                  <p className="font-bold uppercase tracking-wider text-xs">
+                                    {block.role}
+                                  </p>
+                                  <p className="text-xs">Name: {block.name}</p>
+                                  <div className="pt-4 pb-1 text-xs text-neutral-400">
+                                    Signature: ______________________________
+                                  </div>
+                                  <div className="text-xs text-neutral-400">
+                                    Date: ________________________
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+
+                          {/* Two-Witness Attestation */}
+                          {payload.signatures.some((b) => b.role.toLowerCase().includes("witness")) && (
+                            <div className="mt-8 pt-4 border-t border-dashed border-neutral-300">
+                              <h5 className="text-center font-bold text-xs uppercase tracking-wider text-neutral-900 mb-4">
+                                Attestation by Two Independent Witnesses
+                              </h5>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                                {payload.signatures
+                                  .filter((b) => b.role.toLowerCase().includes("witness"))
+                                  .map((witness) => (
+                                    <div key={witness.party_id} className="space-y-1 bg-neutral-50/60 p-3 rounded-xs border border-neutral-200">
+                                      <p className="font-bold uppercase">{witness.role}</p>
+                                      {witness.lines.map((line, i) => (
+                                        line.toUpperCase() !== witness.role.toUpperCase() && (
+                                          <p key={i}>{line}</p>
+                                        )
+                                      ))}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ) : null}
+                    </section>
+                  );
+                })}
+
+                {/* Schedules */}
+                {payload.schedules && payload.schedules.length > 0 && (
+                  <div className="mt-8 pt-6 border-t-2 border-neutral-800">
+                    {payload.schedules.map((sched) => (
+                      <div key={sched.id} className="space-y-3">
+                        <h4 className="text-center font-bold text-sm uppercase tracking-widest text-neutral-900">
+                          {sched.title}
+                        </h4>
+                        {sched.description && (
+                          <p className="text-xs text-justify leading-relaxed whitespace-pre-wrap">
+                            {sched.description}
+                          </p>
+                        )}
+                        {sched.boundaries && Object.keys(sched.boundaries).length > 0 && (
+                          <div className="mt-2 rounded-xs border border-neutral-300 p-3 bg-neutral-50/50">
+                            <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-neutral-800">
+                              Boundaries:
+                            </p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                              {Object.entries(sched.boundaries).map(([side, desc]) => (
+                                <div key={side} className="flex gap-1.5">
+                                  <span className="font-semibold uppercase text-neutral-700">{side}:</span>
+                                  <span className="text-neutral-900">{desc}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Running Footer & Legal Notice */}
+                {payload.disclaimer ? (
+                  <p className="mt-12 border-t border-neutral-300 pt-4 text-[11px] italic leading-normal text-neutral-500 text-center">
+                    {payload.disclaimer}
+                  </p>
+                ) : null}
+              </article>
+            </div>
           </div>
         </section>
 

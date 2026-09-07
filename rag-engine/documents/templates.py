@@ -73,10 +73,22 @@ def _jurisdiction_fields(step: str = "jurisdiction") -> list[FieldSpec]:
 NDA_TEMPLATE: TemplateSpec = {
     "id": "nda",
     "category": "agreement",
-    "title": "Non-Disclosure Agreement",
-    "description": "A mutual or one-way confidentiality agreement for sharing information in India.",
+    "title": "Non-Disclosure Agreement (NDA)",
+    "description": "A mutual or one-way confidentiality agreement based on Startup India model format with exclusions, non-solicitation, and dispute clauses.",
     "document_type": "Non-Disclosure Agreement",
     "jurisdiction_country": "IN",
+    "language": ["English"],
+    "version": "2026.1",
+    "applicability": "Mutual and unilateral confidential disclosures in India.",
+    "source": {
+        "authority": "Startup India Model Contracts & Indian Contract Act, 1872",
+        "url": "https://www.startupindia.gov.in/content/sih/en/model-contracts.html",
+        "document_name": "Model Non-Disclosure Agreement",
+        "reference_date": "2024",
+    },
+    "execution_requirements": [
+        "Execution on appropriate non-judicial stamp paper as prescribed under State Stamp Act",
+    ],
     "legal_query": "confidentiality non-disclosure agreement obligations India contract",
     "parties": [
         {"id": "disclosing", "role": "Disclosing Party", "name_field": "disclosing_party_name",
@@ -203,9 +215,21 @@ SERVICE_AGREEMENT_TEMPLATE: TemplateSpec = {
     "id": "service_agreement",
     "category": "agreement",
     "title": "Service Agreement",
-    "description": "A services contract between a client and a service provider in India.",
+    "description": "A commercial services contract between a client and a service provider based on Startup India model format.",
     "document_type": "Service Agreement",
     "jurisdiction_country": "IN",
+    "language": ["English"],
+    "version": "2026.1",
+    "applicability": "Commercial and independent contractor services in India.",
+    "source": {
+        "authority": "Startup India Model Contracts & Indian Contract Act, 1872",
+        "url": "https://www.startupindia.gov.in/content/sih/en/model-contracts.html",
+        "document_name": "Model Service Agreement",
+        "reference_date": "2024",
+    },
+    "execution_requirements": [
+        "Execution on non-judicial stamp paper as per State Stamp Act",
+    ],
     "legal_query": "service agreement consideration payment obligations India contract",
     "parties": [
         {"id": "client", "role": "Client", "name_field": "client_name",
@@ -316,15 +340,33 @@ RENT_LEASE_TEMPLATE: TemplateSpec = {
     "id": "rent_lease",
     "category": "agreement",
     "title": "Rent / Lease Agreement",
-    "description": "A residential or commercial lease draft for property in India.",
+    "description": "A residential or commercial tenancy agreement based on Indian model formats, with recitals, numbered covenants, and property schedule.",
     "document_type": "Rent / Lease Agreement",
     "jurisdiction_country": "IN",
+    "language": ["English", "Hindi"],
+    "version": "2026.1",
+    "applicability": "Residential and commercial tenancies across Indian States under applicable State Rent Control / Tenancy Acts.",
+    "source": {
+        "authority": "Startup India Model Contracts & Ministry of Housing and Urban Affairs Model Tenancy Act",
+        "url": "https://www.startupindia.gov.in/content/sih/en/model-contracts.html",
+        "document_name": "Model Tenancy Agreement",
+        "reference_date": "2024",
+    },
+    "execution_requirements": [
+        "Execution on non-judicial stamp paper of value prescribed by State Stamp Act",
+        "Mandatory registration before Sub-Registrar if tenancy term exceeds 11 months under Section 107 of Transfer of Property Act, 1882",
+        "Attestation by two independent witnesses",
+    ],
     "legal_query": "lease rent landlord tenant property agreement India",
     "parties": [
         {"id": "landlord", "role": "Landlord / Lessor", "name_field": "landlord_name",
          "type_field": "landlord_type", "address_field": "landlord_address"},
         {"id": "tenant", "role": "Tenant / Lessee", "name_field": "tenant_name",
          "type_field": "tenant_type", "address_field": "tenant_address"},
+    ],
+    "witnesses": [
+        {"id": "witness_1", "role": "Witness 1", "name_field": "witness_1_name", "address_field": "witness_1_address"},
+        {"id": "witness_2", "role": "Witness 2", "name_field": "witness_2_name", "address_field": "witness_2_address"},
     ],
     "steps": [
         {"id": "type", "title": "Document type", "description": "Confirm the agreement you need.", "field_ids": ["document_title", "property_use"]},
@@ -375,62 +417,80 @@ RENT_LEASE_TEMPLATE: TemplateSpec = {
         _field("dispute_resolution", "Dispute resolution", "DISPUTE RESOLUTION", "select", "recommended", "conditions",
                options=list(DISPUTE_OPTIONS)),
         _field("special_conditions", "Other agreed conditions", "SPECIAL CONDITIONS", "textarea", "optional", "conditions"),
+        _field("witness_1_name", "Witness 1 name", "WITNESS 1 NAME", "text", "optional", "conditions"),
+        _field("witness_1_address", "Witness 1 address", "WITNESS 1 ADDRESS", "text", "optional", "conditions"),
+        _field("witness_2_name", "Witness 2 name", "WITNESS 2 NAME", "text", "optional", "conditions"),
+        _field("witness_2_address", "Witness 2 address", "WITNESS 2 ADDRESS", "text", "optional", "conditions"),
     ],
     "clauses": [
-        {"id": "title", "title": "Title", "required": True, "body":
-         "{document_title}\n\nThis Rent / Lease Agreement is made on {effective_date} for {property_use} use."},
+        {"id": "title", "title": "Title and Preamble", "required": True, "body":
+         "{document_title}\n\nRENTAL AGREEMENT\n\nThis Rent / Lease Agreement is made and executed on this {effective_date} at {governing_law_seat}, {jurisdiction_region} for {property_use} premises."},
         {"id": "parties", "title": "Parties", "required": True, "body":
-         "BETWEEN:\n\n(1) {landlord_name}, a {landlord_type}, of {landlord_address} (the \"Landlord\"); and\n\n"
-         "(2) {tenant_name}, a {tenant_type}, of {tenant_address} (the \"Tenant\")."},
-        {"id": "property", "title": "Premises", "required": True, "body":
-         "The Landlord lets and the Tenant takes the premises at {property_address}. Description: {property_description}. "
-         "The Tenant shall use the premises only for {property_use} use, and shall not change that use without the Landlord's prior written consent."},
-        {"id": "term", "title": "Term", "required": True, "body":
-         "The tenancy starts on {effective_date} and ends on {end_date}, unless ended earlier in accordance with this Agreement or applicable law."},
-        {"id": "rent", "title": "Rent", "required": False, "condition": {"has_value": "rent_amount"}, "body":
-         "The Tenant shall pay rent of {rent_currency} {rent_amount} ({rent_frequency}) for the premises. "
-         "The draft does not add interest, GST, or other charges that were not supplied."},
-        {"id": "deposit", "title": "Security deposit", "required": False, "condition": {"has_value": "deposit_amount"}, "body":
-         "The Tenant shall pay a security deposit of {rent_currency} {deposit_amount}. The Landlord shall hold it as security "
-         "for unpaid rent and damage beyond fair wear and tear, and shall return the balance after the premises are vacated, "
-         "subject to applicable law and a written statement of deductions."},
-        {"id": "tenant_obligations", "title": "Tenant obligations", "required": True, "body":
-         "The Tenant shall pay agreed sums on time, keep the premises in a reasonably clean condition, "
-         "not assign or sublet without prior written consent, and comply with applicable building and society rules notified to the Tenant."},
-        {"id": "landlord_obligations", "title": "Landlord obligations", "required": True, "body":
-         "The Landlord shall give quiet enjoyment of the premises while the Tenant complies with this Agreement, "
-         "and shall carry out structural and major repairs that are the Landlord's responsibility, except where damage is caused by the Tenant."},
-        {"id": "maintenance", "title": "Maintenance", "required": True, "body":
-         "Routine maintenance responsibility: {maintenance_responsibility}. The Parties should record any specific repair allocation in special conditions."},
-        {"id": "termination", "title": "Ending the tenancy", "required": False, "condition": {"has_value": "termination_notice_days"}, "body":
-         "Either Party may end this Agreement by giving {termination_notice_days} days' written notice, subject to any mandatory notice period that applies in {jurisdiction_region}. "
-         "The Landlord may also end the tenancy for unpaid rent or material breach after written notice and any cure period required by applicable law."},
-        {"id": "dispute_resolution", "title": "Dispute resolution", "required": True, "body":
-         "Disputes shall first be discussed in good faith. If arbitration is selected, unresolved disputes shall be referred to arbitration in India "
-         "with the seat at {governing_law_seat}, except where a tenancy statute requires a particular forum. "
-         "If courts are selected, or no method is stated, the courts at {governing_law_seat} have non-exclusive jurisdiction, subject to that limitation."},
-        {"id": "governing_law", "title": "Governing law", "required": True, "needs_legal_context": True, "body":
-         "This Agreement is governed by the laws of India as applicable in {jurisdiction_region}. "
-         "Registration, stamp duty, and local tenancy controls are not determined by this draft unless a verified legal source is attached. "
-         "[JURISDICTION REVIEW REQUIRED]"},
-        {"id": "notices", "title": "Notices", "required": True, "body":
-         "Notices must be in writing and sent to the addresses of the Parties set out above, or to an address notified in writing."},
-        {"id": "miscellaneous", "title": "General", "required": True, "body":
-         "Amendments must be in writing and signed. If a provision is unenforceable, the rest remains in effect. "
-         "Special conditions: {special_conditions}"},
-        {"id": "signatures", "title": "Signatures", "required": True, "include_signature": True, "body":
-         "IN WITNESS WHEREOF the Parties have executed this Agreement on the date first written above."},
+         "BY AND BETWEEN:\n\n"
+         "(1) {landlord_name}, a {landlord_type}, residing at {landlord_address} (hereinafter referred to as the \"LANDLORD / LESSOR\", which expression shall include their heirs, executors, and assigns) of the FIRST PART;\n\n"
+         "AND\n\n"
+         "(2) {tenant_name}, a {tenant_type}, residing at {tenant_address} (hereinafter referred to as the \"TENANT / LESSEE\", which expression shall include their heirs and permitted assigns) of the SECOND PART."},
+        {"id": "recitals", "title": "Recitals", "required": True, "body":
+         "WHEREAS:\n"
+         "A. The Landlord is the absolute lawful owner of the premises situated at {property_address}, fully described in the Schedule hereunder.\n"
+         "B. The Tenant has approached the Landlord to take on rent the Scheduled Premises for {property_use} use, and the Landlord has agreed on the terms and covenants herein.\n\n"
+         "NOW THIS AGREEMENT WITNESSETH AND IT IS MUTUALLY AGREED AS FOLLOWS:"},
+        {"id": "property", "title": "1. Demised Premises", "required": True, "body":
+         "1.1. The Landlord hereby lets out and the Tenant takes on rent the premises situated at {property_address}.\n"
+         "1.2. Description of premises: {property_description}. The Tenant shall use the premises exclusively for {property_use} purposes and shall not change such use without prior written consent."},
+        {"id": "term", "title": "2. Term and Duration", "required": True, "body":
+         "2.1. The tenancy shall commence on {effective_date} and expire on {end_date}, unless terminated earlier in accordance with this Agreement or applicable law."},
+        {"id": "rent", "title": "3. Rent and Payment", "required": False, "condition": {"has_value": "rent_amount"}, "body":
+         "3.1. The Tenant shall pay a monthly rent of {rent_currency} {rent_amount} ({rent_frequency}) on or before the 10th day of each calendar month in advance."},
+        {"id": "deposit", "title": "4. Security Deposit", "required": False, "condition": {"has_value": "deposit_amount"}, "body":
+         "4.1. The Tenant has deposited with the Landlord an interest-free refundable security deposit of {rent_currency} {deposit_amount}.\n"
+         "4.2. The Landlord shall refund this deposit upon vacant, peaceful handover of the premises, subject to deduction of unpaid rent or damage exceeding normal wear and tear."},
+        {"id": "tenant_obligations", "title": "5. Tenant Covenants", "required": True, "body":
+         "5.1. The Tenant shall pay agreed sums on time, maintain the premises in tenantable repair, and shall NOT sublet, assign, or part with possession of the premises to any third party."},
+        {"id": "landlord_obligations", "title": "6. Landlord Covenants", "required": True, "body":
+         "6.1. The Landlord covenants that the Tenant paying rent shall peaceably hold and enjoy the premises without interruption during the tenancy.\n"
+         "6.2. The Landlord shall bear municipal property taxes and carry out necessary major structural repairs."},
+        {"id": "maintenance", "title": "7. Maintenance and Utilities", "required": True, "body":
+         "7.1. Routine maintenance responsibility: {maintenance_responsibility}. Electricity, water, and utility charges as per meter readings shall be paid by the Tenant."},
+        {"id": "termination", "title": "8. Termination and Notice", "required": False, "condition": {"has_value": "termination_notice_days"}, "body":
+         "8.1. Either party may terminate this tenancy by serving {termination_notice_days} days' prior written notice to the other party.\n"
+         "8.2. On expiration or termination, the Tenant shall peacefully vacate and deliver vacant possession to the Landlord."},
+        {"id": "dispute_resolution", "title": "9. Dispute Resolution", "required": True, "body":
+         "9.1. Disputes arising out of this Agreement shall first be discussed amicably. If unresolved, disputes shall be referred to {dispute_resolution} at {governing_law_seat}."},
+        {"id": "governing_law", "title": "10. Governing Law", "required": True, "needs_legal_context": True, "body":
+         "10.1. This Agreement is governed by the laws of India as applicable in {jurisdiction_region}.\n"
+         "10.2. Stamp duty and registration requirements under the State Stamp Act and Registration Act, 1908 should be verified prior to formal execution."},
+        {"id": "schedule", "title": "Schedule of Property", "required": True, "body":
+         "SCHEDULE OF PROPERTY:\n\n"
+         "All that residential / commercial premises situated at: {property_address}.\n"
+         "Description: {property_description}.\n"
+         "Situate within {governing_law_seat}, {jurisdiction_region}."},
+        {"id": "signatures", "title": "Signatures and Witnesses", "required": True, "include_signature": True, "body":
+         "IN WITNESS WHEREOF, the Landlord and Tenant have signed this Agreement on the day, month, and year first written above in presence of witnesses."},
     ],
 }
 
 AFFIDAVIT_TEMPLATE: TemplateSpec = {
     "id": "affidavit",
-    "category": "legal_document",
-    "title": "Affidavit",
-    "description": "A sworn statement of facts for use in India. Notary or oath formalities are not completed by this draft.",
+    "category": "affidavit",
+    "title": "General Affidavit",
+    "description": "A formal sworn affidavit before a Notary Public / Oath Commissioner with deponent particulars, solemn affirmation, and statutory verification.",
     "document_type": "Affidavit",
     "jurisdiction_country": "IN",
-    "legal_query": "affidavit sworn statement verification of facts India oath",
+    "language": ["English", "Hindi"],
+    "version": "2026.1",
+    "applicability": "General sworn statements of fact for submission before courts, authorities, and institutions across India.",
+    "source": {
+        "authority": "Notaries Act, 1952 & High Court Civil Rules of Practice",
+        "url": "https://indiacode.nic.in/handle/123456789/1572",
+        "document_name": "Standard Format of General Affidavit before Notary Public",
+        "reference_date": "1952 (as amended)",
+    },
+    "execution_requirements": [
+        "Execution on non-judicial stamp paper of prescribed denomination under State Stamp Act",
+        "Mandatory oath and verification administered before an authorized Notary Public or Oath Commissioner",
+    ],
+    "legal_query": "affidavit sworn statement verification of facts India oath notary",
     "parties": [
         {"id": "deponent", "role": "Deponent", "name_field": "deponent_name",
          "type_field": "deponent_type", "address_field": "deponent_address"},
@@ -440,7 +500,7 @@ AFFIDAVIT_TEMPLATE: TemplateSpec = {
         {"id": "jurisdiction", "title": "Jurisdiction", "description": "Where this affidavit is intended to be used.",
          "field_ids": ["jurisdiction_country", "jurisdiction_region", "governing_law_seat"]},
         {"id": "parties", "title": "Deponent", "description": "Identify the person who will swear the facts.",
-         "field_ids": ["deponent_name", "deponent_type", "deponent_address", "deponent_age", "deponent_occupation"]},
+         "field_ids": ["deponent_name", "deponent_type", "deponent_parent_spouse", "deponent_address", "deponent_age", "deponent_occupation"]},
         {"id": "purpose", "title": "Subject and facts", "description": "State why the affidavit is needed and the facts to be sworn.",
          "field_ids": ["purpose", "facts", "effective_date", "place_of_swearing"]},
         {"id": "conditions", "title": "Extra details", "description": "Optional supporting information.",
@@ -454,6 +514,7 @@ AFFIDAVIT_TEMPLATE: TemplateSpec = {
         _field("deponent_name", "Deponent name", "DEPONENT NAME", "text", "required", "parties"),
         _field("deponent_type", "Deponent type", "DEPONENT TYPE", "select", "required", "parties",
                options=list(PARTY_TYPE_OPTIONS)),
+        _field("deponent_parent_spouse", "Father / Spouse name", "PARENT OR SPOUSE NAME", "text", "optional", "parties"),
         _field("deponent_address", "Deponent address", "DEPONENT ADDRESS", "textarea", "required", "parties"),
         _field("deponent_age", "Deponent age (years)", "DEPONENT AGE", "number", "recommended", "parties",
                min=18, max=120),
@@ -467,36 +528,50 @@ AFFIDAVIT_TEMPLATE: TemplateSpec = {
         _field("special_conditions", "Additional particulars", "ADDITIONAL PARTICULARS", "textarea", "optional", "conditions"),
     ],
     "clauses": [
-        {"id": "title", "title": "Title", "required": True, "body":
-         "{document_title}\n\nAFFIDAVIT\n\nDated {effective_date}"},
-        {"id": "parties", "title": "Deponent", "required": True, "body":
-         "I, {deponent_name}, a {deponent_type}, aged about {deponent_age} years, occupation {deponent_occupation}, "
-         "residing at {deponent_address} (the \"Deponent\"), do hereby solemnly affirm and state as follows."},
-        {"id": "purpose", "title": "Purpose", "required": True, "body":
-         "This affidavit is made for the following purpose: {purpose}."},
-        {"id": "facts", "title": "Facts", "required": True, "body":
-         "The Deponent states the following facts from personal knowledge, unless otherwise indicated:\n\n{facts}\n\n"
+        {"id": "title", "title": "Heading and Solemn Affirmation", "required": True, "body":
+         "BEFORE THE NOTARY PUBLIC / OATH COMMISSIONER AT {place_of_swearing}, {jurisdiction_region}\n\n"
+         "AFFIDAVIT\n\n"
+         "I, {deponent_name}, son/daughter/wife of {deponent_parent_spouse}, a {deponent_type}, aged about {deponent_age} years, "
+         "occupation {deponent_occupation}, residing at {deponent_address} (the \"Deponent\"), do hereby solemnly affirm and state on oath as under:"},
+        {"id": "purpose", "title": "1. Competence and Purpose", "required": True, "body":
+         "1. That I am the deponent herein, fully conversant with the facts deposed herein, and competent to swear this Affidavit.\n"
+         "2. That this Affidavit is sworn in connection with: {purpose}."},
+        {"id": "facts", "title": "2. Sworn Statements of Fact", "required": True, "body":
+         "3. That the Deponent states and affirms the following facts from personal knowledge:\n\n{facts}\n\n"
          "Additional particulars: {special_conditions}"},
-        {"id": "verification", "title": "Verification", "required": True, "body":
-         "I, the Deponent, verify that the contents of this affidavit are true to my personal knowledge, "
-         "that no part of it is false, and that nothing material has been concealed. "
-         "Verified at {place_of_swearing} on {effective_date}."},
-        {"id": "governing_law", "title": "Jurisdiction note", "required": True, "needs_legal_context": True, "body":
-         "This draft is intended for use in India as applicable in {jurisdiction_region}. "
-         "Oath, attestation, stamp, and filing requirements are not completed by this draft and must be checked before use. "
-         "This draft does not determine that any particular statute or form applies unless a verified legal source is attached."},
-        {"id": "signatures", "title": "Signatures", "required": True, "include_signature": True, "body":
-         "DEPONENT\n\nPlace: {place_of_swearing}\nDate: {effective_date}"},
+        {"id": "verification", "title": "3. Statutory Verification", "required": True, "body":
+         "VERIFICATION\n\n"
+         "I, the Deponent above named, do hereby solemnly verify and declare that the contents of paragraphs 1 to 3 above are true and correct "
+         "to my personal knowledge and belief, no part of it is false, and nothing material has been concealed therefrom.\n\n"
+         "Verified at {place_of_swearing} on this {effective_date}."},
+        {"id": "signatures", "title": "Signatures and Notary Jurat", "required": True, "include_signature": True, "body":
+         "DEPONENT\n\n"
+         "Identified by me:\nAdvocate\n\n"
+         "Solemnly affirmed and signed before me on this {effective_date} at {place_of_swearing}.\n\n"
+         "NOTARY PUBLIC / OATH COMMISSIONER\n(Seal and Signature)"},
     ],
 }
 
 LEGAL_NOTICE_TEMPLATE: TemplateSpec = {
     "id": "legal_notice",
-    "category": "legal_document",
+    "category": "notice",
     "title": "Legal Notice",
-    "description": "A formal notice of demand or grievance under Indian practice. Sending and service formalities are not completed by this draft.",
+    "description": "Advocate legal notice for civil and commercial demands, issued under Registered Post with A.D. with factual chronology and statutory consequence notice.",
     "document_type": "Legal Notice",
     "jurisdiction_country": "IN",
+    "language": ["English", "Hindi"],
+    "version": "2026.1",
+    "applicability": "Pre-litigation demand notice under Indian civil and commercial law.",
+    "source": {
+        "authority": "Bar Council of India Standards & Code of Civil Procedure, 1908",
+        "url": "https://barcouncilofindia.org",
+        "document_name": "Standard Format of Advocate Legal Notice",
+        "reference_date": "2024",
+    },
+    "execution_requirements": [
+        "Dispatch via Registered Post with Acknowledgement Due (RPAD) or Speed Post",
+        "Preserve postal booking receipt and delivery tracking report for court record",
+    ],
     "legal_query": "legal notice demand grievance reply India civil dispute",
     "parties": [
         {"id": "sender", "role": "Sender", "name_field": "sender_name",
@@ -509,7 +584,7 @@ LEGAL_NOTICE_TEMPLATE: TemplateSpec = {
         {"id": "jurisdiction", "title": "Jurisdiction", "description": "Where the dispute or demand arises.",
          "field_ids": ["jurisdiction_country", "jurisdiction_region", "governing_law_seat"]},
         {"id": "parties", "title": "Parties", "description": "Identify who is sending and receiving the notice.",
-         "field_ids": ["sender_name", "sender_type", "sender_address", "recipient_name", "recipient_type", "recipient_address"]},
+         "field_ids": ["sender_name", "sender_type", "sender_address", "recipient_name", "recipient_type", "recipient_address", "advocate_name"]},
         {"id": "purpose", "title": "Subject and facts", "description": "Describe the grievance and background.",
          "field_ids": ["purpose", "facts", "effective_date"]},
         {"id": "demand", "title": "Demand", "description": "State what is demanded and by when.",
@@ -521,54 +596,73 @@ LEGAL_NOTICE_TEMPLATE: TemplateSpec = {
     "fields": [
         _field("document_title", "Document title", "DOCUMENT TITLE", "text", "optional", "type"),
         *_jurisdiction_fields(),
-        _field("sender_name", "Sender name", "SENDER NAME", "text", "required", "parties"),
+        _field("sender_name", "Sender (Client) full name", "SENDER NAME", "text", "required", "parties"),
         _field("sender_type", "Sender type", "SENDER TYPE", "select", "required", "parties", options=list(PARTY_TYPE_OPTIONS)),
         _field("sender_address", "Sender address", "SENDER ADDRESS", "textarea", "required", "parties"),
-        _field("recipient_name", "Recipient name", "RECIPIENT NAME", "text", "required", "parties"),
+        _field("recipient_name", "Recipient full name", "RECIPIENT NAME", "text", "required", "parties"),
         _field("recipient_type", "Recipient type", "RECIPIENT TYPE", "select", "required", "parties", options=list(PARTY_TYPE_OPTIONS)),
         _field("recipient_address", "Recipient address", "RECIPIENT ADDRESS", "textarea", "required", "parties"),
+        _field("advocate_name", "Advocate / Counsel name", "ADVOCATE NAME", "text", "optional", "parties"),
         _field("purpose", "Subject of notice", "SUBJECT", "textarea", "required", "purpose"),
-        _field("facts", "Background facts", "FACTS", "textarea", "required", "purpose"),
+        _field("facts", "Background facts and chronology", "FACTS", "textarea", "required", "purpose"),
         _field("effective_date", "Date of notice", "DATE OF NOTICE", "date", "required", "purpose"),
         _field("relief_sought", "Demand / relief sought", "RELIEF SOUGHT", "textarea", "required", "demand"),
         _field("compliance_days", "Days to comply", "COMPLIANCE DAYS", "number", "recommended", "demand",
-               "Leave blank if no fixed period is agreed.", min=1, max=365),
+               "Standard 15 or 30 days.", min=1, max=365),
         _field("special_conditions", "Additional particulars", "ADDITIONAL PARTICULARS", "textarea", "optional", "conditions"),
     ],
     "clauses": [
-        {"id": "title", "title": "Title", "required": True, "body":
-         "{document_title}\n\nLEGAL NOTICE\n\nDate: {effective_date}"},
-        {"id": "parties", "title": "Parties", "required": True, "body":
-         "FROM:\n{sender_name}, a {sender_type}, of {sender_address}\n\n"
-         "TO:\n{recipient_name}, a {recipient_type}, of {recipient_address}"},
-        {"id": "subject", "title": "Subject", "required": True, "body":
-         "Subject: {purpose}"},
-        {"id": "facts", "title": "Facts", "required": True, "body":
-         "Under instructions from and on behalf of the Sender, you are informed of the following facts:\n\n{facts}\n\n"
-         "Additional particulars: {special_conditions}"},
-        {"id": "demand", "title": "Demand", "required": True, "body":
-         "You are hereby called upon to: {relief_sought}."},
-        {"id": "consequences", "title": "Consequences of non-compliance", "required": False,
-         "condition": {"has_value": "compliance_days"}, "body":
-         "You are called upon to comply within {compliance_days} days of receipt of this notice. "
-         "Failing compliance, the Sender may pursue such remedies as are available under applicable law, "
-         "without further notice, at your risk as to costs and consequences. This draft does not itself commence any proceeding."},
-        {"id": "governing_law", "title": "Jurisdiction note", "required": True, "needs_legal_context": True, "body":
-         "This notice is drafted with reference to India as applicable in {jurisdiction_region}, "
-         "with disputes contemplated at {governing_law_seat} only if the parties have agreed that seat. "
-         "Service, limitation, and mandatory pre-suit requirements are not determined by this draft unless a verified legal source is attached."},
-        {"id": "signatures", "title": "Signatures", "required": True, "include_signature": True, "body":
-         "Yours faithfully,\n\nFor the Sender"},
+        {"id": "title", "title": "Dispatch Mode and Header", "required": True, "body":
+         "BY REGISTERED POST WITH ACKNOWLEDGEMENT DUE / SPEED POST\n\n"
+         "LEGAL NOTICE\n\n"
+         "Date: {effective_date}\n\n"
+         "TO:\n"
+         "{recipient_name},\n"
+         "a {recipient_type},\n"
+         "residing/having office at:\n"
+         "{recipient_address}.\n\n"
+         "SUBJECT: {purpose}\n\n"
+         "Sir / Madam,"},
+        {"id": "parties", "title": "Instructions and Client Identification", "required": True, "body":
+         "Under instructions from and on behalf of my client, {sender_name}, a {sender_type}, residing at {sender_address} "
+         "(hereinafter referred to as \"my Client\"), I hereby serve upon you this Legal Notice as under:"},
+        {"id": "facts", "title": "1. Factual Chronology and Contractual Relations", "required": True, "body":
+         "1.1. That my Client states the following factual background:\n\n{facts}\n\n"
+         "1.2. Additional particulars: {special_conditions}"},
+        {"id": "demand", "title": "2. Breach, Default, and Legal Demand", "required": True, "body":
+         "2.1. That you have committed default and breach of your binding legal obligations towards my Client.\n"
+         "2.2. You are hereby called upon to: {relief_sought}."},
+        {"id": "consequences", "title": "3. Notice Period and Legal Consequences", "required": True, "needs_legal_context": True, "body":
+         "3.1. TAKE NOTICE that you are hereby required to comply with the above demands within a period of {compliance_days} days from the date of receipt of this notice.\n"
+         "3.2. Failing compliance within the stipulated period of {compliance_days} days, my Client has given me peremptory instructions to institute appropriate civil and/or criminal legal proceedings "
+         "against you in the competent Court of Law having jurisdiction at {governing_law_seat}, {jurisdiction_region}, entirely at your risk, cost, and consequence."},
+        {"id": "signatures", "title": "Advocate / Counsel Signature", "required": True, "include_signature": True, "body":
+         "Yours faithfully,\n\n"
+         "ADVOCATE FOR THE SENDER\n"
+         "({advocate_name})\n"
+         "Place: {governing_law_seat}"},
     ],
 }
 
 AUTHORIZATION_LETTER_TEMPLATE: TemplateSpec = {
     "id": "authorization_letter",
-    "category": "legal_document",
+    "category": "affidavit",
     "title": "Authorization Letter",
-    "description": "A letter authorizing another person to act on the principal's behalf in India for a stated purpose.",
+    "description": "A formal letter of authority authorizing a representative to act on the principal's behalf before authorities or private bodies.",
     "document_type": "Authorization Letter",
     "jurisdiction_country": "IN",
+    "language": ["English"],
+    "version": "2026.1",
+    "applicability": "Letter of authority for representation before administrative bodies in India.",
+    "source": {
+        "authority": "Department of Legal Affairs, Government of India",
+        "url": "https://legalaffairs.gov.in",
+        "document_name": "Standard Format of Letter of Authority",
+        "reference_date": "2024",
+    },
+    "execution_requirements": [
+        "Signature on company letterhead or with identity verification",
+    ],
     "legal_query": "authorization letter letter of authority agent principal India",
     "parties": [
         {"id": "principal", "role": "Principal", "name_field": "principal_name",
@@ -633,12 +727,26 @@ AUTHORIZATION_LETTER_TEMPLATE: TemplateSpec = {
 
 CONSUMER_COMPLAINT_TEMPLATE: TemplateSpec = {
     "id": "consumer_complaint",
-    "category": "legal_document",
+    "category": "complaint",
     "title": "Consumer Complaint",
-    "description": "A consumer dispute complaint draft for India. Forum filing and fee formalities are not completed by this draft.",
+    "description": "Formal consumer dispute complaint under Section 35 of the Consumer Protection Act, 2019 before the District Commission with cause title, grounds, prayer, and verification.",
     "document_type": "Consumer Complaint",
     "jurisdiction_country": "IN",
-    "legal_query": "consumer complaint deficiency goods services Consumer Protection Act India",
+    "language": ["English", "Hindi"],
+    "version": "2026.1",
+    "applicability": "Filing consumer complaints under Consumer Protection Act, 2019 before District Consumer Disputes Redressal Commissions in India.",
+    "source": {
+        "authority": "Department of Consumer Affairs, Government of India & e-Daakhil Portal",
+        "url": "https://edaakhil.nic.in",
+        "document_name": "Model Consumer Complaint Format under Section 35 CPA 2019",
+        "reference_date": "2019 (as amended)",
+    },
+    "execution_requirements": [
+        "Filing before the jurisdictional District Consumer Disputes Redressal Commission based on complainant's residence or opposite party's workplace",
+        "Payment of prescribed court/forum fee (exempt up to Rs. 5 Lakhs claim value)",
+        "Accompanied by an affidavit of verification and supporting invoices/documents",
+    ],
+    "legal_query": "consumer complaint deficiency goods services Consumer Protection Act India Section 35",
     "parties": [
         {"id": "complainant", "role": "Complainant", "name_field": "complainant_name",
          "type_field": "complainant_type", "address_field": "complainant_address"},
@@ -684,39 +792,67 @@ CONSUMER_COMPLAINT_TEMPLATE: TemplateSpec = {
         _field("special_conditions", "Additional particulars", "ADDITIONAL PARTICULARS", "textarea", "optional", "conditions"),
     ],
     "clauses": [
-        {"id": "title", "title": "Title", "required": True, "body":
-         "{document_title}\n\nCONSUMER COMPLAINT\n\nDate: {effective_date}"},
-        {"id": "parties", "title": "Parties", "required": True, "body":
-         "BETWEEN:\n\n(1) {complainant_name}, a {complainant_type}, of {complainant_address} (the \"Complainant\"); and\n\n"
-         "(2) {opposite_party_name}, a {opposite_party_type}, of {opposite_party_address} (the \"Opposite Party\")."},
-        {"id": "transaction", "title": "Transaction", "required": True, "body":
-         "The complaint concerns the following goods or services: {product_or_service}. "
-         "Transaction / purchase date: {transaction_date}."},
-        {"id": "facts", "title": "Facts", "required": True, "body":
-         "The Complainant states the following facts:\n\n{facts}\n\nAdditional particulars: {special_conditions}"},
-        {"id": "cause", "title": "Cause of action", "required": True, "body":
-         "Nature of the complaint: {purpose}. "
-         "The draft does not assert that any particular consumer forum has jurisdiction unless a verified legal source is attached."},
-        {"id": "relief", "title": "Relief sought", "required": True, "body":
-         "The Complainant seeks the following relief: {relief_sought}."},
-        {"id": "claim_amount", "title": "Amount claimed", "required": False, "condition": {"has_value": "claim_amount"}, "body":
-         "Amount claimed: {claim_currency} {claim_amount}. The draft does not invent interest, costs, or other sums that were not supplied."},
-        {"id": "governing_law", "title": "Jurisdiction note", "required": True, "needs_legal_context": True, "body":
-         "This draft is intended with reference to India as applicable in {jurisdiction_region}. "
-         "Forum, limitation, fees, and filing formalities under consumer protection law are not completed by this draft "
-         "and must be checked before filing."},
+        {"id": "title", "title": "Cause Title and Forum", "required": True, "body":
+         "BEFORE THE HON'BLE DISTRICT CONSUMER DISPUTES REDRESSAL COMMISSION AT {governing_law_seat}, {jurisdiction_region}\n\n"
+         "CONSUMER COMPLAINT NO. _____ OF 2026\n\n"
+         "IN THE MATTER OF:\n\n"
+         "{complainant_name}, a {complainant_type}, residing at {complainant_address}\n"
+         "... COMPLAINANT\n\n"
+         "VERSUS\n\n"
+         "{opposite_party_name}, a {opposite_party_type}, having office/residence at {opposite_party_address}\n"
+         "... OPPOSITE PARTY\n\n"
+         "COMPLAINT UNDER SECTION 35 OF THE CONSUMER PROTECTION ACT, 2019\n\n"
+         "MOST RESPECTFULLY SHOWETH:"},
+        {"id": "parties", "title": "1. Description of the Parties", "required": True, "body":
+         "1.1. That the Complainant is a consumer within the meaning of Section 2(7) of the Consumer Protection Act, 2019, having purchased/availed {product_or_service} for consideration.\n"
+         "1.2. That the Opposite Party is a trader/service provider having office/business at {opposite_party_address}."},
+        {"id": "transaction", "title": "2. Facts of the Case and Transaction", "required": True, "body":
+         "2.1. That on or about {transaction_date}, the Complainant availed/purchased {product_or_service} from the Opposite Party.\n"
+         "2.2. Statement of Facts: {facts}\n"
+         "2.3. Additional particulars: {special_conditions}"},
+        {"id": "cause", "title": "3. Deficiency in Service / Unfair Trade Practice", "required": True, "body":
+         "3.1. That the Opposite Party committed deficiency in service and/or unfair trade practice under Section 2(11) and Section 2(47) of the Act as follows: {purpose}.\n"
+         "3.2. That despite representations and requests, the Opposite Party failed to redress the grievance of the Complainant."},
+        {"id": "governing_law", "title": "4. Jurisdiction and Limitation", "required": True, "needs_legal_context": True, "body":
+         "4.1. That the cause of action arose within the territorial jurisdiction of this Hon'ble Commission at {governing_law_seat}, {jurisdiction_region}.\n"
+         "4.2. That this Complaint is filed within the two-year limitation period prescribed under Section 69 of the Consumer Protection Act, 2019."},
+        {"id": "relief", "title": "5. Prayer (Relief Claimed)", "required": True, "body":
+         "PRAYER:\n\n"
+         "Wherefore, the Complainant most respectfully prays that this Hon'ble Commission may be pleased to:\n"
+         "(a) Direct the Opposite Party to: {relief_sought};\n"
+         "(b) Award the claim amount of {claim_currency} {claim_amount} along with interest;\n"
+         "(c) Award compensation towards mental agony, harassment, and litigation expenses;\n"
+         "(d) Pass such further order(s) as this Hon'ble Commission deems fit in the interest of justice."},
+        {"id": "verification", "title": "Statutory Verification", "required": True, "body":
+         "VERIFICATION\n\n"
+         "I, {complainant_name}, the Complainant above named, do hereby verify and declare that the contents of paragraphs 1 to 5 "
+         "of the above complaint are true and correct to the best of my knowledge, information, and belief, and nothing material has been concealed therefrom.\n\n"
+         "Verified at {governing_law_seat} on this {effective_date}."},
         {"id": "signatures", "title": "Signatures", "required": True, "include_signature": True, "body":
-         "Place: {governing_law_seat}\nDate: {effective_date}\n\nCOMPLAINANT"},
+         "COMPLAINANT\n\nPlace: {governing_law_seat}\nDate: {effective_date}"},
     ],
 }
 
 COMPLAINT_TEMPLATE: TemplateSpec = {
     "id": "complaint",
-    "category": "legal_document",
+    "category": "complaint",
     "title": "General Complaint / Police Complaint",
-    "description": "A draft complaint or police complaint narrative for India. Filing with police or any authority is not completed by this draft.",
+    "description": "A formal police complaint / First Information statement narrative for reporting cognizable offences before the Station House Officer.",
     "document_type": "Complaint",
     "jurisdiction_country": "IN",
+    "language": ["English", "Hindi"],
+    "version": "2026.1",
+    "applicability": "Filing complaints before police authorities or statutory enforcement agencies in India.",
+    "source": {
+        "authority": "Ministry of Home Affairs & Bharatiya Nagarik Suraksha Sanhita, 2023 / Cr.P.C.",
+        "url": "https://mha.gov.in",
+        "document_name": "Standard Format of Police Information / Complaint",
+        "reference_date": "2023",
+    },
+    "execution_requirements": [
+        "Submission in person or by registered post to the jurisdictional Station House Officer (SHO)",
+        "Complainant is entitled to receive a free certified copy of the FIR upon registration under Section 173(2) BNSS / 154(2) Cr.P.C.",
+    ],
     "legal_query": "police complaint FIR complaint to authority India criminal civil grievance",
     "parties": [
         {"id": "complainant", "role": "Complainant", "name_field": "complainant_name",
@@ -764,30 +900,38 @@ COMPLAINT_TEMPLATE: TemplateSpec = {
         _field("special_conditions", "Additional particulars", "ADDITIONAL PARTICULARS", "textarea", "optional", "conditions"),
     ],
     "clauses": [
-        {"id": "title", "title": "Title", "required": True, "body":
-         "{document_title}\n\nCOMPLAINT ({complaint_kind})\n\nDate: {effective_date}"},
-        {"id": "parties", "title": "Parties", "required": True, "body":
-         "Complainant: {complainant_name}, a {complainant_type}, of {complainant_address}.\n\n"
-         "Accused / Opposite Party: {accused_name}, a {accused_type}, of {accused_address}."},
-        {"id": "subject", "title": "Subject", "required": True, "body":
-         "Subject: {purpose}\n\n"
-         "Incident date: {incident_date}. Place of incident: {incident_place}. "
-         "Police station / authority: {police_station}."},
-        {"id": "facts", "title": "Facts", "required": True, "body":
-         "The Complainant states the following facts:\n\n{facts}\n\nAdditional particulars: {special_conditions}"},
-        {"id": "request", "title": "Request", "required": True, "body":
-         "The Complainant requests that appropriate action be taken as follows: {relief_sought}. "
-         "This draft does not register an FIR or commence any proceeding."},
-        {"id": "governing_law", "title": "Jurisdiction note", "required": True, "needs_legal_context": True, "body":
-         "This draft is intended with reference to India as applicable in {jurisdiction_region}. "
-         "Police station jurisdiction, cognizable offences, and filing formalities are not determined by this draft "
-         "unless a verified legal source is attached. Obtain professional review before filing."},
+        {"id": "title", "title": "Authority Heading and Subject", "required": True, "body":
+         "BEFORE THE STATION HOUSE OFFICER / OFFICER-IN-CHARGE\n"
+         "POLICE STATION: {police_station}, {incident_place}, {jurisdiction_region}\n\n"
+         "COMPLAINT / FIRST INFORMATION STATEMENT\n"
+         "[Under Section 173 of Bharatiya Nagarik Suraksha Sanhita, 2023 / Section 154 Cr.P.C.]\n\n"
+         "Date: {effective_date}"},
+        {"id": "parties", "title": "1. Particulars of Complainant and Accused", "required": True, "body":
+         "1. Informant / Complainant: {complainant_name}, a {complainant_type}, residing at {complainant_address}.\n"
+         "2. Accused / Suspect: {accused_name}, a {accused_type}, residing/having office at {accused_address}."},
+        {"id": "subject", "title": "2. Time, Place, and Incident Overview", "required": True, "body":
+         "Subject: {purpose}\n"
+         "Date and Time of Occurrence: {incident_date}\n"
+         "Place of Occurrence: {incident_place}\n"
+         "Jurisdictional Police Station: {police_station}"},
+        {"id": "facts", "title": "3. Statement of Facts and Cognizable Offences", "required": True, "body":
+         "The Complainant states the following facts regarding the commission of offences:\n\n{facts}\n\n"
+         "Additional particulars: {special_conditions}"},
+        {"id": "request", "title": "4. Prayer / Action Requested", "required": True, "body":
+         "PRAYER:\n\n"
+         "It is therefore most respectfully prayed that this Police Authority may be pleased to register a First Information Report (FIR) "
+         "against the accused person(s), investigate the matter strictly in accordance with law, and take action as requested: {relief_sought}."},
         {"id": "signatures", "title": "Signatures", "required": True, "include_signature": True, "body":
-         "Place: {incident_place}\nDate: {effective_date}\n\nCOMPLAINANT"},
+         "Yours faithfully,\n\n"
+         "INFORMANT / COMPLAINANT\n"
+         "({complainant_name})\n"
+         "Place: {incident_place}\n"
+         "Date: {effective_date}"},
     ],
 }
 
 from .extra_templates import EXTRA_TEMPLATES
+from .model_templates import MODEL_TEMPLATES
 
 TEMPLATES: dict[str, TemplateSpec] = {
     NDA_TEMPLATE["id"]: NDA_TEMPLATE,
@@ -799,6 +943,7 @@ TEMPLATES: dict[str, TemplateSpec] = {
     CONSUMER_COMPLAINT_TEMPLATE["id"]: CONSUMER_COMPLAINT_TEMPLATE,
     COMPLAINT_TEMPLATE["id"]: COMPLAINT_TEMPLATE,
     **EXTRA_TEMPLATES,
+    **MODEL_TEMPLATES,
 }
 
 
