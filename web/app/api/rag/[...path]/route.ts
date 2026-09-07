@@ -3,7 +3,13 @@ import { getSessionUser } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
-const ALLOWED_ROUTES = new Set(["api/chat", "api/search", "api/conversations"]);
+const ALLOWED_ROUTES = new Set([
+  "api/chat",
+  "api/search",
+  "api/conversations",
+  "api/voice/tts",
+  "api/voice/stt",
+]);
 
 function isAllowed(path: string[]): boolean {
   const normalized = path.join("/");

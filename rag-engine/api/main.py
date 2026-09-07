@@ -12,7 +12,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .routes import chat, search, conversations, documents, extract, summarize
+from .routes import chat, search, conversations, documents, extract, summarize, voice
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
@@ -67,7 +67,7 @@ async def production_guards(request: Request, call_next):
         if not _authorized(request):
             return JSONResponse(status_code=401, content={"detail": "Authentication required"})
         content_length = request.headers.get("content-length")
-        max_bytes = EXTRACT_MAX_BYTES if request.url.path == "/api/extract/pdf" else MAX_REQUEST_BYTES
+        max_bytes = EXTRACT_MAX_BYTES if request.url.path in {"/api/extract/pdf", "/api/voice/stt"} else MAX_REQUEST_BYTES
         if content_length and (not content_length.isdigit() or int(content_length) > max_bytes):
             return JSONResponse(status_code=413, content={"detail": "Request payload is too large"})
         if request.url.path in {
@@ -77,6 +77,7 @@ async def production_guards(request: Request, call_next):
             "/api/documents/regenerate",
             "/api/documents/revise",
             "/api/documents/selection-edit",
+            "/api/voice/tts",
         } or request.url.path.endswith("/messages"):
             now = time.monotonic()
             bucket = _rate_limit[_client_key(request)]
@@ -93,6 +94,7 @@ app.include_router(conversations.router)
 app.include_router(documents.router)
 app.include_router(extract.router)
 app.include_router(summarize.router)
+app.include_router(voice.router)
 
 
 @app.get("/", tags=["health"])

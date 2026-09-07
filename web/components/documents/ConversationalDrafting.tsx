@@ -15,6 +15,13 @@ import { getTemplate, listTemplates } from "@/lib/documents/templates";
 import type { DocumentValues, TemplateSpec } from "@/lib/documents/types";
 import { validateValues } from "@/lib/documents/validation";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
+import {
+  AudioRecorderSession,
+  isAudioRecordingSupported,
+  transcribeAudio,
+  SpeechOutputSession,
+  chatLanguageToSpeechCode,
+} from "@/lib/speech";
 
 interface MessageItem {
   id: string;
@@ -39,6 +46,14 @@ export default function ConversationalDrafting() {
   const [busy, setBusy] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Voice drafting states
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState<string | null>(null);
+  const [autoSpeakQuestions, setAutoSpeakQuestions] = useState(true);
+  const recorderRef = useRef<AudioRecorderSession | null>(null);
+  const outputSessionRef = useRef<SpeechOutputSession | null>(null);
+  const speechLang = useMemo(() => chatLanguageToSpeechCode(language), [language]);
 
   // Progressive draft state
   const [currentDraft, setCurrentDraft] = useState<DocumentDraftState | null>(null);
@@ -100,6 +115,72 @@ export default function ConversationalDrafting() {
     }
   }, []);
 
+  useEffect(() => {
+    outputSessionRef.current = new SpeechOutputSession({
+      onStart: () => {},
+      onEnd: () => setIsSpeaking(null),
+      onPause: () => {},
+      onResume: () => {},
+      onError: () => setIsSpeaking(null),
+    });
+
+    return () => {
+      recorderRef.current?.cancel();
+      outputSessionRef.current?.dispose();
+    };
+  }, []);
+
+  function speakMessage(id: string, text: string) {
+    if (isSpeaking === id) {
+      outputSessionRef.current?.stop();
+      setIsSpeaking(null);
+      return;
+    }
+    setIsSpeaking(id);
+    outputSessionRef.current?.speak(text, speechLang);
+  }
+
+  async function toggleRecording() {
+    if (isRecording) {
+      setIsRecording(false);
+      setBusy(true);
+      try {
+        const recordingResult = await recorderRef.current?.stop();
+        if (recordingResult?.blob && recordingResult.blob.size > 0) {
+          const stt = await transcribeAudio(recordingResult.blob, speechLang);
+          if (stt.transcript) {
+            setInputMessage(stt.transcript);
+            void sendPrompt(stt.transcript);
+          }
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Voice input error.");
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
+    if (!isAudioRecordingSupported()) {
+      setError("Microphone recording is not supported on this device/browser.");
+      return;
+    }
+
+    outputSessionRef.current?.stop();
+    setIsSpeaking(null);
+    setError(null);
+
+    const recorder = new AudioRecorderSession({
+      onStart: () => setIsRecording(true),
+      onError: (msg) => {
+        setIsRecording(false);
+        setError(msg);
+      },
+    });
+    recorderRef.current = recorder;
+    await recorder.start();
+  }
+
   async function sendPrompt(textToSend: string) {
     if (!textToSend.trim() || busy) return;
     setError(null);
@@ -151,6 +232,13 @@ export default function ConversationalDrafting() {
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
+
+      // Spoken question output
+      const assistantText = response.message || response.answer;
+      if (autoSpeakQuestions && assistantText) {
+        outputSessionRef.current?.speak(assistantText, speechLang);
+        setIsSpeaking(assistantMsg.id);
+      }
 
       if (response.document_draft) {
         setCurrentDraft(response.document_draft);
@@ -260,11 +348,22 @@ export default function ConversationalDrafting() {
                   ChatLaw Legal Drafting Engine
                 </span>
               </div>
-              {activeTemplate && (
-                <span className="rounded-xs bg-white px-2 py-0.5 text-xs font-medium text-[var(--forest)] border border-[var(--line)]">
-                  {activeTemplate.documentType}
-                </span>
-              )}
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-1.5 text-xs text-[var(--ink-muted)] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={autoSpeakQuestions}
+                    onChange={(e) => setAutoSpeakQuestions(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-[var(--line)] text-[var(--forest)]"
+                  />
+                  <span>🔊 Spoken questions</span>
+                </label>
+                {activeTemplate && (
+                  <span className="rounded-xs bg-white px-2 py-0.5 text-xs font-medium text-[var(--forest)] border border-[var(--line)]">
+                    {activeTemplate.documentType}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Messages Scroll Area */}
@@ -278,14 +377,14 @@ export default function ConversationalDrafting() {
                     Describe what legal document you need
                   </h3>
                   <p className="mx-auto mt-1 max-w-md text-xs leading-5 text-[var(--ink-muted)]">
-                    Provide the parties, terms, amounts, dates, and place in natural language. ChatLaw will extract the facts and only ask for whatever is missing.
+                    Provide the parties, terms, amounts, dates, and place in natural language or voice. ChatLaw will extract the facts and only ask for whatever is missing.
                   </p>
                 </div>
               ) : (
                 messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
                   >
                     <div
                       className={`max-w-[85%] rounded-sm p-4 text-sm leading-relaxed ${
@@ -296,6 +395,18 @@ export default function ConversationalDrafting() {
                     >
                       {msg.content}
                     </div>
+                    {msg.role === "assistant" && (
+                      <div className="mt-1 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => speakMessage(msg.id, msg.content)}
+                          className="text-xs font-medium text-[var(--forest)] hover:underline flex items-center gap-1"
+                          aria-label={isSpeaking === msg.id ? "Stop reading" : "Read aloud"}
+                        >
+                          <span>{isSpeaking === msg.id ? "⏹️ Stop" : "🔊 Listen"}</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))
               )}
@@ -312,7 +423,7 @@ export default function ConversationalDrafting() {
               <div ref={chatBottomRef} />
             </div>
 
-            {/* Input Box */}
+            {/* Input Box with Voice & Text */}
             <div className="border-t border-[var(--line)] p-4 bg-white">
               {error && (
                 <div className="mb-3 rounded-xs border border-red-200 bg-red-50 p-2.5 text-xs text-red-700">
@@ -325,7 +436,7 @@ export default function ConversationalDrafting() {
                   e.preventDefault();
                   void sendPrompt(inputMessage);
                 }}
-                className="flex gap-2"
+                className="flex items-center gap-2"
               >
                 <input
                   type="text"
@@ -333,12 +444,27 @@ export default function ConversationalDrafting() {
                   onChange={(e) => setInputMessage(e.target.value)}
                   placeholder={
                     activeTemplate
-                      ? "Reply with missing details or adjustments..."
+                      ? "Reply with missing details (or use microphone)..."
                       : "e.g. Rental agreement for Coimbatore flat at ₹18,000/mo..."
                   }
                   disabled={busy || generating}
                   className="flex-1 rounded-sm border border-[var(--line)] bg-[var(--canvas)] px-3.5 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--ink-muted)] focus:border-[var(--forest)] focus:bg-white focus:outline-none"
                 />
+                <button
+                  type="button"
+                  onClick={toggleRecording}
+                  disabled={busy || generating}
+                  className={`min-h-10 rounded-sm px-3.5 py-2 text-sm font-semibold transition-colors flex items-center gap-1.5 ${
+                    isRecording
+                      ? "bg-red-600 text-white animate-pulse"
+                      : "border border-[var(--line)] bg-[var(--canvas)] text-[var(--foreground)] hover:border-[var(--forest)]"
+                  }`}
+                  title={isRecording ? "Stop recording" : "Speak your answers"}
+                  aria-label={isRecording ? "Stop voice recording" : "Start voice recording"}
+                >
+                  <span>{isRecording ? "⏹️" : "🎙️"}</span>
+                  <span className="hidden sm:inline">{isRecording ? "Done" : "Voice"}</span>
+                </button>
                 <button
                   type="submit"
                   disabled={busy || !inputMessage.trim() || generating}

@@ -197,3 +197,28 @@ def test_rate_limit_returns_429(monkeypatch):
             assert client.post("/api/chat", json={"message": "two"}, headers=AUTH).status_code == 429
     finally:
         app.dependency_overrides.clear()
+
+
+def test_voice_stt_requires_audio():
+    with TestClient(app) as client:
+        response = client.post("/api/voice/stt", headers=AUTH)
+    assert response.status_code == 422
+
+
+def test_voice_tts_requires_text():
+    with TestClient(app) as client:
+        response = client.post("/api/voice/tts", json={"text": "  ", "language": "ta"}, headers=AUTH)
+    assert response.status_code == 400
+
+
+def test_voice_tts_generates_audio():
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/voice/tts",
+            json={"text": "வணக்கம் ChatLaw", "language": "ta"},
+            headers=AUTH,
+        )
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "audio/mpeg"
+    assert "ta-IN-ValluvarNeural" in response.headers.get("x-chatlaw-voice", "")
+    assert len(response.content) > 1000
