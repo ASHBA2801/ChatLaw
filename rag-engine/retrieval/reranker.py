@@ -56,6 +56,7 @@ _BUILTIN_DOCUMENT_ALIASES = (
     ("SCSTPOA1989", ("sc st act", "sc st poa act", "prevention of atrocities act", "sc st prevention of atrocities act", "atrocities act")),
     ("PMLA2002", ("pmla", "pmla 2002", "prevention of money laundering act", "money laundering act")),
     ("MVA1988", ("mva", "mva 1988", "motor vehicles act", "motor vehicles act 1988", "motor vehicle act")),
+    ("RAILWAYS1989", ("railways act", "railway act", "the railways act", "the railways act 1989", "railways act 1989", "railway act 1989", "indian railways act", "indian railways act 1989")),
     ("COMPANIES2013", ("companies act", "companies act 2013", "company law")),
     ("IBC2016", ("ibc", "ibc 2016", "insolvency and bankruptcy code", "insolvency and bankruptcy code 2016")),
     ("NIACT1881", ("ni act", "ni act 1881", "negotiable instruments act", "negotiable instruments act 1881", "section 138 ni act")),

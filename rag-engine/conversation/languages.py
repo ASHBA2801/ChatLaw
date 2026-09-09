@@ -74,11 +74,13 @@ def _load_languages() -> dict[str, dict[str, Any]]:
     return catalog
 
 
-def normalize_language(code: str | None) -> str:
+def normalize_language(code: str | None, allow_auto: bool = False) -> str:
     """Return a known language code, defaulting to English."""
     if not code or not str(code).strip():
         return "en"
     raw = str(code).strip().lower().replace("_", "-")
+    if allow_auto and raw == "auto":
+        return "auto"
     catalog = _load_languages()
     if raw in catalog:
         return raw
