@@ -283,6 +283,20 @@ DOMAINS_REGISTRY: dict[str, DomainDefinition] = {
             "integrated goods and services tax act", "customs act",
         ),
     ),
+    "railways": DomainDefinition(
+        id="railways",
+        display_name="Railways",
+        priority_keywords=(
+            "railway", "railways", "train accident", "untoward incident", "railway ticket",
+            "train collision", "railway passenger", "railway administration", "railway claims tribunal",
+            "railway property", "train delay", "railway refund", "रेल", "ट्रेन दुर्घटना", "रेलवे",
+        ),
+        general_keywords=(
+            "train", "station", "locomotive", "railway track", "coach", "ticket examiner",
+            "berth", "train fare", "freight train", "goods carriage", "demurrage", "wharfage",
+        ),
+        acts_and_statutes=("railways act", "railways act 1989", "the railways act, 1989", "indian railways act", "railway claims tribunal act"),
+    ),
     "general_legal": DomainDefinition(
         id="general_legal",
         display_name="General Legal",

@@ -52,11 +52,16 @@ def _document_draft_response(
     started: float,
     top_k: int,
 ) -> ConversationChatResponse:
+    from conversation.speech_cleaner import clean_speech_text
+
+    speech = clean_speech_text(answer)
     return ConversationChatResponse(
         conversation_id=conversation_id,
         user_message=ConversationMessage.model_validate(user_message),
         assistant_message=ConversationMessage.model_validate(assistant_message),
         answer=answer,
+        display_text=answer,
+        speech_text=speech,
         has_context=False,
         citations=[],
         retrieval=_empty_retrieval(top_k),
@@ -66,6 +71,7 @@ def _document_draft_response(
         invalid_citations=[],
         response_kind=response_kind,
         language=language,
+        detected_language=language,
         document_draft=DocumentDraftState.model_validate(draft_state),
     )
 
@@ -114,14 +120,33 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
     started = time.perf_counter()
     service = get_service()
     store = ConversationStore(service.connection)
-    language = normalize_language(request.language)
+    from conversation.language_detector import detect_language
+    from conversation.speech_cleaner import clean_speech_text
+
+    raw_lang = normalize_language(request.language, allow_auto=True)
     try:
         if not store.exists(conversation_id):
             raise HTTPException(status_code=404, detail="Conversation not found")
 
+        prior_lang = None
+        for m in reversed(store.recent_messages(conversation_id)):
+            if m.get("language") and m["language"] not in ("auto", "en"):
+                prior_lang = m["language"]
+                break
+            if m.get("language") and not prior_lang:
+                prior_lang = m["language"]
+
+        det = detect_language(request.message, input_type="text", prior_language=prior_lang)
+        if det["directive_applied"]:
+            language = det["detected_language"]
+        elif raw_lang != "auto" and raw_lang != "en":
+            language = raw_lang
+        else:
+            language = det["detected_language"]
+
         last_meta = store.last_assistant_metadata(conversation_id)
         draft_prior = drafting_state_from_metadata(last_meta)
-        draft = process_document_turn(request.message, draft_prior)
+        draft = process_document_turn(request.message, draft_prior, language=language)
 
         user_message = store.add_message(
             conversation_id, "user", request.message, language=language,
@@ -172,10 +197,12 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
                 "assumptions": result.state.get("assumptions"),
                 "original_query": result.state.get("original_query"),
             }
+            clarify_text = result.question or ""
+            speech = clean_speech_text(clarify_text)
             assistant_message = store.add_message(
                 conversation_id,
                 "assistant",
-                result.question or "",
+                clarify_text,
                 metadata,
                 language=language,
             )
@@ -183,7 +210,9 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
                 conversation_id=conversation_id,
                 user_message=ConversationMessage.model_validate(user_message),
                 assistant_message=ConversationMessage.model_validate(assistant_message),
-                answer=result.question or "",
+                answer=clarify_text,
+                display_text=clarify_text,
+                speech_text=speech,
                 has_context=False,
                 citations=[],
                 retrieval=_empty_retrieval(request.top_k),
@@ -193,6 +222,7 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
                 invalid_citations=[],
                 response_kind="clarification",
                 language=language,
+                detected_language=language,
                 interview=InterviewState.model_validate(result.state),
             )
 
@@ -224,11 +254,14 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
         assistant_message = store.add_message(
             conversation_id, "assistant", answer.answer, metadata, language=language,
         )
+        speech = clean_speech_text(answer.answer)
         return ConversationChatResponse(
             conversation_id=conversation_id,
             user_message=ConversationMessage.model_validate(user_message),
             assistant_message=ConversationMessage.model_validate(assistant_message),
             answer=answer.answer,
+            display_text=answer.answer,
+            speech_text=speech,
             has_context=answer.has_context,
             citations=[Citation.model_validate(citation) for citation in answer.citations],
             retrieval=RetrievalTimings(
@@ -243,6 +276,7 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
             invalid_citations=list(answer.invalid_citations),
             response_kind=response_kind,
             language=language,
+            detected_language=language,
             interview=InterviewState.model_validate(result.state),
         )
     except HTTPException:

@@ -47,7 +47,7 @@ class ChatRequest(QueryOptions):
     @classmethod
     def language_normalized(cls, value: str) -> str:
         from conversation.languages import normalize_language
-        return normalize_language(value)
+        return normalize_language(value, allow_auto=True)
 
 
 class ConversationMessage(BaseModel):
@@ -105,7 +105,7 @@ class ConversationMessageRequest(QueryOptions):
     @classmethod
     def language_normalized(cls, value: str) -> str:
         from conversation.languages import normalize_language
-        return normalize_language(value)
+        return normalize_language(value, allow_auto=True)
 
 
 class RetrievalTimings(BaseModel):
@@ -206,6 +206,9 @@ class ChatResponse(BaseModel):
     invalid_citations: list[int] = []
     response_kind: str = "answer"
     language: str = "en"
+    detected_language: str = "en"
+    display_text: str = ""
+    speech_text: str = ""
     interview: InterviewState | None = None
     document_draft: DocumentDraftState | None = None
 
@@ -224,6 +227,9 @@ class ConversationChatResponse(BaseModel):
     no_relevant_context: bool = False
     response_kind: str = "answer"
     language: str = "en"
+    detected_language: str = "en"
+    display_text: str = ""
+    speech_text: str = ""
     interview: InterviewState | None = None
     document_draft: DocumentDraftState | None = None
 

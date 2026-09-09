@@ -73,6 +73,13 @@ async def text_to_speech(payload: TtsRequest):
         raise HTTPException(status_code=400, detail="Text is required for TTS")
 
     code = (payload.language or "en").lower().strip()
+    if code in ("auto", "en", "en-in", "en-us") or not code:
+        from conversation.language_detector import detect_language
+
+        det = detect_language(text, input_type="text")
+        if det["detected_language"] != "en":
+            code = det["detected_language"]
+
     voice = payload.voice or VOICE_MAP.get(code) or VOICE_MAP.get(code.split("-")[0]) or "en-IN-NeerjaNeural"
 
     try:
@@ -122,8 +129,9 @@ async def transcribe_audio(
         from google.genai import types
 
         client = genai.Client(api_key=api_key)
-        lang_hint = (language or "").strip()
-        lang_name = LANGUAGE_MAP.get(lang_hint[:2].lower(), "")
+        raw_hint = (language or "").strip()
+        lang_hint = "" if raw_hint.lower() == "auto" else raw_hint
+        lang_name = LANGUAGE_MAP.get(lang_hint[:2].lower(), "") if lang_hint else ""
 
         prompt = (
             "You are ChatLaw's Indian legal assistant multilingual speech recognition model.\n"
@@ -149,10 +157,19 @@ async def transcribe_audio(
 
         text = getattr(response, "text", "") or "{}"
         data = json.loads(text)
+        transcript = data.get("transcript", "").strip()
+        from conversation.language_detector import detect_language
+        script_det = detect_language(transcript, input_type="voice")
+        detected_lang = (
+            script_det["detected_language"]
+            if script_det["detected_language"] != "en"
+            else data.get("detected_language") or lang_hint or "en"
+        ).lower()
+        confidence = max(float(data.get("confidence", 0.95)), float(script_det["confidence"]))
         return SttResponse(
-            transcript=data.get("transcript", "").strip(),
-            detected_language=data.get("detected_language", lang_hint or "en").lower(),
-            confidence=float(data.get("confidence", 0.95)),
+            transcript=transcript,
+            detected_language=detected_lang,
+            confidence=confidence,
         )
     except Exception as exc:
         logger.exception("Voice transcription failed")

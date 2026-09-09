@@ -86,3 +86,16 @@ def test_clarifies_jurisdiction_and_reaches_ready():
     assert result.action == "ready"
     assert result.state["values"].get("jurisdiction_country") == "IN"
     assert result.state["values"].get("jurisdiction_region") == "Karnataka"
+
+
+def test_multilingual_document_clarification():
+    # Tamil drafting turn
+    res_ta = process_document_turn("வாடகை ஒப்பந்தம் வேண்டும்", language="ta")
+    assert res_ta.action == "clarify"
+    assert "உங்களுக்கு" in res_ta.message
+    assert "Rental Agreement" in res_ta.message
+
+    # Hindi drafting turn
+    res_hi = process_document_turn("Please draft an NDA", language="hi")
+    assert res_hi.action == "clarify"
+    assert "मैंने पहचाना है" in res_hi.message
