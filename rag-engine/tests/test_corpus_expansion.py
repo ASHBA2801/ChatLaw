@@ -55,6 +55,11 @@ def test_route_gst_query():
     assert result.primary_domain == "tax"
 
 
+def test_route_railways_query():
+    result = route_domain("compensation for passenger injured in train accident")
+    assert result.primary_domain == "railways"
+
+
 def test_version_filter_repealed_income_tax_1961_after_2026():
     as_of = parse_as_of_date("What is the income tax rate today?")
     assert as_of.year >= 2026

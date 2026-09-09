@@ -274,6 +274,21 @@ CONCEPT_MAPPINGS: tuple[ConceptMapping, ...] = (
             "compensation for accident", "rash and negligent driving",
         ),
     ),
+    # --- Railways ---
+    ConceptMapping(
+        concept_id="railway_accident_claim",
+        canonical_term="railway accident untoward incident and passenger compensation",
+        domain="railways",
+        triggers=(
+            "train accident", "railway accident", "untoward incident", "derailment",
+            "fell from train", "railway compensation", "railway claims tribunal",
+            "रेल दुर्घटना", "ट्रेन हादसा",
+        ),
+        expanded_terms=(
+            "railways act 1989", "section 124 railways act", "section 124a untoward incident",
+            "railway claims tribunal act", "compensation for train accident",
+        ),
+    ),
     # --- Family Law ---
     ConceptMapping(
         concept_id="matrimonial_maintenance",

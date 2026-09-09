@@ -18,6 +18,7 @@ psycopg[binary,pool]>=3.1
 # --- Retrieval & Generation (Future Phases) ---
 # google-generativeai # Legacy SDK; not used
 google-genai         # Gemini embeddings + grounded generation
+edge-tts>=7.2.8      # Multilingual neural text-to-speech for Indian languages
 
 # --- Text / parsing ---
 # pypdf              # PDF parsing for Law_files sources

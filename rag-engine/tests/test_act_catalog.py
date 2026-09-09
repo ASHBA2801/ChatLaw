@@ -19,6 +19,7 @@ def test_catalog_loads_successfully():
     assert catalog.get("POCSO2012") is not None
     assert catalog.get("NDPS1985") is not None
     assert catalog.get("PCA1988") is not None
+    assert catalog.get("RAILWAYS1989") is not None
 
 
 def test_catalog_find_by_alias():
@@ -30,14 +31,16 @@ def test_catalog_find_by_alias():
     assert catalog.find_by_alias("posh").act_id == "POSH2013"
     assert catalog.find_by_alias("bns 2023").act_id == "BNS2023"
     assert catalog.find_by_alias("Bharatiya_Nagarik_Suraksha_Sanhita_2023").act_id == "BNSS2023"
+    assert catalog.find_by_alias("railways act").act_id == "RAILWAYS1989"
+    assert catalog.find_by_alias("the railways act, 1989").act_id == "RAILWAYS1989"
 
 
 def test_catalog_ingested_acts_count():
     catalog = get_catalog()
     ingested = catalog.get_ingested()
-    assert len(ingested) == 15
+    assert len(ingested) == 16
     ingested_ids = {e.act_id for e in ingested}
-    assert {"BNS2023", "BNSS2023", "BSA", "COMPANIES2013", "ICA1872"}.issubset(ingested_ids)
+    assert {"BNS2023", "BNSS2023", "BSA", "COMPANIES2013", "ICA1872", "RAILWAYS1989"}.issubset(ingested_ids)
 
 
 def test_catalog_priority_tiers():
@@ -65,6 +68,11 @@ def test_reranker_extracts_expanded_act_signals():
     signals_pca = extract_query_signals("prevention of corruption act section 7")
     assert "PCA1988" in signals_pca.documents
     assert signals_pca.sections == (("7", None),)
+
+    # Railways Act query
+    signals_rail = extract_query_signals("compensation for train accident under Railways Act section 124")
+    assert "RAILWAYS1989" in signals_rail.documents
+    assert (("124", None),) == signals_rail.sections
 
 
 def test_existing_bns_signals_continue_working():

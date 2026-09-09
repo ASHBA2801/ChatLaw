@@ -81,34 +81,34 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     (
         "rental_agreement_tamil_nadu",
         re.compile(
-            r"\b(?:tamil\s*nadu\s+(?:rental|lease|tenancy)|வாடகை\s+ஒப்பந்தம்|rental\s+agreement\s+in\s+tamil\s*nadu"
-            r"|rental\s+agreement\s+in\s+(?:chennai|coimbatore|madurai|salem|trichy|tirupur))\b",
+            r"(?:\b(?:tamil\s*nadu\s+(?:rental|lease|tenancy)|rental\s+agreement\s+in\s+tamil\s*nadu"
+            r"|rental\s+agreement\s+in\s+(?:chennai|coimbatore|madurai|salem|trichy|tirupur))\b|வாடகை\s+ஒப்பந்தம்)",
             re.I,
         ),
     ),
     (
         "special_power_of_attorney",
-        re.compile(r"\b(?:special\s+power\s+of\s+attorney|spa|specific\s+power\s+of\s+attorney|குறிப்பிட்ட\s+அதிகார\s+ஆவணம்)\b", re.I),
+        re.compile(r"(?:\b(?:special\s+power\s+of\s+attorney|spa|specific\s+power\s+of\s+attorney)\b|குறிப்பிட்ட\s+அதிகார\s+ஆவணம்)", re.I),
     ),
     (
         "general_power_of_attorney",
-        re.compile(r"\b(?:general\s+power\s+of\s+attorney|gpa|பொது\s+அதிகார\s+ஆவணம்|power\s+of\s+attorney)\b", re.I),
+        re.compile(r"(?:\b(?:general\s+power\s+of\s+attorney|gpa|power\s+of\s+attorney)\b|பொது\s+அதிகார\s+ஆவணம்)", re.I),
     ),
     (
         "sale_deed",
-        re.compile(r"\b(?:sale\s+deed|deed\s+of\s+sale|absolute\s+sale\s+deed|கிரைய\s+பத்திரம்)\b", re.I),
+        re.compile(r"(?:\b(?:sale\s+deed|deed\s+of\s+sale|absolute\s+sale\s+deed)\b|கிரைய\s+பத்திரம்|बिक्री\s*नामा|విక్రయ\s*పత్రం)", re.I),
     ),
     (
         "gift_deed",
-        re.compile(r"\b(?:gift\s+deed|deed\s+of\s+gift|தான\s+செட்டில்மென்ட்|தானப்\s+பத்திரம்)\b", re.I),
+        re.compile(r"(?:\b(?:gift\s+deed|deed\s+of\s+gift)\b|தான\s+செட்டில்மென்ட்|தானப்\s+பத்திரம்)", re.I),
     ),
     (
         "release_deed",
-        re.compile(r"\b(?:release\s+deed|relinquishment\s+deed|deed\s+of\s+release|விடுதலைப்\s+பத்திரம்)\b", re.I),
+        re.compile(r"(?:\b(?:release\s+deed|relinquishment\s+deed|deed\s+of\s+release)\b|விடுதலைப்\s+பத்திரம்)", re.I),
     ),
     (
         "partition_deed",
-        re.compile(r"\b(?:partition\s+deed|deed\s+of\s+partition|பாகப்பிரிவினை\s+பத்திரம்)\b", re.I),
+        re.compile(r"(?:\b(?:partition\s+deed|deed\s+of\s+partition)\b|பாகப்பிரிவினை\s+பத்திரம்)", re.I),
     ),
     (
         "commercial_lease",
@@ -159,7 +159,7 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("partnership_agreement", re.compile(r"\bpartnership\s+(?:agreement|deed)\b|\bpartners?\s+agreement\b", re.I)),
     ("sale_agreement", re.compile(r"\bsale\s+(?:of\s+)?(?:goods\s+)?agreement\b|\bagreement\s+(?:to\s+)?sell\b|\bpurchase\s+agreement\b", re.I)),
     ("mou", re.compile(r"\b(?:mou|memorandum of understanding)\b", re.I)),
-    ("rent_lease", re.compile(r"\b(?:rent(?:al)?|lease)\s+agreement\b|\btenancy\s+agreement\b", re.I)),
+    ("rent_lease", re.compile(r"(?:\b(?:rent(?:al)?|lease)\s+agreement\b|\btenancy\s+agreement\b|किराया\s*अनुबंध|किरायानामा|అద్దె\s*ఒప్పందం)", re.I)),
     ("service_agreement", re.compile(r"\bservice\s+agreement\b|\bservices?\s+contract\b", re.I)),
     ("affidavit", re.compile(r"\baffidavit\b", re.I)),
     ("authorization_letter", re.compile(r"\bauthorization\s+letter\b|\bletter of authority\b|\bauthorisation\s+letter\b", re.I)),
@@ -206,10 +206,14 @@ def looks_like_document_request(message: str) -> bool:
     if _UNSUPPORTED.search(text) and _DRAFT_LOOSE.search(text):
         return True
     matched_id = detect_template_id(text)
-    if matched_id and _DRAFT_VERB.search(text):
-        return True
-    if matched_id and re.search(r"\b(?:need|want|help(?:\s+me)?|for|in)\b", text, re.I):
-        return True
+    if matched_id:
+        if _DRAFT_VERB.search(text):
+            return True
+        if re.search(r"\b(?:need|want|help(?:\s+me)?|for|in)\b", text, re.I):
+            return True
+        # Multilingual request cues in Tamil, Hindi, Telugu
+        if re.search(r"(?:வேண்டும்|உருவாக்க|செய்ய|தயாரிக்க|ஒப்பந்தம்|பத்திரம்|चाहिए|बनाना|तैयार|काవాలి|చేయండి)", text):
+            return True
     return bool(_DRAFT_VERB.search(text))
 
 
@@ -490,14 +494,40 @@ def extract_entities_from_text(template_id: str, text: str, values: dict[str, An
             pass
 
 
-def _question_for_field(field: dict[str, Any]) -> str:
+def _question_for_field(field: dict[str, Any], language: str = "en") -> str:
+    lang = (language or "en").lower().split("-")[0]
+    field_id = field.get("id", "")
+
+    if field_id == "jurisdiction_region":
+        if lang == "ta":
+            return "இந்த வரைவு எந்த இந்திய மாநிலத்திற்கு பொருந்தும்? (எ.கா. தமிழ்நாடு)"
+        if lang == "hi":
+            return "यह कानूनी प्रारूप किस भारतीय राज्य या केंद्र शासित प्रदेश के लिए है? (उदा. दिल्ली, उत्तर प्रदेश)"
+        if lang == "te":
+            return "ఈ చట్టపరమైన డ్రాఫ్ట్ ఏ భారతీయ రాష్ట్రానికి వర్తిస్తుంది? (ఉదా. తెలంగాణ, ఆంధ్రప్రదేశ్)"
+        return "Which Indian state or union territory should govern this draft? I will not guess the jurisdiction."
+
+    if "rent" in field_id or "monthly_rent" in field_id:
+        if lang == "ta":
+            return "மாத வாடகை தொகை எவ்வளவு?"
+        if lang == "hi":
+            return "मासिक किराया कितना है?"
+        if lang == "te":
+            return "నెలవారీ అద్దె ఎంత?"
+
+    if "deposit" in field_id:
+        if lang == "ta":
+            return "பாதுகாப்பு வைப்புத் தொகை (Security Deposit) எவ்வளவு?"
+        if lang == "hi":
+            return "सुरक्षा जमा राशि (Security Deposit) कितनी है?"
+        if lang == "te":
+            return "సెక్యూరిటీ డిపాజిట్ మొత్తం ఎంత?"
+
     help_text = (field.get("help") or "").strip()
     base = f"To draft this document, what is the {field['label'].lower()}?"
     if field["type"] == "select" and field.get("options"):
         options = ", ".join(option["label"] for option in field["options"][:8])
         base = f"Please choose {field['label'].lower()} ({options})."
-    if field["id"] == "jurisdiction_region":
-        base = "Which Indian state or union territory should govern this draft? I will not guess the jurisdiction."
     if help_text:
         return f"{base} {help_text}"
     return base
@@ -563,10 +593,24 @@ def _seed_from_message(template_id: str, message: str, values: dict[str, Any]) -
             values[purpose_fields[0]["id"]] = cleaned[:500]
 
 
-def _build_clarification_prompt(template: dict[str, Any], values: dict[str, Any], missing: list[dict[str, Any]]) -> str:
+def _build_clarification_prompt(
+    template: dict[str, Any],
+    values: dict[str, Any],
+    missing: list[dict[str, Any]],
+    language: str = "en",
+) -> str:
     """Build a conversational, grouped clarification response summarizing understood facts."""
+    lang = (language or "en").lower().split("-")[0]
     title = template["title"]
-    lines = [f"I have identified that you need a **{title}**."]
+
+    if lang == "ta":
+        lines = [f"உங்களுக்கு **{title}** ஆவணம் தேவை என்பதை அடையாளம் கண்டுள்ளேன்."]
+    elif lang == "hi":
+        lines = [f"मैंने पहचाना है कि आपको **{title}** की आवश्यकता है।"]
+    elif lang == "te":
+        lines = [f"మీకు **{title}** అవసరమని గుర్తించాను."]
+    else:
+        lines = [f"I have identified that you need a **{title}**."]
 
     # Summarize recorded facts
     recorded_items = []
@@ -576,24 +620,44 @@ def _build_clarification_prompt(template: dict[str, Any], values: dict[str, Any]
             continue
         if k in field_map and v:
             label = field_map[k]
-            if isinstance(v, (int, float)) and "amount" in k or "rent" in k or "deposit" in k or "salary" in k or "price" in k:
+            if isinstance(v, (int, float)) and ("amount" in k or "rent" in k or "deposit" in k or "salary" in k or "price" in k):
                 recorded_items.append(f"• {label}: ₹{v:,.0f}")
             else:
                 recorded_items.append(f"• {label}: {v}")
 
     if recorded_items:
-        lines.append("\n**Here is what I have recorded so far:**")
+        if lang == "ta":
+            lines.append("\n**இதுவரை பதிவு செய்யப்பட்ட விவரங்கள்:**")
+        elif lang == "hi":
+            lines.append("\n**अब तक दर्ज किए गए विवरण:**")
+        elif lang == "te":
+            lines.append("\n**ఇప్పటివరకు నమోదు చేయబడిన వివరాలు:**")
+        else:
+            lines.append("\n**Here is what I have recorded so far:**")
         lines.extend(recorded_items[:12])
 
     # Numbered missing questions (top 3-4 items)
-    lines.append("\n**To complete your legal draft, please provide:**")
+    if lang == "ta":
+        lines.append("\n**உங்கள் சட்ட ஆவண வரைவை முடிக்க, தயவுசெய்து பின்வரும் விவரங்களை கூறவும்:**")
+    elif lang == "hi":
+        lines.append("\n**आपके कानूनी दस्तावेज़ को पूरा करने के लिए, कृपया निम्नलिखित विवरण प्रदान करें:**")
+    elif lang == "te":
+        lines.append("\n**మీ చట్టపరమైన డ్రాఫ్ట్‌ను పూర్తి చేయడానికి, దయచేసి క్రింది వివరాలను అందించండి:**")
+    else:
+        lines.append("\n**To complete your legal draft, please provide:**")
+
     for i, field in enumerate(missing[:4], 1):
-        lines.append(f"{i}. {field['label']}{' (' + field.get('help', '') + ')' if field.get('help') else ''}")
+        q = _question_for_field(field, language)
+        lines.append(f"{i}. {q}")
 
     return "\n".join(lines)
 
 
-def process_document_turn(message: str, prior: dict[str, Any] | None = None) -> DocumentDraftResult:
+def process_document_turn(
+    message: str,
+    prior: dict[str, Any] | None = None,
+    language: str = "en",
+) -> DocumentDraftResult:
     """Deterministic document-drafting engine with multi-entity extraction and grouped clarification."""
     prior = prior if isinstance(prior, dict) and prior.get("mode") == "document_drafting" else None
 
@@ -658,6 +722,7 @@ def process_document_turn(message: str, prior: dict[str, Any] | None = None) -> 
     template = get_template(template_id)
     missing = _missing_required(template_id, state["values"])
 
+    lang = (language or "en").lower().split("-")[0]
     if not missing or state["round"] >= state["max_rounds"]:
         # If still missing jurisdiction after max rounds, keep asking for it.
         still = _missing_required(template_id, state["values"])
@@ -670,18 +735,27 @@ def process_document_turn(message: str, prior: dict[str, Any] | None = None) -> 
                 state["asked"].append(field["id"])
             state["round"] = int(state["round"]) + 1
             title = template["title"]
+            q_text = _question_for_field(field, language)
             return DocumentDraftResult(
                 "clarify",
-                f"Drafting a {title}. {_question_for_field(field)}",
+                f"Drafting a {title}. {q_text}",
                 state,
             )
         state["pending_field"] = None
         state["pending_fields"] = []
         state["missing_optional"] = _optional_missing(template_id, state["values"])
         title = template["title"]
+        if lang == "ta":
+            ready_msg = f"{title} வரைவுக்கு தேவையான விவரங்கள் பெறப்பட்டன. ஆவணத்தை உருவாக்க இப்போது திறக்கப்படுகிறது."
+        elif lang == "hi":
+            ready_msg = f"{title} प्रारूप के लिए आवश्यक विवरण प्राप्त हो गए हैं। दस्तावेज़ तैयार किया जा रहा है।"
+        elif lang == "te":
+            ready_msg = f"{title} డ్రాఫ్ట్ కోసం అవసరమైన వివరాలు పొందబడ్డాయి. పత్రం రూపొందించబడుతోంది."
+        else:
+            ready_msg = f"I have the required details for a {title} draft. Opening your document workspace to generate it now."
         return DocumentDraftResult(
             "ready",
-            f"I have the required details for a {title} draft. Opening your document workspace to generate it now.",
+            ready_msg,
             state,
         )
 
@@ -694,7 +768,7 @@ def process_document_turn(message: str, prior: dict[str, Any] | None = None) -> 
     state["round"] = int(state["round"]) + 1
 
     # Return grouped conversational clarification
-    clarification_msg = _build_clarification_prompt(template, state["values"], missing)
+    clarification_msg = _build_clarification_prompt(template, state["values"], missing, language=language)
     return DocumentDraftResult(
         "clarify",
         clarification_msg,

@@ -35,7 +35,11 @@ def _interview_payload(state: dict) -> InterviewState:
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> ChatResponse:
     started = time.perf_counter()
-    language = normalize_language(request.language)
+    from conversation.language_detector import detect_language
+    from conversation.speech_cleaner import clean_speech_text
+
+    prior_lang = None
+    raw_lang = normalize_language(request.language, allow_auto=True)
     try:
         prior = None
         draft_prior = None
@@ -46,17 +50,34 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
                 meta = store.last_assistant_metadata(request.conversation_id)
                 prior = active_interview_from_metadata(meta)
                 draft_prior = drafting_state_from_metadata(meta)
+                for m in reversed(store.recent_messages(request.conversation_id)):
+                    if m.get("language") and m["language"] not in ("auto", "en"):
+                        prior_lang = m["language"]
+                        break
+                    if m.get("language") and not prior_lang:
+                        prior_lang = m["language"]
 
-        draft = process_document_turn(request.message, draft_prior)
+        det = detect_language(request.message, input_type="text", prior_language=prior_lang)
+        if det["directive_applied"]:
+            language = det["detected_language"]
+        elif raw_lang != "auto" and raw_lang != "en":
+            language = raw_lang
+        else:
+            language = det["detected_language"]
+
+        draft = process_document_turn(request.message, draft_prior, language=language)
         if draft.action in {"clarify", "ready", "unsupported"}:
             kind = {
                 "clarify": "document_clarification",
                 "ready": "document_ready",
                 "unsupported": "document_unsupported",
             }[draft.action]
+            speech = clean_speech_text(draft.message)
             return ChatResponse(
                 message=request.message,
                 answer=draft.message,
+                display_text=draft.message,
+                speech_text=speech,
                 has_context=False,
                 no_relevant_context=False,
                 citations=[],
@@ -66,14 +87,19 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
                 invalid_citations=[],
                 response_kind=kind,
                 language=language,
+                detected_language=language,
                 document_draft=DocumentDraftState.model_validate(draft.state),
             )
 
         result = _interview.process_turn(request.message, language, prior)
         if result.action == "clarify":
+            ans_text = result.question or ""
+            speech = clean_speech_text(ans_text)
             return ChatResponse(
                 message=request.message,
-                answer=result.question or "",
+                answer=ans_text,
+                display_text=ans_text,
+                speech_text=speech,
                 has_context=False,
                 no_relevant_context=False,
                 citations=[],
@@ -83,6 +109,7 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
                 invalid_citations=[],
                 response_kind="clarification",
                 language=language,
+                detected_language=language,
                 interview=_interview_payload(result.state),
             )
 
@@ -98,9 +125,12 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
             retrieval_query=retrieval_query,
         )
         response_kind = "answer" if answer.has_context else "no_context"
+        speech = clean_speech_text(answer.answer)
         return ChatResponse(
             message=request.message,
             answer=answer.answer,
+            display_text=answer.answer,
+            speech_text=speech,
             has_context=answer.has_context,
             citations=[Citation.model_validate(citation) for citation in answer.citations],
             retrieval=RetrievalTimings(
@@ -115,6 +145,7 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
             invalid_citations=list(answer.invalid_citations),
             response_kind=response_kind,
             language=language,
+            detected_language=language,
             interview=_interview_payload(result.state),
         )
     except (ValueError, RuntimeError) as exc:

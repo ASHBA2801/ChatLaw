@@ -19,7 +19,7 @@ export function canTransition(from: VoiceChatState, to: VoiceChatState): boolean
   const allowed: Record<VoiceChatState, VoiceChatState[]> = {
     idle: ["listening", "speaking", "error"],
     listening: ["transcribing", "idle", "error"],
-    transcribing: ["ready_to_send", "idle", "error"],
+    transcribing: ["ready_to_send", "thinking", "idle", "error"],
     ready_to_send: ["thinking", "listening", "idle", "error"],
     thinking: ["speaking", "idle", "error"],
     speaking: ["idle", "paused", "listening", "error"],
