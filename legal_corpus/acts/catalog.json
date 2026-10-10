@@ -35,7 +35,9 @@
     ],
     "constitutional_law": [
       "RTI2005",
-      "PHRA1993"
+      "PHRA1993",
+      "RPA1950",
+      "RPA1951"
     ],
     "consumer_protection": [
       "CPA2019",
@@ -162,6 +164,10 @@
       "GSTNOTIFICATIONS",
       "UTGST2017",
       "GSTCOMP2017"
+    ],
+    "election_law": [
+      "RPA1950",
+      "RPA1951"
     ]
   },
   "acts": [
@@ -3005,6 +3011,86 @@
       ],
       "ingestion_status": "catalog_only",
       "notes": "Scaffold only — State land corpora Stage 3."
+    },
+    {
+      "act_id": "RPA1950",
+      "official_title": "The Representation of the People Act, 1950",
+      "short_title": "RPA, 1950",
+      "year": 1950,
+      "act_number": "43 of 1950",
+      "sub_domains": [
+        "electoral_rolls",
+        "delimitation",
+        "seat_allocation",
+        "voter_registration"
+      ],
+      "official_url": "https://thc.nic.in/Central%20Governmental%20Acts/Representation%20of%20the%20People%20Act,%201950.pdf",
+      "effective_from": "1950-05-12",
+      "aliases": [
+        "rpa 1950",
+        "rp act 1950",
+        "representation of the people act 1950",
+        "representation of the people act, 1950",
+        "the representation of the people act, 1950"
+      ],
+      "source_file": "Law_files/RPA1950.pdf",
+      "category": "Election / Constitutional Law",
+      "domain": "election_law",
+      "domains": [
+        "election_law",
+        "constitutional_law"
+      ],
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice (Legislative Department)",
+      "source_type": "official_gazette",
+      "jurisdiction_level": "CENTRAL",
+      "state": null,
+      "status": "in_force",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "ingestion_status": "ingested",
+      "retrieval_date": "2026-10-10"
+    },
+    {
+      "act_id": "RPA1951",
+      "official_title": "The Representation of the People Act, 1951",
+      "short_title": "RPA, 1951",
+      "year": 1951,
+      "act_number": "43 of 1951",
+      "sub_domains": [
+        "conduct_of_elections",
+        "disqualification",
+        "corrupt_practices",
+        "election_petitions"
+      ],
+      "official_url": "https://thc.nic.in/Central%20Governmental%20Acts/Representation%20of%20the%20People%20Act,%201951.pdf",
+      "effective_from": "1951-07-17",
+      "aliases": [
+        "rpa 1951",
+        "rp act 1951",
+        "representation of the people act 1951",
+        "representation of the people act, 1951",
+        "the representation of the people act, 1951"
+      ],
+      "source_file": "Law_files/RPA1951.pdf",
+      "category": "Election / Constitutional Law",
+      "domain": "election_law",
+      "domains": [
+        "election_law",
+        "constitutional_law"
+      ],
+      "jurisdiction": "India",
+      "document_type": "STATUTE",
+      "source_authority": "Parliament of India / Ministry of Law and Justice (Legislative Department)",
+      "source_type": "official_gazette",
+      "jurisdiction_level": "CENTRAL",
+      "state": null,
+      "status": "in_force",
+      "priority": "tier_1",
+      "ingestion_stage": "stage_1",
+      "ingestion_status": "ingested",
+      "retrieval_date": "2026-10-10"
     }
   ],
   "stage_notes": {

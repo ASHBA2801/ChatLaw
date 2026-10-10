@@ -1,8 +1,8 @@
 {
   "generation_calls": 0,
-  "embedding_api_calls": 4886,
-  "new_chunks_embedded": 4886,
-  "existing_embeddings_reused": 2499,
+  "embedding_api_calls": 10250,
+  "new_chunks_embedded": 10250,
+  "existing_embeddings_reused": 2574,
   "runs": [
     {
       "timestamp": "2026-08-29T09:01:29.441361+00:00",
@@ -111,6 +111,60 @@
       "new_chunks_embedded": 31,
       "existing_embeddings_reused": 0,
       "notes": "document=HMA1955"
+    },
+    {
+      "timestamp": "2026-10-05T06:24:51.729414+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 1,
+      "new_chunks_embedded": 1,
+      "existing_embeddings_reused": 0,
+      "notes": "document=BNS2023"
+    },
+    {
+      "timestamp": "2026-10-05T07:25:30.189973+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 5079,
+      "new_chunks_embedded": 5079,
+      "existing_embeddings_reused": 1,
+      "notes": "document=all"
+    },
+    {
+      "timestamp": "2026-10-10T09:21:51.533338+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 1,
+      "new_chunks_embedded": 1,
+      "existing_embeddings_reused": 0,
+      "notes": "document=RPA1950"
+    },
+    {
+      "timestamp": "2026-10-10T09:22:44.049031+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 72,
+      "new_chunks_embedded": 72,
+      "existing_embeddings_reused": 1,
+      "notes": "document=RPA1950"
+    },
+    {
+      "timestamp": "2026-10-10T14:30:12.412078+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 0,
+      "new_chunks_embedded": 0,
+      "existing_embeddings_reused": 73,
+      "notes": "document=RPA1950"
+    },
+    {
+      "timestamp": "2026-10-10T14:32:21.241796+00:00",
+      "run_type": "embed_execute",
+      "generation_calls": 0,
+      "embedding_api_calls": 211,
+      "new_chunks_embedded": 211,
+      "existing_embeddings_reused": 0,
+      "notes": "document=RPA1951"
     }
   ]
 }

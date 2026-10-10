@@ -173,6 +173,12 @@
       "description": "RTI, fundamental rights statutes, governance"
     },
     {
+      "id": "ELECTION",
+      "slug": "election_law",
+      "display_name": "Election Law",
+      "description": "Electoral rolls, conduct of elections, qualifications and disqualifications, corrupt practices, election petitions (RPA 1950/1951)"
+    },
+    {
       "id": "OTHER_REGULATORY",
       "slug": "general_legal",
       "display_name": "Other Regulatory",
