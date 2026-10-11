@@ -155,7 +155,9 @@ Return strictly a JSON object with this exact schema:
       parsed = { transcript: rawJson, detectedLanguage: languageHint || "en", confidence: 0.9 };
     }
 
-    const transcript = (parsed.transcript || "").trim();
+    let transcript = (parsed.transcript || "").trim();
+    // For silence or noise the model sometimes repeats the instructions instead of returning an empty transcript.
+    if (/multilingual Indian speech recognition system/i.test(transcript)) transcript = "";
     const detectedLanguage = (parsed.detectedLanguage || languageHint || "en").toLowerCase();
 
     return NextResponse.json({

@@ -22,9 +22,22 @@ def test_looks_like_document_request():
 
 
 def test_unsupported_document_type():
-    result = process_document_turn("Please draft a will and testament for my property")
+    result = process_document_turn("Please draft a divorce petition for me")
     assert result.action == "unsupported"
     assert result.state.get("unsupported") is True
+
+
+def test_will_is_supported():
+    result = process_document_turn("Please draft a will for my property")
+    assert result.state["template_id"] == "will"
+    assert result.action == "clarify"
+
+
+def test_bare_deed_asks_for_type_then_continues():
+    first = process_document_turn("write a deed")
+    assert first.action == "clarify"
+    second = process_document_turn("sale deed", first.state)
+    assert second.state["template_id"] == "sale_deed"
 
 
 def test_power_of_attorney_is_now_supported():

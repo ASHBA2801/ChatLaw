@@ -100,7 +100,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
 
   return (
     <div className="space-y-6">
-      <form ref={formRef} onSubmit={onSubmit} className="rounded-sm border border-[var(--line)] bg-white p-4 sm:p-5">
+      <form ref={formRef} onSubmit={onSubmit} className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4 sm:p-5">
         <label htmlFor="research-query" className="text-sm font-semibold">
           Legal question or keywords
         </label>
@@ -110,19 +110,19 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="e.g. privacy Article 21 OR security deposit landlord"
-            className="min-h-11 flex-1 rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 text-sm outline-none focus:border-[var(--forest)]"
+            className="min-h-11 flex-1 rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 text-sm outline-none focus:border-[var(--accent)]"
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="min-h-11 rounded-sm bg-[var(--forest)] px-6 text-sm font-semibold text-white disabled:opacity-50"
+            className="btn-primary disabled:opacity-50"
           >
             {loading ? "Searching…" : "Search"}
           </button>
         </div>
         {searched ? (
           <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex rounded-sm border border-[var(--line)] p-1" role="group" aria-label="Result type">
+            <div className="flex rounded-lg bg-[var(--fill)] p-1" role="group" aria-label="Result type">
               {(
                 [
                   ["all", "All"],
@@ -134,7 +134,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                   key={value}
                   type="button"
                   onClick={() => setScope(value)}
-                  className={`min-h-10 flex-1 rounded-sm px-3 text-sm font-medium ${scope === value ? "bg-[var(--forest)] text-white" : "text-[var(--ink-muted)]"}`}
+                  className={`min-h-9 flex-1 rounded-md px-3 text-sm font-medium ${scope === value ? "bg-[var(--surface)] text-[var(--accent)] shadow-[var(--shadow-soft)]" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
                   aria-pressed={scope === value}
                 >
                   {label}
@@ -146,20 +146,20 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
               placeholder="Filter by title, section, court, or text"
-              className="min-h-11 flex-1 rounded-sm border border-[var(--line)] px-4 text-sm outline-none focus:border-[var(--forest)]"
+              className="min-h-11 flex-1 rounded-sm border border-[var(--line)] px-4 text-sm outline-none focus:border-[var(--accent)]"
             />
           </div>
         ) : null}
       </form>
 
       {error ? (
-        <div role="alert" className="rounded-sm border border-[var(--warn-line)] bg-[var(--warn-bg)] px-5 py-4 text-sm text-[var(--warn)]">
+        <div role="alert" className="rounded-xl border border-[var(--warn-line)] bg-[var(--warn-bg)] px-5 py-4 text-sm text-[var(--warn)]">
           {error}
         </div>
       ) : null}
 
       {!searched && !loading ? (
-        <div className="rounded-sm border border-dashed border-[var(--line)] bg-white px-6 py-14 text-center">
+        <div className="rounded-xl border border-dashed border-[var(--line)] bg-[var(--surface)] px-6 py-14 text-center">
           <h2 className="text-lg font-semibold">Search statutes and landmark cases</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
             Statute passages come from the ChatLaw corpus. Landmark cases are a curated verified set with official
@@ -171,17 +171,17 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
       {loading ? (
         <div className="space-y-3" aria-busy="true" aria-live="polite">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-28 animate-pulse rounded-sm border border-[var(--line)] bg-white" />
+            <div key={i} className="h-28 animate-pulse rounded-xl border border-[var(--line)] bg-[var(--surface)]" />
           ))}
         </div>
       ) : null}
 
       {searched && !loading && noRelevant && !error ? (
-        <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-12 text-center">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] px-6 py-12 text-center">
           <h2 className="text-lg font-semibold">No matching sources</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
             Try different keywords, a section number, a case name, or ask in{" "}
-            <Link href="/chat" className="font-semibold text-[var(--forest)] underline-offset-2 hover:underline">
+            <Link href="/chat" className="font-semibold text-[var(--accent)] underline-offset-2 hover:underline">
               Chat
             </Link>
             .
@@ -190,7 +190,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
       ) : null}
 
       {searched && !loading && scope === "cases" && filteredCases.length === 0 ? (
-        <div className="rounded-sm border border-[var(--line)] bg-white px-6 py-10 text-center">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] px-6 py-10 text-center">
           <h3 className="text-base font-semibold">No sufficiently relevant judgments found</h3>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
             No sufficiently relevant judgment was found in the available official case-law sources.
@@ -207,23 +207,23 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                 Authoritative judgments retrieved and ranked by legal relevance from official court sources.
               </p>
             </div>
-            <span className="text-xs font-medium text-[var(--forest)]">Official Indian Judiciary</span>
+            <span className="text-xs font-medium text-[var(--accent)]">Official Indian Judiciary</span>
           </div>
           <ul className="space-y-3">
             {filteredCases.map((item) => {
               const sourceUrl = isSafeExternalUrl(item.source_url);
               return (
-                <li key={item.id} className="rounded-sm border border-[var(--line)] bg-white p-4 sm:p-5 space-y-2.5">
+                <li key={item.id} className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4 sm:p-5 space-y-2.5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="text-base font-semibold leading-6">{item.title}</h3>
                         <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold border ${
                           item.relevance_level === "Highly relevant"
-                            ? "bg-[#e8f5e9] text-[#1b5e20] border-[#a5d6a7]"
+                            ? "bg-[var(--ok-bg)] text-[var(--ok)] border-[var(--ok-line)]"
                             : item.relevance_level === "Relevant"
-                              ? "bg-[#e3f2fd] text-[#0d47a1] border-[#90caf9]"
-                              : "bg-[#f5f5f5] text-[#424242] border-[#e0e0e0]"
+                              ? "bg-[var(--accent-soft)] text-[var(--accent)] border-[var(--accent-mid)]"
+                              : "bg-[var(--fill)] text-[var(--ink-muted)] border-[var(--line)]"
                         }`}>
                           {item.relevance_score}% · {item.relevance_level}
                         </span>
@@ -237,24 +237,24 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                         href={sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="min-h-10 inline-flex items-center rounded-sm border border-[var(--line)] px-3 text-sm font-medium text-[var(--forest)] hover:border-[var(--forest)] bg-white"
+                        className="btn-secondary btn-sm"
                       >
                         Official judgment ↗
                       </a>
                     ) : null}
                   </div>
 
-                  <div className="pt-2 text-xs space-y-1.5 border-t border-[var(--line)] text-[var(--ink)]">
+                  <div className="pt-2 text-xs space-y-1.5 border-t border-[var(--line)] text-[var(--foreground)]">
                     <div>
-                      <span className="font-semibold text-[var(--signal)]">Relevant issue: </span>
+                      <span className="font-semibold text-[var(--accent)]">Relevant issue: </span>
                       <span>{item.legal_issue}</span>
                     </div>
                     <div>
-                      <span className="font-semibold text-[var(--signal)]">Relevant law: </span>
+                      <span className="font-semibold text-[var(--accent)]">Relevant law: </span>
                       <span className="text-[var(--ink-muted)]">{item.relevant_law}</span>
                     </div>
                     <div>
-                      <span className="font-semibold text-[var(--signal)]">Why this case is relevant: </span>
+                      <span className="font-semibold text-[var(--accent)]">Why this case is relevant: </span>
                       <span className="leading-5 text-[var(--ink-muted)]">{item.why_relevant}</span>
                     </div>
                     <div className="text-[11px] text-[var(--ink-muted)]">
@@ -283,7 +283,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                 ) ??
                 isSafeExternalUrl(typeof item.metadata?.url === "string" ? item.metadata.url : null);
               return (
-                <li key={item.chunk_id} className="rounded-sm border border-[var(--line)] bg-white p-4 sm:p-5">
+                <li key={item.chunk_id} className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4 sm:p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h3 className="text-base font-semibold leading-6">{item.document_title}</h3>
@@ -304,7 +304,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                         href={sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-sm font-medium text-[var(--forest)] hover:border-[var(--forest)]"
+                        className="btn-secondary btn-sm"
                       >
                         Open source
                       </a>

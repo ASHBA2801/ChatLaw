@@ -270,10 +270,10 @@ export default function DocumentEditor({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <a className="inline-flex min-h-11 items-center rounded-sm border border-[var(--line)] bg-white px-4 text-sm font-medium" href={`/api/documents/${documentId}/export?format=pdf`}>Export PDF</a>
-          <a className="inline-flex min-h-11 items-center rounded-sm border border-[var(--line)] bg-white px-4 text-sm font-medium" href={`/api/documents/${documentId}/export?format=docx`}>Export DOCX</a>
-          <button type="button" onClick={printDocument} className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-4 text-sm font-medium">Print</button>
-          <button type="button" onClick={save} disabled={busy !== null} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
+          <a className="btn-secondary" href={`/api/documents/${documentId}/export?format=pdf`}>Export PDF</a>
+          <a className="btn-secondary" href={`/api/documents/${documentId}/export?format=docx`}>Export DOCX</a>
+          <button type="button" onClick={printDocument} className="btn-secondary">Print</button>
+          <button type="button" onClick={save} disabled={busy !== null} className="btn-primary disabled:opacity-60">
             {busy === "save" ? "Saving…" : "Save new version"}
           </button>
         </div>
@@ -291,7 +291,7 @@ export default function DocumentEditor({
             role="tab"
             aria-selected={pane === item}
             onClick={() => setPane(item)}
-            className={`min-h-11 flex-1 rounded-sm text-sm font-medium ${pane === item ? "bg-[var(--forest)] text-white" : "border border-[var(--line)] bg-white"}`}
+            className={`min-h-11 flex-1 rounded-lg text-sm font-medium ${pane === item ? "bg-[var(--accent)] text-white" : "border border-[var(--line)] bg-[var(--surface)]"}`}
           >
             {item === "edit" ? "Edit" : item === "preview" ? "Preview" : "Assistant"}
           </button>
@@ -299,7 +299,7 @@ export default function DocumentEditor({
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[220px_minmax(0,1fr)_minmax(280px,340px)] print:block">
-        <aside className={`rounded-sm border border-[var(--line)] bg-white p-3 print:hidden ${pane === "edit" || pane === "preview" ? "" : "hidden"} xl:block`}>
+        <aside className={`rounded-xl border border-[var(--line)] bg-[var(--surface)] p-3 print:hidden ${pane === "edit" || pane === "preview" ? "" : "hidden"} xl:block`}>
           <h2 className="px-2 text-sm font-semibold">Clauses</h2>
           <ul className="mt-2 space-y-1">
             {payload.sections.map((section) => (
@@ -307,10 +307,10 @@ export default function DocumentEditor({
                 <button
                   type="button"
                   onClick={() => { setSelectedId(section.id); setPane("edit"); setSelectionPending(null); }}
-                  className={`flex min-h-11 w-full flex-col items-start rounded-sm px-3 py-2 text-left text-sm ${section.id === selected?.id ? "bg-[var(--signal-soft)] text-[var(--forest)]" : "hover:bg-[var(--module-fill)]"}`}
+                  className={`flex min-h-11 w-full flex-col items-start rounded-sm px-3 py-2 text-left text-sm ${section.id === selected?.id ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "hover:bg-[var(--fill)]"}`}
                 >
                   <span className="w-full truncate">{section.number ? `${section.number}. ${section.title}` : section.title}</span>
-                  <span className="mt-0.5 text-[10px] uppercase tracking-wide text-[var(--ink-muted)]">
+                  <span className="mt-0.5 text-[11px] text-[var(--ink-muted)]">
                     {provisionLabel(section.provision_class, section.required)}
                     {section.review_required ? " · Review" : ""}
                   </span>
@@ -325,26 +325,26 @@ export default function DocumentEditor({
               push(addSection(payload, section, selected?.id));
               setSelectedId(section.id);
             }}
-            className="mt-3 min-h-11 w-full rounded-sm border border-dashed border-[var(--line)] text-sm"
+            className="mt-3 min-h-11 w-full rounded-lg border border-dashed border-[var(--line)] text-sm"
           >
             Add clause
           </button>
         </aside>
 
         <section className={`space-y-3 ${pane === "edit" || pane === "preview" ? "block" : "hidden"} xl:block`}>
-          <div className={`rounded-sm border border-[var(--line)] bg-white p-4 print:hidden ${pane === "edit" ? "block" : "hidden xl:block"}`}>
+          <div className={`rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 print:hidden ${pane === "edit" ? "block" : "hidden xl:block"}`}>
             {selected ? (
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h2 className="text-lg font-semibold">{selected.title}</h2>
-                    <p className="text-xs uppercase tracking-wide text-[var(--ink-muted)]">
+                    <p className="text-xs text-[var(--ink-muted)]">
                       {provisionLabel(selected.provision_class, selected.required)}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={undo} disabled={history.length < 2} className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm disabled:opacity-50">Undo</button>
-                    <button type="button" onClick={regenerate} disabled={busy !== null} className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm">
+                    <button type="button" onClick={undo} disabled={history.length < 2} className="btn-secondary btn-sm disabled:opacity-50">Undo</button>
+                    <button type="button" onClick={regenerate} disabled={busy !== null} className="btn-secondary btn-sm">
                       {busy === "regen" ? "Regenerating…" : "Regenerate section"}
                     </button>
                     <button
@@ -354,7 +354,7 @@ export default function DocumentEditor({
                         push(next);
                         setSelectedId(next.sections[0]?.id ?? "");
                       }}
-                      className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-sm"
+                      className="btn-secondary btn-sm"
                     >
                       Remove
                     </button>
@@ -386,7 +386,7 @@ export default function DocumentEditor({
                     push(updateSectionBody(payload, selected.id, event.target.value));
                   }}
                   aria-describedby={selected.review_required ? "clause-review-note" : undefined}
-                  className="min-h-72 w-full rounded-sm border border-[var(--line)] p-3 font-serif text-[15px] leading-7"
+                  className="min-h-72 w-full rounded-lg border border-[var(--line)] p-3 font-serif text-[15px] leading-7"
                 />
                 {selected.review_required ? (
                   <p id="clause-review-note" className="text-sm text-[var(--ink-muted)]">This clause is marked for legal review before use.</p>
@@ -398,14 +398,14 @@ export default function DocumentEditor({
           </div>
 
           {/* A4 Legal Sheet Document Preview */}
-          <div className={`overflow-hidden rounded-sm border border-[var(--line)] bg-[var(--canvas)] p-2 sm:p-4 ${pane === "preview" ? "block" : "hidden xl:block"} print:border-0 print:p-0 print:bg-white`}>
+          <div className={`overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--fill)] p-2 sm:p-4 ${pane === "preview" ? "block" : "hidden xl:block"} print:border-0 print:p-0 print:bg-[var(--surface)]`}>
             <div className="flex items-center justify-between pb-3 px-2 print:hidden">
               <h2 className="text-sm font-semibold text-[var(--foreground)]">A4 Legal Sheet Preview</h2>
               <span className="text-xs text-[var(--ink-muted)]">ISO A4 • 1-inch Legal Margins</span>
             </div>
 
-            <div className="max-h-[75vh] overflow-y-auto rounded-xs bg-neutral-200/60 p-3 sm:p-6 print:max-h-none print:overflow-visible print:bg-white print:p-0">
-              <article className="document-sheet document-print-root mx-auto max-w-[794px] min-h-[1050px] bg-white p-8 sm:p-14 shadow-sm border border-neutral-200 text-neutral-900 font-serif print:border-0 print:shadow-none print:p-0">
+            <div className="max-h-[75vh] overflow-y-auto rounded-md bg-neutral-200/60 p-3 sm:p-6 print:max-h-none print:overflow-visible print:bg-[var(--surface)] print:p-0">
+              <article className="rounded-lg document-sheet document-print-root mx-auto max-w-[794px] min-h-[1050px] bg-[var(--surface)] p-8 sm:p-14 shadow-sm border border-neutral-200 text-neutral-900 font-serif print:border-0 print:shadow-none print:p-0">
                 {/* Formal Centered Uppercase Document Title */}
                 <h3 className="text-center text-xl sm:text-2xl font-bold uppercase tracking-wider text-neutral-900">
                   {payload.title}
@@ -416,7 +416,7 @@ export default function DocumentEditor({
 
                 {/* Execution Requirements & Stamp Advisory */}
                 {payload.execution_requirements && payload.execution_requirements.length > 0 && (
-                  <div className="mt-4 rounded-xs border border-amber-200 bg-amber-50/70 p-3 text-xs text-neutral-800 print:hidden">
+                  <div className="mt-4 rounded-md border border-amber-200 bg-amber-50/70 p-3 text-xs text-neutral-800 print:hidden">
                     <p className="font-semibold uppercase tracking-wider text-amber-900 text-[11px]">
                       Statutory Execution Requirements:
                     </p>
@@ -502,7 +502,7 @@ export default function DocumentEditor({
                                 {payload.signatures
                                   .filter((b) => b.role.toLowerCase().includes("witness"))
                                   .map((witness) => (
-                                    <div key={witness.party_id} className="space-y-1 bg-neutral-50/60 p-3 rounded-xs border border-neutral-200">
+                                    <div key={witness.party_id} className="space-y-1 bg-neutral-50/60 p-3 rounded-md border border-neutral-200">
                                       <p className="font-bold uppercase">{witness.role}</p>
                                       {witness.lines.map((line, i) => (
                                         line.toUpperCase() !== witness.role.toUpperCase() && (
@@ -534,7 +534,7 @@ export default function DocumentEditor({
                           </p>
                         )}
                         {sched.boundaries && Object.keys(sched.boundaries).length > 0 && (
-                          <div className="mt-2 rounded-xs border border-neutral-300 p-3 bg-neutral-50/50">
+                          <div className="mt-2 rounded-md border border-neutral-300 p-3 bg-neutral-50/50">
                             <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-neutral-800">
                               Boundaries:
                             </p>
@@ -586,8 +586,8 @@ export default function DocumentEditor({
         </aside>
       </div>
 
-      {error ? <p role="alert" className="text-sm text-[#8a3b2b] print:hidden">{error}</p> : null}
-      {message ? <p role="status" className="text-sm text-[var(--forest)] print:hidden">{message}</p> : null}
+      {error ? <p role="alert" className="text-sm text-[var(--warn)] print:hidden">{error}</p> : null}
+      {message ? <p role="status" className="text-sm text-[var(--accent)] print:hidden">{message}</p> : null}
     </div>
   );
 }

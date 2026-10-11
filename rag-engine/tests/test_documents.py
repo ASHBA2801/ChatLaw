@@ -133,6 +133,7 @@ def test_registry_exposes_only_implemented_templates():
         "founder_agreement",
         "name_change_affidavit",
         "indemnity_bond",
+        "will",
     }
     assert "power_of_attorney" not in TEMPLATES
 
@@ -300,6 +301,10 @@ def test_no_context_marks_jurisdiction_review_without_inventing_sources():
         "property_address": "T Nagar",
         "effective_date": "2026-08-20",
         "end_date": "2027-08-19",
+            "witness_1_name": "Witness One",
+            "witness_1_address": "Chennai",
+            "witness_2_name": "Witness Two",
+            "witness_2_address": "Chennai",
     }, searcher=FakeService(), generator=None)
     assert generated["retrieval"]["no_relevant_context"] is True
     assert generated["document"]["citations"] == []
@@ -371,6 +376,7 @@ def test_templates_endpoint_lists_implemented_types():
         "founder_agreement",
         "name_change_affidavit",
         "indemnity_bond",
+        "will",
     }
 
 

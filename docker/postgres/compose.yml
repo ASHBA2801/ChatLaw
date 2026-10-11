@@ -9,7 +9,7 @@
 #
 # Usage:
 #   docker compose -f docker/postgres/compose.yml up -d
-#   (or use the root docker-compose.yml to start everything)
+#   (host development only; the root docker-compose.yml runs the full stack)
 #
 # The container maps to localhost:5433 and uses the credentials in
 # database/.env (defaults: postgres / postgres, database chatlaw).
@@ -35,3 +35,4 @@ services:
 
 volumes:
   chatlaw_pgdata:
+    name: chatlaw_pgdata

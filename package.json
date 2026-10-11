@@ -20,5 +20,9 @@
     "db:reset": "npm run db:reset --workspace @chatlaw/database",
     "db:check": "npm run db:check --workspace @chatlaw/database",
     "db:test:vector": "npm run db:test:vector --workspace @chatlaw/database"
+  },
+  "dependencies": {
+    "claude": "^0.1.2",
+    "impeccable": "^4.1.0"
   }
 }

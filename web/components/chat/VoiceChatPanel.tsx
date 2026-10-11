@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, type ReactNode } from "react";
+
 import type { SpeechLanguageCode, VoiceChatState } from "@/lib/speech/types";
 import { getEnabledSpeechLanguages } from "@/lib/speech/support";
+import { KeyboardIcon, MicIcon, PauseIcon, PlayIcon, SlidersIcon, SpeakerIcon, StopIcon } from "@/components/chat/ChatIcons";
 
 const NATIVE_VOICE_LABELS: Record<string, { start: string; stop: string; listen: string; speaking: string }> = {
   ta: {
@@ -77,62 +80,68 @@ function getNativeVoiceText(langCode: string) {
   return NATIVE_VOICE_LABELS[primary] || NATIVE_VOICE_LABELS.en;
 }
 
-function VoiceOrb({ state, audioLevel = 0 }: { state: VoiceChatState; audioLevel?: number }) {
-  const active = state === "listening" || state === "speaking";
-  const paused = state === "paused";
+function VoiceOrb({
+  state,
+  audioLevel = 0,
+  size,
+}: {
+  state: VoiceChatState;
+  audioLevel?: number;
+  size: "lg" | "sm";
+}) {
+  const listening = state === "listening";
+  const speaking = state === "speaking";
+  const busy = state === "transcribing" || state === "thinking";
   const error = state === "error";
-  const reviewing = state === "ready_to_send";
-  const scale = state === "listening" ? 1 + audioLevel * 0.4 : 1;
+  const scale = listening ? 1 + audioLevel * 0.25 : 1;
+  const dims = size === "lg" ? "h-40 w-40" : "h-11 w-11";
+  const core = size === "lg" ? "h-24 w-24" : "h-6 w-6";
+  const tone = error
+    ? "bg-[var(--warn-bg)] text-[var(--warn)]"
+    : listening
+      ? "bg-[var(--warn-bg)] text-[var(--warn)]"
+      : "bg-[var(--accent-soft)] text-[var(--accent)]";
+  const coreTone = error || listening ? "bg-[var(--warn)]/20" : "bg-[var(--accent)]/20";
+  const bars = size === "lg" ? "h-8 w-2" : "h-3 w-0.5";
 
   return (
     <div
-      className={`relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border-4 transition-transform duration-100 ${
-        error
-          ? "border-[var(--warn-line)] bg-[var(--warn-bg)] shadow-md"
-          : reviewing
-            ? "border-[var(--warm)] bg-[#fff8ef] shadow-md"
-            : active
-              ? "border-[var(--forest)] bg-[var(--signal-soft)] shadow-lg"
-              : "border-[var(--line)] bg-white shadow-sm"
-      }`}
+      className={`relative mx-auto flex shrink-0 items-center justify-center rounded-full transition-transform duration-100 ${dims} ${tone}`}
       style={{ transform: `scale(${scale})` }}
       aria-hidden="true"
     >
       <div
-        className={`h-20 w-20 rounded-full transition-all ${
-          state === "listening"
-            ? "animate-pulse bg-[#b42318]/25"
-            : state === "speaking"
-              ? "animate-pulse bg-[var(--forest)]/25"
-              : paused
-                ? "bg-[var(--ink-muted)]/15"
-                : reviewing
-                  ? "bg-[var(--warm)]/20"
-                  : "bg-[var(--forest)]/10"
-        }`}
+        className={`rounded-full ${core} ${coreTone} ${listening || speaking || busy ? "animate-pulse" : ""}`}
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        {state === "listening" ? (
-          <div className="flex items-center gap-1">
-            <span className="h-6 w-1.5 rounded-full bg-[#b42318] animate-bounce" />
-            <span className="h-10 w-1.5 rounded-full bg-[#b42318] animate-pulse" />
-            <span className="h-6 w-1.5 rounded-full bg-[#b42318] animate-bounce" />
-          </div>
-        ) : state === "speaking" ? (
-          <span className="flex items-end gap-1.5" title="Speaking indicator">
-            <span className="h-4 w-1.5 rounded-full bg-[var(--forest)] voice-bar" />
-            <span className="h-7 w-1.5 rounded-full bg-[var(--forest)] voice-bar voice-bar-delay-1" />
-            <span className="h-5 w-1.5 rounded-full bg-[var(--forest)] voice-bar voice-bar-delay-2" />
+        {listening || speaking ? (
+          <span className="flex items-center gap-1.5">
+            <span className={`${bars} rounded-full bg-current voice-bar`} />
+            <span className={`${bars} rounded-full bg-current voice-bar voice-bar-delay-1 ${size === "lg" ? "!h-12" : "!h-4"}`} />
+            <span className={`${bars} rounded-full bg-current voice-bar voice-bar-delay-2`} />
           </span>
         ) : (
-          <svg className="h-10 w-10 text-[var(--forest)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2" strokeLinecap="round" />
-            <line x1="12" x2="12" y1="19" y2="22" strokeLinecap="round" />
-          </svg>
+          <MicIcon className={size === "lg" ? "h-10 w-10" : "h-5 w-5"} />
         )}
       </div>
     </div>
+  );
+}
+
+function SettingToggle({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  children: ReactNode;
+}) {
+  return (
+    <label className="inline-flex min-h-9 cursor-pointer items-center rounded-full border border-[var(--line)] px-3.5 text-xs font-medium text-[var(--ink-muted)] hover:bg-[var(--fill)] has-[:checked]:border-[var(--accent-mid)] has-[:checked]:bg-[var(--accent-soft)] has-[:checked]:text-[var(--accent)] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--focus)]">
+      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="sr-only" />
+      {children}
+    </label>
   );
 }
 
@@ -141,8 +150,8 @@ export interface VoiceChatPanelProps {
   stateLabel: string;
   supported: boolean;
   ttsSupported: boolean;
+  /** Voice language follows the chat language chosen in the header. */
   language: SpeechLanguageCode;
-  onLanguageChange: (language: SpeechLanguageCode) => void;
   muted: boolean;
   onMutedChange: (muted: boolean) => void;
   autoSend?: boolean;
@@ -159,6 +168,8 @@ export interface VoiceChatPanelProps {
   lastUserText: string;
   lastAssistantText: string;
   disabled?: boolean;
+  /** `true` once the thread has messages: the panel docks under it like the text composer. */
+  compact?: boolean;
   onStartListening: () => void;
   onStopListening: () => void;
   onCancelListening: () => void;
@@ -178,7 +189,6 @@ export default function VoiceChatPanel({
   supported,
   ttsSupported,
   language,
-  onLanguageChange,
   muted,
   onMutedChange,
   autoSend = true,
@@ -195,6 +205,7 @@ export default function VoiceChatPanel({
   lastUserText,
   lastAssistantText,
   disabled = false,
+  compact = false,
   onStartListening,
   onStopListening,
   onCancelListening,
@@ -207,285 +218,251 @@ export default function VoiceChatPanel({
   onClearError,
   onSwitchToText,
 }: VoiceChatPanelProps) {
-  const languages = getEnabledSpeechLanguages();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const languageLabel = getEnabledSpeechLanguages().find((option) => option.code === language)?.label ?? language;
   const nativeText = getNativeVoiceText(language);
   const isReady = state === "ready_to_send";
-  const displayTranscript = isReady ? draftText : (interimText || lastUserText);
+  const displayTranscript = isReady ? draftText : interimText || lastUserText;
   const canListen = supported && !disabled && (state === "idle" || state === "error" || state === "speaking" || state === "paused");
   const isListening = state === "listening";
   const isTranscribing = state === "transcribing";
   const isThinking = state === "thinking";
   const isSpeaking = state === "speaking";
   const isPaused = state === "paused";
+  const statusText = isSpeaking ? nativeText.speaking : stateLabel;
+
+  const btn = compact ? "!min-h-10 !px-4 !text-sm" : "!min-h-12 !px-6 !text-[15px]";
+  const secondary = `btn-secondary ${btn}`;
+  const primary = `btn-primary ${btn}`;
+
+  const actions = (
+    <div className={`flex flex-wrap items-center gap-2 ${compact ? "w-full justify-center sm:w-auto" : "justify-center"}`}>
+      {canListen && !isListening && !isTranscribing && !isThinking && !isReady && (
+        <button
+          type="button"
+          onClick={onStartListening}
+          disabled={!supported}
+          className={`${primary} disabled:opacity-50`}
+          aria-label="Start voice chat listening"
+        >
+          <MicIcon className="h-5 w-5" />
+          <span>{isSpeaking || isPaused ? "Interrupt & speak" : nativeText.start}</span>
+        </button>
+      )}
+
+      {isListening && (
+        <>
+          <button
+            type="button"
+            onClick={onStopListening}
+            className={`inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--warn)] font-semibold text-white hover:opacity-90 ${compact ? "min-h-10 px-4 text-sm" : "min-h-12 px-6 text-[15px]"}`}
+            aria-label="Stop voice input recording"
+          >
+            <StopIcon className="h-5 w-5" />
+            <span>{nativeText.stop}</span>
+          </button>
+          <button type="button" onClick={onCancelListening} className={secondary} aria-label="Cancel voice input">
+            Cancel
+          </button>
+        </>
+      )}
+
+      {isReady && (
+        <>
+          <button
+            type="button"
+            onClick={onConfirmSend}
+            disabled={!draftText.trim()}
+            className={`${primary} disabled:opacity-50`}
+            aria-label="Send voice transcript"
+          >
+            Send question
+          </button>
+          <button type="button" onClick={onStartListening} className={secondary} aria-label="Record again">
+            Re-record
+          </button>
+          <button type="button" onClick={onDiscardDraft} className={secondary} aria-label="Discard transcript">
+            Discard
+          </button>
+        </>
+      )}
+
+      {isSpeaking && (
+        <>
+          <button type="button" onClick={onPauseSpeaking} className={secondary} aria-label="Pause speech">
+            <PauseIcon className="h-4 w-4" /> Pause
+          </button>
+          <button type="button" onClick={onStopSpeaking} className={secondary} aria-label="Stop speech">
+            <StopIcon className="h-4 w-4" /> Stop
+          </button>
+        </>
+      )}
+
+      {isPaused && (
+        <>
+          <button type="button" onClick={onResumeSpeaking} className={secondary} aria-label="Resume speech">
+            <PlayIcon className="h-4 w-4" /> Resume
+          </button>
+          <button type="button" onClick={onStopSpeaking} className={secondary} aria-label="Stop speech">
+            <StopIcon className="h-4 w-4" /> Stop
+          </button>
+        </>
+      )}
+
+      {state === "idle" && lastAssistantText && ttsSupported && !muted && (
+        <button type="button" onClick={onReplaySpeaking} className={secondary} aria-label="Replay spoken response">
+          <SpeakerIcon className="h-4 w-4" /> Replay answer
+        </button>
+      )}
+    </div>
+  );
+
+  const settings = (
+    <div className={`flex flex-wrap items-center gap-2 ${compact ? "" : "justify-center"}`}>
+      <SettingToggle checked={continuousMode} onChange={(value) => onContinuousModeChange?.(value)}>
+        Continuous conversation
+      </SettingToggle>
+      <SettingToggle checked={autoSend} onChange={(value) => onAutoSendChange?.(value)}>
+        Direct voice-to-voice
+      </SettingToggle>
+      <SettingToggle checked={muted} onChange={onMutedChange}>
+        Mute voice
+      </SettingToggle>
+      <span className="inline-flex min-h-9 items-center px-1 text-xs text-[var(--ink-muted)]">
+        Language: {languageLabel} (change it in the top bar)
+      </span>
+    </div>
+  );
+
+  const review = isReady ? (
+    <div className="w-full space-y-2 text-left">
+      <label className="text-xs font-semibold text-[var(--ink-muted)]" htmlFor="voice-draft-transcript">
+        Review your question before sending
+      </label>
+      <textarea
+        id="voice-draft-transcript"
+        value={draftText}
+        onChange={(event) => onDraftTextChange(event.target.value)}
+        rows={3}
+        className="w-full resize-none rounded-2xl border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-[15px] leading-6 outline-none focus:border-[var(--accent)]"
+        aria-label="Edit transcript before sending"
+      />
+    </div>
+  ) : null;
+
+  const autoplayNotice = autoplayBlocked ? (
+    <div className="w-full rounded-2xl border border-[var(--accent-mid)] bg-[var(--accent-soft)] p-3 text-center">
+      <p className="mb-2 text-sm font-semibold text-[var(--accent)]">Your browser needs a tap before it can play audio</p>
+      <button type="button" onClick={onUnlockAutoplay} className="btn-primary">
+        <SpeakerIcon className="h-4 w-4" />
+        <span>{nativeText.listen}</span>
+      </button>
+    </div>
+  ) : null;
+
+  const errorNotice = error ? (
+    <div
+      className="flex w-full items-center justify-between gap-3 rounded-xl border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-left text-sm text-[var(--warn)]"
+      role="alert"
+    >
+      <p>{error}</p>
+      <button type="button" onClick={onClearError} className="shrink-0 font-semibold underline underline-offset-2">
+        Retry
+      </button>
+    </div>
+  ) : null;
+
+  if (compact) {
+    return (
+      <section
+        className="w-full rounded-3xl border border-[var(--line-strong)] bg-[var(--surface)] p-3 shadow-[var(--shadow-soft)]"
+        aria-label="ChatLaw voice assistant"
+      >
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <VoiceOrb state={state} audioLevel={audioLevel} size="sm" />
+            <div className="min-w-0 flex-1" aria-live="polite">
+              <p className="truncate text-sm font-semibold">{statusText}</p>
+              {!isReady && displayTranscript ? (
+                <p className="truncate text-xs text-[var(--ink-muted)]">&ldquo;{displayTranscript}&rdquo;</p>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setSettingsOpen((value) => !value)}
+              aria-expanded={settingsOpen}
+              aria-label="Voice settings"
+              title="Voice settings"
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-[var(--fill)] ${settingsOpen ? "bg-[var(--fill)] text-[var(--foreground)]" : "text-[var(--ink-muted)]"}`}
+            >
+              <SlidersIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={onSwitchToText}
+              aria-label="Switch to text mode"
+              title="Type instead"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--ink-muted)] hover:bg-[var(--fill)] hover:text-[var(--foreground)]"
+            >
+              <KeyboardIcon className="h-5 w-5" />
+            </button>
+          </div>
+          {actions}
+        </div>
+        {review || autoplayNotice || errorNotice || settingsOpen ? (
+          <div className="mt-3 space-y-3">
+            {review}
+            {autoplayNotice}
+            {settingsOpen ? <div className="border-t border-[var(--line)] pt-3">{settings}</div> : null}
+            {errorNotice}
+          </div>
+        ) : null}
+      </section>
+    );
+  }
 
   return (
     <section
-      className="mx-auto flex w-full max-w-xl flex-col gap-5 rounded-md border-2 border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm"
-      aria-label="ChatLaw Voice Assistant"
+      className="mx-auto flex w-full max-w-xl flex-col items-center gap-6 text-center"
+      aria-label="ChatLaw voice assistant"
     >
-      <div className="flex items-center justify-between gap-3 border-b border-[var(--line)] pb-3">
-        <div>
-          <h3 className="text-lg font-bold text-[var(--foreground)] flex items-center gap-2">
-            <span>🎙️</span>
-            <span>ChatLaw Voice Assistant</span>
-          </h3>
-          <p className="text-xs text-[var(--ink-muted)] mt-0.5">
-            Voice-to-Voice legal assistance in Indian languages with authentic legal reasoning.
+      <VoiceOrb state={state} audioLevel={audioLevel} size="lg" />
+
+      <div aria-live="polite">
+        <p className="text-2xl font-semibold tracking-tight">{statusText}</p>
+        {state === "idle" && !displayTranscript ? (
+          <p className="mt-2 text-[15px] leading-7 text-[var(--ink-muted)]">
+            Tap the microphone and ask your question in your own words.
           </p>
-        </div>
-        <button
-          type="button"
-          onClick={onSwitchToText}
-          className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-xs font-semibold hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-          aria-label="Switch to text mode"
-        >
-          ⌨️ Text mode
-        </button>
+        ) : null}
       </div>
 
-      <VoiceOrb state={state} audioLevel={audioLevel} />
+      {review ??
+        (displayTranscript ? (
+          <p className="max-w-md text-[15px] italic leading-7 text-[var(--foreground)]">&ldquo;{displayTranscript}&rdquo;</p>
+        ) : null)}
 
-      <div className="text-center" aria-live="polite">
-        <p className="text-base font-bold text-[var(--foreground)]">
-          {isSpeaking ? nativeText.speaking : stateLabel}
-        </p>
-
-        {autoplayBlocked && (
-          <div className="mt-3 rounded-sm border-2 border-[var(--signal)] bg-[var(--signal-soft)] p-3 text-center">
-            <p className="text-sm font-semibold text-[var(--signal)] mb-2">
-              🔊 Autoplay requires user permission
-            </p>
-            <button
-              type="button"
-              onClick={onUnlockAutoplay}
-              className="inline-flex min-h-11 items-center gap-2 rounded-sm bg-[var(--forest)] px-5 text-sm font-bold text-white shadow-sm hover:opacity-95"
-            >
-              <span>🔊</span>
-              <span>{nativeText.listen} (Tap to Listen)</span>
-            </button>
-          </div>
-        )}
-      </div>
-
-      {isReady ? (
-        <div className="space-y-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]" htmlFor="voice-draft-transcript">
-            Review your question before sending:
-          </label>
-          <textarea
-            id="voice-draft-transcript"
-            value={draftText}
-            onChange={(event) => onDraftTextChange(event.target.value)}
-            rows={3}
-            className="w-full rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
-            aria-label="Edit transcript before sending"
-          />
-        </div>
-      ) : displayTranscript ? (
-        <blockquote className="rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm italic text-[var(--foreground)]">
-          &ldquo;{displayTranscript}&rdquo;
-        </blockquote>
+      {lastAssistantText && state === "idle" && !isListening ? (
+        <p className="line-clamp-3 max-w-md text-sm leading-6 text-[var(--ink-muted)]">{lastAssistantText}</p>
       ) : null}
 
-      {lastAssistantText && state === "idle" && !isListening && (
-        <div className="rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm leading-6 text-[var(--ink-muted)]">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-muted)]">Latest spoken response</p>
-          <p className="mt-1 line-clamp-3 text-[var(--foreground)]">{lastAssistantText}</p>
-        </div>
-      )}
+      {autoplayNotice}
+      {actions}
+      {errorNotice}
 
-      {/* Primary Voice Actions with High Visibility & Native Indian Language Labels */}
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        {canListen && !isListening && !isTranscribing && !isThinking && !isReady && (
-          <button
-            type="button"
-            onClick={onStartListening}
-            disabled={!supported}
-            className="min-h-14 min-w-[200px] rounded-sm bg-[var(--forest)] px-6 text-base font-bold text-white shadow-md hover:opacity-95 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] flex items-center justify-center gap-2"
-            aria-label="Start voice chat listening"
-          >
-            <span>🎙️</span>
-            <span>{isSpeaking || isPaused ? "Interrupt & Speak" : `${nativeText.start}`}</span>
-          </button>
-        )}
+      <div className="w-full border-t border-[var(--line)] pt-5">{settings}</div>
 
-        {isListening && (
-          <>
-            <button
-              type="button"
-              onClick={onStopListening}
-              className="min-h-14 min-w-[180px] rounded-sm border-2 border-[#b42318] bg-[#fef3f2] px-6 text-base font-bold text-[#b42318] shadow-md hover:bg-[#fee4e2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] flex items-center justify-center gap-2"
-              aria-label="Stop voice input recording"
-            >
-              <span>⏹️</span>
-              <span>{nativeText.stop}</span>
-            </button>
-            <button
-              type="button"
-              onClick={onCancelListening}
-              className="min-h-14 rounded-sm border border-[var(--line)] px-5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-              aria-label="Cancel voice input"
-            >
-              Cancel
-            </button>
-          </>
-        )}
-
-        {isReady && (
-          <>
-            <button
-              type="button"
-              onClick={onConfirmSend}
-              disabled={!draftText.trim()}
-              className="min-h-14 rounded-sm bg-[var(--forest)] px-6 text-base font-bold text-white shadow-md disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-              aria-label="Send voice transcript"
-            >
-              Send Question
-            </button>
-            <button
-              type="button"
-              onClick={onDiscardDraft}
-              className="min-h-14 rounded-sm border border-[var(--line)] px-5 text-sm font-semibold"
-              aria-label="Discard transcript"
-            >
-              Discard
-            </button>
-            <button
-              type="button"
-              onClick={onStartListening}
-              className="min-h-14 rounded-sm border border-[var(--line)] px-5 text-sm font-semibold"
-              aria-label="Record again"
-            >
-              Re-record
-            </button>
-          </>
-        )}
-
-        {isSpeaking && (
-          <>
-            <button
-              type="button"
-              onClick={onPauseSpeaking}
-              className="min-h-12 rounded-sm border border-[var(--line)] px-4 text-sm font-semibold"
-              aria-label="Pause speech"
-            >
-              ⏸ Pause
-            </button>
-            <button
-              type="button"
-              onClick={onStopSpeaking}
-              className="min-h-12 rounded-sm border border-[var(--line)] px-4 text-sm font-semibold"
-              aria-label="Stop speech"
-            >
-              ⏹ Stop
-            </button>
-            <button
-              type="button"
-              onClick={onStartListening}
-              className="min-h-12 rounded-sm bg-[#b42318] px-4 text-sm font-bold text-white shadow-sm"
-              aria-label="Interrupt and speak"
-            >
-              🎙️ Interrupt & Speak
-            </button>
-          </>
-        )}
-
-        {isPaused && (
-          <>
-            <button
-              type="button"
-              onClick={onResumeSpeaking}
-              className="min-h-12 rounded-sm border border-[var(--line)] px-4 text-sm font-semibold"
-              aria-label="Resume speech"
-            >
-              ▶ Resume
-            </button>
-            <button
-              type="button"
-              onClick={onStopSpeaking}
-              className="min-h-12 rounded-sm border border-[var(--line)] px-4 text-sm font-semibold"
-              aria-label="Stop speech"
-            >
-              ⏹ Stop
-            </button>
-          </>
-        )}
-
-        {state === "idle" && lastAssistantText && ttsSupported && !muted && (
-          <button
-            type="button"
-            onClick={onReplaySpeaking}
-            className="min-h-12 rounded-sm border border-[var(--line)] px-4 text-sm font-semibold hover:border-[var(--forest)]"
-            aria-label="Replay spoken response"
-          >
-            🔊 Replay Spoken Answer
-          </button>
-        )}
-      </div>
-
-      {/* Settings & Voice Conversation Modes */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line)] pt-4 text-sm">
-        <div className="flex flex-wrap items-center gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={continuousMode}
-              onChange={(e) => onContinuousModeChange?.(e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--line)] text-[var(--forest)]"
-            />
-            <span className="text-xs font-semibold">Continuous conversation</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={autoSend}
-              onChange={(e) => onAutoSendChange?.(e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--line)] text-[var(--forest)]"
-            />
-            <span className="text-xs font-semibold">Direct Voice-to-Voice</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={muted}
-              onChange={(event) => onMutedChange(event.target.checked)}
-              className="h-4 w-4 rounded border-[var(--line)] text-[var(--forest)]"
-            />
-            <span className="text-xs font-semibold">Mute voice</span>
-          </label>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-xs font-bold text-[var(--ink-muted)]" htmlFor="voice-chat-language">
-            Language:
-          </label>
-          <select
-            id="voice-chat-language"
-            value={language}
-            onChange={(event) => onLanguageChange(event.target.value as SpeechLanguageCode)}
-            disabled={disabled || isListening || isTranscribing || isThinking || isReady}
-            className="min-h-10 rounded-sm border border-[var(--line)] bg-white px-3 text-xs font-medium text-[var(--foreground)]"
-            aria-label="Voice language"
-          >
-            {languages.map((option) => (
-              <option key={option.code} value={option.code}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {error && (
-        <div className="rounded-sm border border-red-200 bg-red-50 p-3 text-xs text-red-700 flex items-center justify-between" role="alert">
-          <p>{error}</p>
-          <button type="button" onClick={onClearError} className="underline font-bold ml-2">
-            Retry
-          </button>
-        </div>
-      )}
+      <button
+        type="button"
+        onClick={onSwitchToText}
+        className="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium text-[var(--ink-muted)] hover:bg-[var(--fill)] hover:text-[var(--foreground)]"
+        aria-label="Switch to text mode"
+      >
+        <KeyboardIcon className="h-5 w-5" />
+        Type instead
+      </button>
     </section>
   );
 }

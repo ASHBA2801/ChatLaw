@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { AudioRecorderSession, isAudioRecordingSupported } from "./audioRecorder";
 import { mapSpeechError } from "./errors";
-import { DEFAULT_SPEECH_LANGUAGE, isSpeechRecognitionSupported } from "./support";
+import { DEFAULT_SPEECH_LANGUAGE, isBraveBrowser, isSpeechRecognitionSupported } from "./support";
 import { SpeechInputSession } from "./SpeechInputSession";
+import { transcribeAudio } from "./transcribe";
 import { mergeTranscript } from "./transcript";
 import type { SpeechInputStatus, SpeechLanguageCode } from "./types";
 
@@ -11,8 +13,17 @@ function subscribeToNothing() {
   return () => undefined;
 }
 
+/** Browser speech recognition, or a microphone recording we can transcribe on the server. */
 function getSpeechSupportSnapshot() {
-  return isSpeechRecognitionSupported();
+  return isSpeechRecognitionSupported() || isAudioRecordingSupported();
+}
+
+/**
+ * Brave exposes the Web Speech API but blocks its transcription backend, so there (and in browsers without the API)
+ * dictation records audio and sends it to the server transcription route instead.
+ */
+function shouldUseServerTranscription() {
+  return isBraveBrowser() || !isSpeechRecognitionSupported();
 }
 
 function getServerSpeechSupportSnapshot() {
@@ -62,6 +73,9 @@ export function useSpeechInput({
   const [language, setLanguage] = useState<SpeechLanguageCode>(initialLanguage);
 
   const sessionRef = useRef<SpeechInputSession | null>(null);
+  const recorderRef = useRef<AudioRecorderSession | null>(null);
+  /** Bumped on cancel so a transcription that finishes late is dropped. */
+  const runIdRef = useRef(0);
   const baseValueRef = useRef(value);
   const onChangeRef = useRef(onChange);
   const languageRef = useRef(language);
@@ -82,6 +96,8 @@ export function useSpeechInput({
     return () => {
       sessionRef.current?.dispose();
       sessionRef.current = null;
+      recorderRef.current?.cancel();
+      recorderRef.current = null;
     };
   }, []);
 
@@ -90,8 +106,60 @@ export function useSpeechInput({
 
   const clearError = useCallback(() => setError(null), []);
 
+  const finishServerRecording = useCallback(
+    async (recorder: AudioRecorderSession) => {
+      const runId = runIdRef.current;
+      setStatus("processing");
+      try {
+        const result = await recorder.stop();
+        if (runId !== runIdRef.current) return;
+        const transcript = result && result.blob.size > 0 ? (await transcribeAudio(result.blob, languageRef.current)).transcript.trim() : "";
+        if (runId !== runIdRef.current) return;
+        if (!transcript) {
+          setError(mapSpeechError("empty"));
+          return;
+        }
+        const next = mergeTranscript(baseValueRef.current, transcript, limit);
+        baseValueRef.current = next;
+        setBaseValue(next);
+        onChangeRef.current(next);
+      } catch (requestError) {
+        if (runId !== runIdRef.current) return;
+        setError(requestError instanceof Error && requestError.message ? requestError.message : mapSpeechError(null));
+      } finally {
+        if (runId === runIdRef.current) setStatus("idle");
+      }
+    },
+    [limit],
+  );
+
   const start = useCallback(() => {
     if (disabled) return;
+
+    if (shouldUseServerTranscription()) {
+      if (!isAudioRecordingSupported()) {
+        setError(mapSpeechError("unsupported"));
+        return;
+      }
+      if (recorderRef.current) return; // already starting or recording
+      sessionRef.current?.dispose();
+      setError(null);
+      setInterimText("");
+      baseValueRef.current = value;
+      setBaseValue(value);
+      const recorder = new AudioRecorderSession({
+        onStart: () => setStatus("recording"),
+        onError: (message) => {
+          recorderRef.current = null;
+          setError(message);
+          setStatus("idle");
+        },
+      });
+      recorderRef.current = recorder;
+      void recorder.start();
+      return;
+    }
+
     if (!isSpeechRecognitionSupported()) {
       setError(mapSpeechError("unsupported"));
       return;
@@ -121,10 +189,19 @@ export function useSpeechInput({
   }, [disabled, language, limit, value]);
 
   const stop = useCallback(() => {
+    const recorder = recorderRef.current;
+    if (recorder) {
+      recorderRef.current = null;
+      void finishServerRecording(recorder);
+      return;
+    }
     sessionRef.current?.stop();
-  }, []);
+  }, [finishServerRecording]);
 
   const cancel = useCallback(() => {
+    runIdRef.current += 1;
+    recorderRef.current?.cancel();
+    recorderRef.current = null;
     sessionRef.current?.cancel();
     sessionRef.current = null;
     setInterimText("");

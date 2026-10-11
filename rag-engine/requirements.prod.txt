@@ -1,0 +1,16 @@
+# RAG Engine production dependencies.
+# Local tests install rag-engine/requirements.txt, which adds pytest.
+
+pymupdf>=1.23.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+psycopg[binary,pool]>=3.1
+
+google-genai
+edge-tts>=7.2.8

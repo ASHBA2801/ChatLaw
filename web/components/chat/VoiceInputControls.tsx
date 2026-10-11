@@ -1,25 +1,8 @@
 "use client";
 
+import { MicIcon, StopIcon } from "@/components/chat/ChatIcons";
 import type { SpeechInputStatus, SpeechLanguageCode } from "@/lib/speech/types";
 import { getEnabledSpeechLanguages, getSpeechRecognitionUnavailableMessage } from "@/lib/speech/support";
-
-function MicIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" />
-      <path d="M5 11a7 7 0 0 0 14 0" strokeLinecap="round" />
-      <path d="M12 18v3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function StopIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-      <rect x="7" y="7" width="10" height="10" rx="1.5" />
-    </svg>
-  );
-}
 
 export interface VoiceInputControlsProps {
   status: SpeechInputStatus;
@@ -30,6 +13,8 @@ export interface VoiceInputControlsProps {
   interimText: string;
   disabled?: boolean;
   languageSelectId?: string;
+  /** "composer" is the borderless icon style used inside the chat composer. */
+  variant?: "default" | "composer";
   onStart: () => void;
   onStop: () => void;
   onCancel: () => void;
@@ -67,6 +52,7 @@ export default function VoiceInputControls({
   interimText,
   disabled = false,
   languageSelectId = "chatlaw-speech-language",
+  variant = "default",
   onStart,
   onStop,
   onCancel,
@@ -75,6 +61,7 @@ export default function VoiceInputControls({
   const isRecording = status === "recording";
   const isProcessing = status === "processing";
   const languages = getEnabledSpeechLanguages();
+  const composer = variant === "composer";
 
   function handleMicClick() {
     if (!supported || status === "unsupported") return;
@@ -88,16 +75,24 @@ export default function VoiceInputControls({
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-1">
-      <div className="flex items-center gap-2">
+    <div className={composer ? "flex min-w-0 flex-wrap items-center gap-x-1" : "flex min-w-0 flex-col gap-1"}>
+      <div className={`flex items-center ${composer ? "gap-1" : "gap-2"}`}>
         <button
           type="button"
           onClick={handleMicClick}
           disabled={disabled || !supported || status === "unsupported" || isProcessing}
-          className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] disabled:cursor-not-allowed disabled:opacity-50 ${
-            isRecording
-              ? "border-[#b42318] bg-[#fef3f2] text-[#b42318]"
-              : "border-[var(--line)] text-[var(--foreground)] hover:border-[var(--forest)]"
+          className={`inline-flex items-center justify-center text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] disabled:cursor-not-allowed disabled:opacity-50 ${
+            composer
+              ? `h-10 w-10 rounded-full ${
+                  isRecording
+                    ? "bg-[var(--warn-bg)] text-[var(--warn)]"
+                    : "text-[var(--ink-muted)] hover:bg-[var(--fill)] hover:text-[var(--foreground)]"
+                }`
+              : `min-h-11 min-w-11 rounded-sm border ${
+                  isRecording
+                    ? "border-[var(--warn)] bg-[var(--warn-bg)] text-[var(--warn)]"
+                    : "border-[var(--line)] text-[var(--foreground)] hover:border-[var(--accent)]"
+                }`
           }`}
           aria-label={buttonLabel(status, supported)}
           aria-pressed={isRecording}
@@ -106,39 +101,43 @@ export default function VoiceInputControls({
           {isRecording ? <StopIcon className="h-5 w-5" /> : <MicIcon className="h-5 w-5" />}
         </button>
 
-        <label className="sr-only" htmlFor={languageSelectId}>
-          Voice input language
-        </label>
-        <select
-          id={languageSelectId}
-          value={language}
-          onChange={(event) => onLanguageChange(event.target.value as SpeechLanguageCode)}
-          disabled={disabled || isRecording || isProcessing || !supported}
-          className="hidden h-11 max-w-[9.5rem] rounded-sm border border-[var(--line)] bg-white px-2 text-xs text-[var(--ink-muted)] sm:block"
-          aria-label="Voice input language"
-        >
-          {languages.map((option) => (
-            <option key={option.code} value={option.code}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        {composer ? null : (
+          <>
+          <label className="sr-only" htmlFor={languageSelectId}>
+            Voice input language
+          </label>
+          <select
+            id={languageSelectId}
+            value={language}
+            onChange={(event) => onLanguageChange(event.target.value as SpeechLanguageCode)}
+            disabled={disabled || isRecording || isProcessing || !supported}
+            className="hidden h-11 max-w-[9.5rem] rounded-sm border border-[var(--line)] bg-[var(--surface)] px-2 text-xs text-[var(--ink-muted)] sm:block"
+            aria-label="Voice input language"
+          >
+            {languages.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          </>
+        )}
 
         {(isRecording || isProcessing) && (
           <button
             type="button"
             onClick={onCancel}
-            className="min-h-11 rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--ink-muted)] hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="btn-secondary btn-sm"
           >
             Cancel
           </button>
         )}
       </div>
 
-      <div className="min-h-4 px-1" aria-live="polite">
-        {status !== "idle" && status !== "error" && (
+      <div className={composer ? "min-w-0 px-1" : "min-h-4 px-1"} aria-live="polite">
+        {status !== "idle" && status !== "error" && status !== "unsupported" && (
           <p className="text-xs text-[var(--ink-muted)]">
-            <span className={isRecording ? "font-medium text-[#b42318]" : ""}>
+            <span className={isRecording ? "font-medium text-[var(--warn)]" : ""}>
               {isRecording ? "Recording…" : statusLabel(status)}
             </span>
             {isRecording && interimText ? <span className="ml-2 italic">“{interimText}”</span> : null}

@@ -7,6 +7,9 @@ import {
   normalizeTextForSpeech,
   stripCitationsAndTechnicalMarkers,
   stripMarkdownFormatting,
+  stripLatinGlossesInIndicText,
+  stripSourceReferences,
+  normalizeStatuteNames,
 } from "./speechNormalizer";
 
 describe("speechNormalizer - Indian numbering system", () => {
@@ -133,5 +136,36 @@ For details, see https://official-gazette.gov.in`;
     expect(normalized).toContain("Bharatiya Nyaya Sanhita");
     expect(normalized).toContain("Section 303, sub-section 2");
     expect(normalized).not.toContain("[1]");
+  });
+});
+
+describe("speechNormalizer - regional language flow", () => {
+  it("drops English glosses after regional-language words", () => {
+    expect(stripLatinGlossesInIndicText("ரசீது (Bill) ஆகியவற்றை")).toBe("ரசீது ஆகியவற்றை");
+    expect(stripLatinGlossesInIndicText("जिला आयोग (District Commission) में")).toBe("जिला आयोग में");
+  });
+
+  it("keeps parentheses in English text", () => {
+    expect(stripLatinGlossesInIndicText("the bill (receipt) and photos")).toBe("the bill (receipt) and photos");
+  });
+
+  it("removes inline source references entirely", () => {
+    const input = "புகார் அளிக்கலாம் [3] THE CONSUMER PROTECTION ACT, 2019 — Section 35 — Page 18.";
+    expect(stripSourceReferences(input)).toBe("புகார் அளிக்கலாம்.");
+  });
+
+  it("speaks all-caps statute names naturally", () => {
+    expect(normalizeStatuteNames("THE CONSUMER PROTECTION ACT, 2019, Section 35")).toBe(
+      "The Consumer Protection Act 2019, Section 35",
+    );
+    expect(normalizeStatuteNames("under BNS and IPC")).toBe("under BNS and IPC");
+  });
+
+  it("produces continuous Tamil prose from a formatted answer", () => {
+    const input =
+      "* **புகார்:** ரசீது (Bill) வைத்திருங்கள். THE CONSUMER PROTECTION ACT, 2019, Section 35-ன்படி இணையவழியாகவோ (online) புகார் அளிக்கலாம் [3] THE CONSUMER PROTECTION ACT, 2019 — Section 35 — Page 18.";
+    expect(normalizeTextForSpeech(input)).toBe(
+      "புகார்: ரசீது வைத்திருங்கள். The Consumer Protection Act 2019, Section 35-ன்படி இணையவழியாகவோ புகார் அளிக்கலாம்.",
+    );
   });
 });

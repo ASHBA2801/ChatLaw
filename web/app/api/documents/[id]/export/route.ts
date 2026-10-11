@@ -38,6 +38,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
   } catch (error) {
     if (error instanceof AuthRequiredError) return NextResponse.json({ error: error.message }, { status: 401 });
     if (error instanceof DocumentAccessError) return NextResponse.json({ error: error.message }, { status: error.status });
+    console.error("Document export failed", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }

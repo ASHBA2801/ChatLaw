@@ -1,0 +1,58 @@
+# Dev mode: hot reload for the web app and the RAG engine.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+#
+# Layers on top of docker-compose.yml (same ports, env and startup order), but:
+#   web         runs `next dev` on the bind-mounted ./web source
+#   rag-engine  runs `uvicorn --reload` on the bind-mounted ./rag-engine source
+#
+# Rebuild (--build) only when dependencies change: web/package.json, the lockfile,
+# or rag-engine/requirements.prod.txt. Prisma schema changes still need
+# `docker compose run --rm migrate` plus `npm run db:generate` on the host.
+#
+# On Docker Desktop (macOS/Windows) file events may not reach the container; set
+# WATCHPACK_POLLING=true and WATCHFILES_FORCE_POLLING=true in .env to poll instead.
+# If files created by the web container are owned by the wrong user on Linux, set
+# DEV_UID/DEV_GID in .env to your own `id -u` / `id -g`.
+
+volumes:
+  # The prod volume is owned by the image's nextjs user (1001); dev runs as DEV_UID,
+  # so it gets its own volume.
+  chatlaw_case_documents_dev:
+    name: chatlaw_case_documents_dev
+
+services:
+  rag-engine:
+    command:
+      [
+        "uvicorn",
+        "api.main:app",
+        "--host", "0.0.0.0",
+        "--port", "8000",
+        "--reload",
+        "--reload-dir", "/app/rag-engine",
+      ]
+    environment:
+      WATCHFILES_FORCE_POLLING: ${WATCHFILES_FORCE_POLLING:-}
+    volumes:
+      - ./rag-engine:/app/rag-engine
+
+  web:
+    build:
+      target: dev
+    user: "${DEV_UID:-1000}:${DEV_GID:-1000}"
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: ${WATCHPACK_POLLING:-}
+    volumes:
+      - ./web:/app/web
+      - chatlaw_case_documents_dev:/data/case-documents
+      # Keep the image's installed dependencies and the dev build cache out of the
+      # host mount (the host's own node_modules/.next may be for another platform).
+      - /app/node_modules
+      - /app/web/node_modules
+      - /app/web/.next
+    # `next dev` compiles each route on first request, so allow more time.
+    healthcheck:
+      timeout: 30s
+      start_period: 60s

@@ -208,11 +208,47 @@ export function normalizeLegalAbbreviations(text: string): string {
   return result;
 }
 
+/** Indian-language scripts: Devanagari through Malayalam/Sinhala, plus Arabic script for Urdu. */
+const INDIC_CHAR = "\\u0900-\\u0DFF\\u0600-\\u06FF";
+
+/**
+ * Remove inline source references such as
+ * "[3] THE CONSUMER PROTECTION ACT, 2019 — Section 35 — Page 18".
+ * Runs before bare [n] markers are stripped so the trailing reference goes with them.
+ */
+export function stripSourceReferences(text: string): string {
+  return text.replace(/\s*\[(?:SOURCE\s+)?\d+\][^\[\n]*?\s[—–-]\s*Page\s+\d+/gi, "");
+}
+
+/**
+ * Drop English glosses that follow a regional-language word, e.g. "ரசீது (Bill)" -> "ரசீது".
+ * The glosses help on screen, but a regional voice switches language for each one,
+ * which breaks the sentence into disconnected phrases.
+ */
+export function stripLatinGlossesInIndicText(text: string): string {
+  return text.replace(
+    new RegExp(`(?<=[${INDIC_CHAR}])[^\\S\\n]*\\(\\s*[A-Za-z][A-Za-z0-9 .,'&/-]*\\)`, "g"),
+    "",
+  );
+}
+
+/**
+ * Speak statute names naturally: "THE CONSUMER PROTECTION ACT, 2019" -> "The Consumer Protection Act 2019".
+ * All-caps runs can be spelled out letter by letter, and the comma before the year adds a pause.
+ */
+export function normalizeStatuteNames(text: string): string {
+  return text
+    .replace(/\b[A-Z]{2,}(?:\s+[A-Z]{2,}){2,}\b/g, (run) =>
+      run.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase()),
+    )
+    .replace(/\b(Act|Code|Sanhita|Adhiniyam|Rules),\s*(\d{4})\b/gi, "$1 $2");
+}
+
 /**
  * Remove citations, technical bracketed markers, and URLs.
  */
 export function stripCitationsAndTechnicalMarkers(text: string): string {
-  return text
+  return stripSourceReferences(text)
     .replace(/\[SOURCE\s+\d+\]/gi, "")
     .replace(/\[\d+\]/g, "")
     .replace(/https?:\/\/[^\s]+/gi, "")
@@ -259,9 +295,11 @@ export function normalizeTextForSpeech(text: string): string {
   let processed = text;
   processed = stripCitationsAndTechnicalMarkers(processed);
   processed = stripMarkdownFormatting(processed);
+  processed = stripLatinGlossesInIndicText(processed);
   processed = normalizeLegalSections(processed);
   processed = normalizeCurrency(processed);
   processed = normalizeLegalAbbreviations(processed);
+  processed = normalizeStatuteNames(processed);
   processed = cleanPunctuationArtifacts(processed);
 
   return processed;

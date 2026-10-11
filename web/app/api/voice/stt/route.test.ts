@@ -101,4 +101,33 @@ describe("POST /api/voice/stt", () => {
     expect(data.detectedLanguage).toBe("ta");
     expect(data.confidence).toBe(0.98);
   });
+  it("returns an empty transcript when the model only repeats its instructions (silence or noise)", async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: JSON.stringify({
+                    transcript: "You are ChatLaw's multilingual Indian speech recognition system.",
+                    detectedLanguage: "en",
+                    confidence: 0.98,
+                  }),
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    }) as unknown as typeof fetch;
+
+    const formData = new FormData();
+    formData.append("audio", new Blob(["silence"], { type: "audio/webm" }));
+
+    const res = await POST(new NextRequest("http://localhost:3000/api/voice/stt", { method: "POST", body: formData }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).transcript).toBe("");
+  });
 });

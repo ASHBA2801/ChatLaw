@@ -53,3 +53,9 @@ __pycache__/
 .venv/
 venv/
 
+#IDE-AI 
+.github
+.claude
+.antigravity
+.gemini
+.cursor

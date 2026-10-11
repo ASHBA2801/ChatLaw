@@ -75,7 +75,7 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
         {
           id: payload.assistant_message?.id || `a-${crypto.randomUUID()}`,
           role: "assistant",
-          content: payload.answer || "I couldn't find sufficiently relevant information in the available legal sources or this case's documents.",
+          content: payload.answer || "Sorry, I couldn't find the answer to this in the laws I have or in this case's papers. Could you tell me a little more?",
           citations,
         },
       ]);
@@ -96,7 +96,7 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
   const composerValue = speech.isListening ? speech.displayValue : input;
 
   return (
-    <section className="rounded-sm border border-[var(--line)] bg-white p-5">
+    <section className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-5">
       <h2 className="text-lg font-semibold">AI assistant</h2>
       <p className="mt-1 text-sm text-[var(--ink-muted)]">
         Ask about this case by text or voice. Answers use official legal sources and your authorized case documents. Case files are never shown as statutes.
@@ -108,7 +108,7 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
             type="button"
             onClick={() => void ask(question)}
             disabled={loading || speech.isListening}
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-left text-sm hover:border-[var(--forest)] disabled:opacity-50"
+            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-left text-sm hover:border-[var(--accent)] disabled:opacity-50"
           >
             {question}
           </button>
@@ -116,14 +116,14 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
       </div>
       <div className="mt-4 max-h-80 space-y-3 overflow-y-auto">
         {messages.length === 0 ? (
-          <p className="rounded-sm border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-muted)]">
+          <p className="rounded-xl border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-muted)]">
             Ask about this case to combine official legal evidence with your authorized documents. Try a suggestion above, or use the microphone to speak.
           </p>
         ) : messages.map((message) => (
           <article
             key={message.id}
             className={message.role === "user"
-              ? "ml-auto max-w-[90%] rounded-sm bg-[var(--forest)] px-4 py-3 text-sm text-white"
+              ? "ml-auto max-w-[90%] rounded-sm bg-[var(--accent)] px-4 py-3 text-sm text-white"
               : `rounded-sm border px-4 py-3 text-sm ${message.error ? "border-[var(--warn-line)] bg-[var(--warn-bg)]" : "border-[var(--line)] bg-[var(--background)]"}`}
           >
             <p className="whitespace-pre-wrap leading-6">{message.content}</p>
@@ -132,7 +132,7 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
                 {message.citations.map((citation) => {
                   const sourceUrl = isSafeExternalUrl(citation.source?.url);
                   return (
-                    <li key={`${citation.id}-${citation.chunk_id}`} className="rounded-sm border border-[var(--line)] bg-white px-3 py-2">
+                    <li key={`${citation.id}-${citation.chunk_id}`} className="rounded-sm border border-[var(--line)] bg-[var(--surface)] px-3 py-2">
                       <p>
                         [{citation.id}] {citationLabel(citation)}
                         {isCaseDocumentCitation(citation) ? " · User case document" : " · Legal source"}
@@ -142,7 +142,7 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
                           href={sourceUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-2 inline-flex min-h-9 items-center text-[var(--forest)] underline-offset-2 hover:underline"
+                          className="mt-2 inline-flex min-h-9 items-center text-[var(--accent)] underline-offset-2 hover:underline"
                         >
                           View source
                         </a>
@@ -179,12 +179,12 @@ export default function CaseAssistant({ caseId }: { caseId: string }) {
             onChange={(event) => setInput(event.target.value.slice(0, 4000))}
             disabled={loading || speech.isListening}
             placeholder="Ask about this case..."
-            className="h-11 min-w-0 flex-1 rounded-sm border border-[var(--line)] px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)] disabled:cursor-not-allowed"
+            className="h-11 min-w-0 flex-1 rounded-sm border border-[var(--line)] px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:cursor-not-allowed"
           />
           <button
             type="submit"
             disabled={loading || speech.isListening || !input.trim()}
-            className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-50"
+            className="btn-primary disabled:opacity-50"
           >
             {loading ? "Asking..." : "Ask"}
           </button>

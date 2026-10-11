@@ -7,12 +7,15 @@ from context.builder import BuiltContext, build_context
 from retrieval.models import RetrievalResponse
 from verification.evidence import Evidence, validate_citations
 
-NO_CONTEXT_MESSAGE = "I couldn't find sufficiently relevant information in the available legal sources to answer this question."
+NO_CONTEXT_MESSAGE = (
+    "Sorry, I couldn't find the right law for this in what I have with me. "
+    "Could you tell me a little more about what happened, in your own words?"
+)
 
 _NO_CONTEXT_LOCALIZED = {
     "en": NO_CONTEXT_MESSAGE,
-    "hi": "इस प्रश्न का उत्तर देने के लिए उपलब्ध कानूनी स्रोतों में पर्याप्त रूप से प्रासंगिक जानकारी नहीं मिली।",
-    "ta": "இந்தக் கேள்விக்கு பதிலளிக்க போதுமான தொடர்புடைய சட்டத் தகவல் கிடைக்கவில்லை.",
+    "hi": "माफ़ कीजिए, मेरे पास जो कानून हैं उनमें मुझे इसका सही जवाब नहीं मिला। क्या आप अपने शब्दों में थोड़ा और बता सकते हैं कि क्या हुआ?",
+    "ta": "மன்னிக்கவும், என்னிடம் உள்ள சட்டங்களில் இதற்கான சரியான பதில் கிடைக்கவில்லை. என்ன நடந்தது என்று உங்கள் வார்த்தைகளில் கொஞ்சம் கூடுதலாகச் சொல்ல முடியுமா?",
 }
 
 

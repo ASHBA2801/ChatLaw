@@ -18,13 +18,28 @@ class LegalChunker:
     """Chunks structured legal documents into legally meaningful units with context hierarchy."""
 
     # Explicit section header pattern to detect when a line starts a new section
+    # An amended section may open with a footnote marker, e.g. "6[3. Qualification ..." or "1[25A. ...".
     SECTION_START_RE = re.compile(
-        r'^\s*(\d{1,4}[A-Z]?)\.\s+(.*)$'
+        r'^\s*(?:\d{1,3}\[+\s*)?(\d{1,4}[A-Z]{0,2})\.(?:\s+|(?=[A-Z]))(.*)$'
     )
+
+    # First line of a page-bottom amendment footnote block, e.g. "3. Subs. by Act 47 of 1966, s. 20, ..."
+    # Footnote numbers restart on every page, so they must never be read as section numbers.
+    FOOTNOTE_START_RE = re.compile(
+        r'^\s*(?:\d{1,2}|\*)\.\s+(?:'
+        r'Subs\.|Ins\.|Added\b|Omitted\b(?!\.)|Rep\.|Vide\b|Certain words\b|'
+        r'The (?:words?|brackets?|heading|figures?|letters?|marginal heading|entry|entries|proviso|Explanation)\b'
+        r')'
+    )
+
+    # Table of contents at the front of an Act, which ends where the Act title is repeated above "ACT NO. n OF yyyy".
+    TOC_START_RE = re.compile(r'^\s*ARRANGEMENT\s+OF\s+SECTIONS\b', re.IGNORECASE)
+    ACT_NUMBER_RE = re.compile(r'^\s*ACT\s+NO\.\s*\d+\s+OF\s+\d{4}\b', re.IGNORECASE)
+    TOC_MAX_PAGES = 12
 
     # Schedule header
     SCHEDULE_START_RE = re.compile(
-        r'^\s*(THE\s+(?:FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH|\d+)?\s*SCHEDULE|THESCHEDULE)\b(?:\s*[-—–]\s*(.*))?',
+        r'^\s*(?:\d{1,3}\[+\s*)?(THE\s+(?:FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH|\d+)?\s*SCHEDULE|THESCHEDULE)\b(?:\s*[-—–]\s*(.*))?',
         re.IGNORECASE
     )
 
@@ -50,6 +65,25 @@ class LegalChunker:
         self.min_chunk_chars = min_chunk_chars
         self.splitter = splitter or LegalSplitter(max_chunk_chars=max_chunk_chars)
 
+    def _drop_table_of_contents(self, page_lines: List[Tuple[int, str]]) -> List[Tuple[int, str]]:
+        """Remove the "ARRANGEMENT OF SECTIONS" block so its entries are not chunked as sections."""
+        first_page = page_lines[0][0] if page_lines else 0
+        in_window = [i for i, (pno, _) in enumerate(page_lines) if pno < first_page + self.TOC_MAX_PAGES]
+        toc_start = next((i for i in in_window if self.TOC_START_RE.match(page_lines[i][1])), None)
+        if toc_start is None:
+            return page_lines
+        act_number = next((i for i in in_window if i > toc_start and self.ACT_NUMBER_RE.match(page_lines[i][1])), None)
+        if act_number is None:
+            return page_lines
+        # Keep the repeated Act title line that precedes "ACT NO." as the start of the body.
+        body_start = act_number
+        while body_start - 1 > toc_start and not page_lines[body_start - 1][1].strip():
+            body_start -= 1
+        if body_start - 1 > toc_start:
+            body_start -= 1
+        # Keep any title lines above ARRANGEMENT OF SECTIONS (the first, cover-level title).
+        return page_lines[:toc_start] + page_lines[body_start:]
+
     def chunk_document(self, document: DocumentData) -> List[LegalChunk]:
         """Processes a DocumentData instance and returns a deterministic list of LegalChunks."""
         chunks: List[LegalChunk] = []
@@ -61,8 +95,16 @@ class LegalChunker:
             cleaned = page.cleaned_text
             if not cleaned:
                 continue
-            for line in cleaned.split('\n'):
+            lines = cleaned.split('\n')
+            for idx, line in enumerate(lines):
+                if self.FOOTNOTE_START_RE.match(line):
+                    # Footnotes sit at the bottom of the page; drop the whole block.
+                    lines = lines[:idx]
+                    break
+            for line in lines:
                 page_lines.append((page.page_number, line))
+
+        page_lines = self._drop_table_of_contents(page_lines)
 
         if not page_lines:
             return []
@@ -242,7 +284,8 @@ class LegalChunker:
 
             # Check for SCHEDULE header
             m_sched = self.SCHEDULE_START_RE.match(trimmed)
-            if m_sched:
+            # A lowercase "the Fourth Schedule;" is a wrapped line of body text, not a header.
+            if m_sched and m_sched.group(1)[0].isupper():
                 emit_current_unit()
                 sched_id = m_sched.group(1).upper()
                 sched_title = m_sched.group(2).strip() if m_sched.group(2) else None

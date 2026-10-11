@@ -150,7 +150,7 @@ export function getSpeechRecognitionUnavailableMessage(
   win: Window | undefined = typeof window !== "undefined" ? window : undefined,
 ): string {
   if (isBraveBrowser(win)) {
-    return "Brave exposes the microphone, but its browser speech service may not provide transcription. Try Chrome or Edge for voice input, or use Text mode.";
+    return "Brave blocks its built-in speech service, and audio recording isn't available on this page. Open ChatLaw over HTTPS (or on localhost) to record your voice, or use Text mode.";
   }
   return "Voice input isn't supported in this browser. You can continue using the keyboard.";
 }

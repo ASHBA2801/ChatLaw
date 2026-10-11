@@ -15,12 +15,12 @@ export default async function DocumentsPage() {
   const documents = await listOwnedDocuments(user.id);
 
   return (
-    <section className="mx-auto w-full max-w-[1200px] space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       {/* Top Header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-[var(--foreground)]">
-            Legal Documents
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            Legal documents
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--ink-muted)]">
             Draft authentic Indian agreements, deeds, notices, complaints, and affidavits using official model formats and natural language.
@@ -28,9 +28,9 @@ export default async function DocumentsPage() {
         </div>
         <Link
           href="/documents/new"
-          className="inline-flex min-h-11 items-center rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white hover:opacity-95"
+          className="btn-primary"
         >
-          New Document Draft
+          New draft
         </Link>
       </div>
 
@@ -43,7 +43,7 @@ export default async function DocumentsPage() {
       <div className="space-y-4 pt-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
-            Your Workspace Documents
+            Your drafts
           </h2>
           <span className="text-xs text-[var(--ink-muted)]">
             {documents.length} draft{documents.length === 1 ? "" : "s"}

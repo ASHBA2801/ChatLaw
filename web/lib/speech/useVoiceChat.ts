@@ -124,6 +124,11 @@ export function useVoiceChat({
   const autoSendRef = useRef(autoSend);
   const continuousModeRef = useRef(continuousMode);
   const languageRef = useRef(language);
+
+  useEffect(() => {
+    setLanguage(initialLanguage);
+  }, [initialLanguage]);
+
   const conversationIdRef = useRef(conversationId);
   const allowWithoutConversationRef = useRef(allowWithoutConversation);
   const processingRef = useRef(false);

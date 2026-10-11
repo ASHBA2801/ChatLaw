@@ -44,7 +44,7 @@ export default function AnswerPlaybackControls({
           type="button"
           onClick={() => onPlay(messageId, text)}
           disabled={disabled || !text.trim()}
-          className="inline-flex min-h-10 items-center gap-1.5 rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--foreground)] hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)] disabled:opacity-50"
+          className="btn-secondary btn-sm disabled:opacity-50"
           aria-label="Play answer"
         >
           <PlayIcon className="h-3.5 w-3.5" />
@@ -53,13 +53,13 @@ export default function AnswerPlaybackControls({
       )}
       {isSpeaking && (
         <>
-          <span className="text-xs font-medium text-[var(--forest)]" aria-live="polite">
+          <span className="text-xs font-medium text-[var(--accent)]" aria-live="polite">
             Speaking…
           </span>
           <button
             type="button"
             onClick={onPause}
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="btn-secondary btn-sm"
             aria-label="Pause answer"
           >
             Pause
@@ -67,7 +67,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onStop}
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="btn-secondary btn-sm"
             aria-label="Stop speech"
           >
             Stop
@@ -82,7 +82,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onResume}
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="btn-secondary btn-sm"
             aria-label="Resume answer"
           >
             Resume
@@ -90,7 +90,7 @@ export default function AnswerPlaybackControls({
           <button
             type="button"
             onClick={onStop}
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            className="btn-secondary btn-sm"
             aria-label="Stop speech"
           >
             Stop

@@ -947,6 +947,20 @@ TEMPLATES: dict[str, TemplateSpec] = {
 }
 
 
+# Witness details are printed in the signature block, so they must be asked for up front
+# rather than left as "[... REQUIRED]" placeholders in the finished document.
+for _template in TEMPLATES.values():
+    _witness_fields = {
+        fid
+        for witness in _template.get("witnesses", [])
+        for fid in (witness.get("name_field"), witness.get("address_field"))
+        if fid
+    }
+    for _field_spec in _template["fields"]:
+        if _field_spec["id"] in _witness_fields:
+            _field_spec["requirement"] = "required"
+
+
 def list_templates() -> list[TemplateSpec]:
     return [TEMPLATES[key] for key in TEMPLATES]
 

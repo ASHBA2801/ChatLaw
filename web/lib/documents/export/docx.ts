@@ -14,12 +14,17 @@ import {
 import { DISCLAIMER } from "../constants";
 import type { GeneratedDocumentPayload } from "../types";
 
+/** Strip characters that are illegal in XML 1.0 (they corrupt the .docx) and coerce non-strings. */
+function clean(value: unknown): string {
+  return String(value ?? "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, "");
+}
+
 function paragraphsFrom(
   text: string,
   bold = false,
   align: (typeof AlignmentType)[keyof typeof AlignmentType] = AlignmentType.JUSTIFIED,
 ): Paragraph[] {
-  return text.split(/\n/).map((line) => {
+  return clean(text).split(/\n/).map((line) => {
     const trimmed = line.trim();
     return new Paragraph({
       alignment: align,
@@ -36,7 +41,10 @@ function paragraphsFrom(
   });
 }
 
-export async function buildDocx(payload: GeneratedDocumentPayload): Promise<Buffer> {
+export async function buildDocx(rawPayload: GeneratedDocumentPayload): Promise<Buffer> {
+  const payload: GeneratedDocumentPayload = JSON.parse(JSON.stringify(rawPayload), (_key, value) =>
+    typeof value === "string" ? clean(value) : value,
+  );
   const children: (Paragraph | Table)[] = [];
 
   // 1. Formal Uppercase Centered Document Title
@@ -141,7 +149,7 @@ export async function buildDocx(payload: GeneratedDocumentPayload): Promise<Buff
         }),
       );
     } else {
-      const heading = `${section.number}. ${section.title}`;
+      const heading = `${section.number}. ${section.title.replace(/^\d+\.\s*/, "")}`;
       children.push(
         new Paragraph({
           heading: HeadingLevel.HEADING_2,

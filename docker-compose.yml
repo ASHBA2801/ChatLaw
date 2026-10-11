@@ -1,30 +1,176 @@
-# ChatLaw development stack.
+# ChatLaw: the whole stack from one command.
 #
-# Orchestrates the shared infrastructure used by the web application and the
-# RAG Engine: PostgreSQL with pgvector, and (optionally) Redis.
+#   cp .env.example .env      # then set AUTH_SECRET, RAG_API_SECRET, GEMINI_API_KEY
+#   docker compose up --build
 #
-# Each service is defined in its own compose file under docker/ so it can be
-# run standalone:
+# Starts PostgreSQL (pgvector), Redis, one-shot Prisma migrations, the RAG engine
+# (FastAPI) and the web app (Next.js), in dependency order.
 #
-#   docker compose -f docker/postgres/compose.yml up -d
-#   docker compose -f docker/redis/compose.yml up -d
+#   Web app:    http://localhost:3000
+#   RAG engine: http://localhost:8000/health
+#   Postgres:   localhost:5433   (host port only, services use postgres:5432)
+#   Redis:      localhost:6379
 #
-# Or start everything with:
-#
-#   docker compose up -d
-#
-# NOTE: PostgreSQL exposes host port 5433 to avoid conflicting with a locally
-# installed PostgreSQL on 5432.
+# Railway does not run Compose files; see docs/railway.md for the per-service
+# setup that uses the same Dockerfiles.
 
 name: chatlaw
 
+x-database-url: &database-url
+  postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-chatlaw}
+
+x-database-url-prisma: &database-url-prisma
+  postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-chatlaw}?schema=public
+
+networks:
+  chatlaw_net:
+    name: chatlaw_net
+
+volumes:
+  chatlaw_pgdata:
+    name: chatlaw_pgdata
+  chatlaw_redisdata:
+    name: chatlaw_redisdata
+  chatlaw_case_documents:
+    name: chatlaw_case_documents
+
 services:
   postgres:
-    extends:
-      file: docker/postgres/compose.yml
-      service: db
+    image: pgvector/pgvector:pg18
+    container_name: chatlaw-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-chatlaw}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      # PostgreSQL 18 images keep the versioned data directory under this path.
+      - chatlaw_pgdata:/var/lib/postgresql
+    networks:
+      - chatlaw_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
-    extends:
-      file: docker/redis/compose.yml
-      service: redis
+    image: redis:7-alpine
+    container_name: chatlaw-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - chatlaw_redisdata:/data
+    networks:
+      - chatlaw_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/migrate/Dockerfile
+    environment:
+      DATABASE_URL: *database-url-prisma
+    networks:
+      - chatlaw_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  rag-engine:
+    build:
+      context: .
+      dockerfile: rag-engine/Dockerfile
+    environment:
+      DATABASE_URL: *database-url
+      PORT: "8000"
+      CHATLAW_FRONTEND_ORIGIN: ${CHATLAW_FRONTEND_ORIGIN:-http://localhost:3000}
+      RAG_API_SECRET: ${RAG_API_SECRET:?Set RAG_API_SECRET in .env (see .env.example)}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_GENERATION_MODEL: ${GEMINI_GENERATION_MODEL:-gemini-3.8-flash}
+      GEMINI_EMBEDDING_MODEL: ${GEMINI_EMBEDDING_MODEL:-gemini-embedding-2-preview}
+      EMBEDDING_PROVIDER: gemini
+      # Must equal GEMINI_EMBEDDING_MODEL; the engine refuses to start otherwise.
+      EMBEDDING_MODEL: ${GEMINI_EMBEDDING_MODEL:-gemini-embedding-2-preview}
+      EMBEDDING_DIMENSION: "768"
+      EMBEDDING_BATCH_SIZE: ${EMBEDDING_BATCH_SIZE:-32}
+      GEMINI_REQUEST_TIMEOUT_SECONDS: ${GEMINI_REQUEST_TIMEOUT_SECONDS:-60}
+      DATABASE_CONNECT_TIMEOUT_SECONDS: ${DATABASE_CONNECT_TIMEOUT_SECONDS:-30}
+      DATABASE_POOL_MAX_SIZE: ${DATABASE_POOL_MAX_SIZE:-10}
+      RAG_MAX_REQUEST_BYTES: ${RAG_MAX_REQUEST_BYTES:-262144}
+      RAG_RATE_LIMIT_REQUESTS: ${RAG_RATE_LIMIT_REQUESTS:-30}
+      RAG_RATE_LIMIT_WINDOW_SECONDS: ${RAG_RATE_LIMIT_WINDOW_SECONDS:-60}
+      RETRIEVAL_TOP_K: ${RETRIEVAL_TOP_K:-10}
+      RETRIEVAL_MIN_SCORE: ${RETRIEVAL_MIN_SCORE:-0.0}
+    ports:
+      - "${RAG_HOST_PORT:-8000}:8000"
+    networks:
+      - chatlaw_net
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    environment:
+      DATABASE_URL: *database-url-prisma
+      RAG_API_URL: http://rag-engine:8000
+      RAG_API_SECRET: ${RAG_API_SECRET:?Set RAG_API_SECRET in .env (see .env.example)}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET in .env (see .env.example)}
+      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-}
+      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-}
+      AUTH_TRUST_HOST: "true"
+      COURT_PROVIDER_URL: ${COURT_PROVIDER_URL:-}
+      ADVOCATE_PROVIDER_URL: ${ADVOCATE_PROVIDER_URL:-}
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      CASE_STORAGE_ROOT: /data/case-documents
+    ports:
+      - "${WEB_HOST_PORT:-3000}:3000"
+    volumes:
+      - chatlaw_case_documents:/data/case-documents
+    networks:
+      - chatlaw_net
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      rag-engine:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000').then((r)=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s

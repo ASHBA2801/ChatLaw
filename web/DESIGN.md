@@ -1,265 +1,152 @@
 ---
 name: ChatLaw
-description: High-density module mosaic for Indian-law chat — ash ground, hairline modules, signal-red tabs.
+description: Quiet product-minimal interface for Indian-law chat — cool tinted neutrals, one cobalt accent, soft geometry.
 colors:
-  background: "#f5f5f5"
+  background: "#f6f7f9"
   surface: "#ffffff"
-  foreground: "#111111"
-  ink-muted: "#6b6b6b"
-  line: "#d0d0d0"
-  signal: "#db1b1a"
-  signal-soft: "#fce8e8"
-  signal-mid: "#f5c2c0"
-  module-fill: "#f0f0f0"
-  focus: "#111111"
-  warn: "#9a3412"
-  warn-bg: "#fff1f0"
-  warn-line: "#f5c2c0"
-  on-signal: "#ffffff"
+  fill: "#f0f2f5"
+  foreground: "#12151c"
+  ink-muted: "#596172"
+  ink-faint: "#8a91a1"
+  line: "#e2e5eb"
+  line-strong: "#cbd1dc"
+  accent: "#2455d4"
+  accent-strong: "#1b44b0"
+  accent-soft: "#edf2ff"
+  accent-mid: "#d3dffc"
+  on-accent: "#ffffff"
+  focus: "#2455d4"
+  warn: "#b42318"
+  warn-bg: "#fef3f2"
+  warn-line: "#fecdca"
+  ok: "#067647"
+  ok-bg: "#ecfdf3"
+  ok-line: "#abefc6"
+  caution: "#93370d"
+  caution-bg: "#fffaeb"
+  caution-line: "#fedf89"
 typography:
   display:
-    fontFamily: "\"Segoe UI\", \"Noto Sans\", \"Noto Sans Devanagari\", \"Noto Sans Tamil\", \"Noto Sans Bengali\", sans-serif"
-    fontSize: "clamp(2.25rem, 5vw, 3.75rem)"
-    fontWeight: 700
-    lineHeight: 1.05
+    fontFamily: "ui-sans-serif, system-ui, \"Segoe UI\", \"Noto Sans\" + Indic Noto families"
+    fontSize: "clamp(2.25rem, 5vw, 3.5rem)"
+    fontWeight: 600
+    lineHeight: 1.08
     letterSpacing: "-0.02em"
   headline:
-    fontFamily: "\"Segoe UI\", \"Noto Sans\", \"Noto Sans Devanagari\", \"Noto Sans Tamil\", \"Noto Sans Bengali\", sans-serif"
-    fontSize: "1.5rem"
+    fontSize: "1.5rem–2.25rem"
     fontWeight: 600
-    lineHeight: 1.25
+    lineHeight: 1.2
     letterSpacing: "-0.01em"
   title:
-    fontFamily: "\"Segoe UI\", \"Noto Sans\", \"Noto Sans Devanagari\", \"Noto Sans Tamil\", \"Noto Sans Bengali\", sans-serif"
-    fontSize: "0.875rem"
-    fontWeight: 700
-    lineHeight: 1.3
-    letterSpacing: "-0.01em"
+    fontSize: "1rem"
+    fontWeight: 600
+    lineHeight: 1.35
   body:
-    fontFamily: "\"Segoe UI\", \"Noto Sans\", \"Noto Sans Devanagari\", \"Noto Sans Tamil\", \"Noto Sans Bengali\", sans-serif"
-    fontSize: "0.875rem"
+    fontSize: "0.9375rem"
     fontWeight: 400
-    lineHeight: 1.5
-    letterSpacing: "normal"
+    lineHeight: 1.55
   label:
-    fontFamily: "\"Segoe UI\", \"Noto Sans\", \"Noto Sans Devanagari\", \"Noto Sans Tamil\", \"Noto Sans Bengali\", sans-serif"
-    fontSize: "0.6875rem"
-    fontWeight: 700
-    lineHeight: 1.2
-    letterSpacing: "0.02em"
+    fontSize: "0.75rem–0.8125rem"
+    fontWeight: 600
+    lineHeight: 1.3
 rounded:
-  none: "0"
-  module: "2px"
+  control: "0.625rem"
+  panel: "0.875rem–1.125rem"
+  composer: "1rem–1.5rem"
+  pill: "9999px"
 spacing:
-  tab-y: "0.4rem"
-  tab-x: "0.65rem"
-  module: "0.75rem"
-  denser: "0.5rem"
-  tight: "0.375rem"
   control: "2.75rem"
-  header: "3rem"
-  rail: "14rem"
+  control-compact: "2.5rem"
+  header: "3.5rem"
+  rail: "15rem"
 components:
   button-primary:
-    backgroundColor: "{colors.signal}"
-    textColor: "{colors.on-signal}"
-    rounded: "{rounded.none}"
-    padding: "0 1.25rem"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.on-accent}"
+    rounded: "{rounded.control}"
     height: "{spacing.control}"
-    typography: "{typography.label}"
-  button-primary-hover:
-    backgroundColor: "#a01010"
-    textColor: "{colors.on-signal}"
-    rounded: "{rounded.none}"
   button-secondary:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.foreground}"
-    rounded: "{rounded.none}"
-    padding: "0 1.25rem"
+    rounded: "{rounded.control}"
     height: "{spacing.control}"
-    typography: "{typography.label}"
-  module-tab:
-    backgroundColor: "{colors.signal}"
-    textColor: "{colors.on-signal}"
-    rounded: "{rounded.none}"
-    padding: "{spacing.tab-y} {spacing.tab-x}"
-    typography: "{typography.label}"
-  module-panel:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.module}"
-    padding: "{spacing.module}"
-  input-field:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.module}"
-    padding: "0 0.75rem"
-    height: "{spacing.control}"
-    typography: "{typography.body}"
   nav-item-active:
-    backgroundColor: "{colors.signal-soft}"
-    textColor: "{colors.signal}"
-    rounded: "{rounded.none}"
-    padding: "0.625rem 0.75rem"
-    typography: "{typography.label}"
+    backgroundColor: "{colors.accent-soft}"
+    textColor: "{colors.accent}"
+    rounded: "{rounded.control}"
   citation-chip:
-    backgroundColor: "{colors.signal-soft}"
-    textColor: "{colors.signal}"
-    rounded: "{rounded.module}"
-    padding: "0.125rem 0.5rem"
-    typography: "{typography.body}"
-  mark-cl:
-    backgroundColor: "{colors.signal}"
-    textColor: "{colors.on-signal}"
-    rounded: "{rounded.none}"
-    size: "1.75rem"
-    typography: "{typography.label}"
+    backgroundColor: "{colors.accent-soft}"
+    textColor: "{colors.accent}"
+    rounded: "{rounded.control}"
 ---
 
 # Design System: ChatLaw
 
 ## Overview
 
-**Creative North Star: "High-Density Module Mosaic"**
+**Creative North Star: "Quiet Product"**
 
-ChatLaw’s shipped interface is a packed mosaic of ruled boxes on ash and white: every major zone — conversations, structured answers, sources, composer, product menu — is a hairline module capped by a utility-red tab. The world is Japanese high-density web adapted for civic Operate work: dense, legible, and edge-to-edge, not sparse mint SaaS chat.
+ChatLaw is used by people under stress, often on a phone, often outside their first language. The interface stays out of the way: cool, slightly blue-tinted neutrals, one cobalt accent, soft rounded surfaces and generous reading measure. Hierarchy comes from type size, weight and whitespace — not from colored bars, boxes inside boxes, or decoration.
 
-Personality is plain, trustworthy, and civic. Signal red (`#db1b1a`) marks tabs, primary actions, and active emphasis; everything else stays ink, ash, and hairline gray. Typography is a compact gothic sans stack that stays Indic-script capable (Segoe UI + Noto Sans family). Persuade (landing) and Operate (product shell) wear the same world — landing is a denser mosaic demo of the chat loop, not a separate marketing aesthetic.
+Landing (Persuade) and product shell (Operate) share the same world. The landing page demonstrates the chat loop (question → follow-up → sources) with a small example conversation; it does not claim accuracy figures, testimonials or outcomes.
 
-Confirmed refusals: sparse mint/forest SaaS chat, purple/indigo AI dashboards, glassmorphism, multi-layer shadows, decorative card stacks, and Latin-only display faces that break Hindi, Tamil, Bengali, or other product languages.
-
-**Key Characteristics:**
-- Ash page ground (`#f5f5f5`) with white module surfaces and 1px `#d0d0d0` hairlines
-- Signal-red module tabs and square primary actions
-- Near-square corners (2px module radius; primary CTAs and brand mark are 0)
-- Compact Indic-capable sans; body at 14px / 1.5
-- Edge-to-edge abutting columns and stacked modules — density as clarity, not decoration
-- Flat depth: borders and tonal fills only; honor `prefers-reduced-motion`
+Confirmed refusals: purple/indigo AI gradients, glassmorphism, glow accents, emoji used as icons, uppercase "kicker" labels, nested bordered cards, and Latin-only display faces that break Indic scripts.
 
 ## Colors
 
-Utility palette: cool neutrals for structure, one loud signal red for tabs and commitment, soft pink tints for selection and citation chips.
+Tokens live in `app/globals.css` (`:root`). Components reference them as `var(--token)`.
 
-### Primary
-- **Signal Red** (`#db1b1a`): Module tabs (`.module-tab`), primary buttons (Sign in, New conversation, Send, Start with Chat), brand mark “CL”, text selection, theme color, and active emphasis text. Hover deepens toward `#a01010` on solid fills.
+- **Background** `#f6f7f9` – page ground and, on Chat, the sidebar (the conversation area is `surface`). **Surface** `#fff` – panels, composer, shell chrome. **Fill** `#f0f2f5` – assistant bubble, hover wells, segmented-control tracks.
+- **Foreground** `#12151c`, **Ink muted** `#596172` (secondary copy, AA on background and surface), **Ink faint** `#8a91a1` (hints, disclaimers, timestamps only — never for required reading).
+- **Line** `#e2e5eb` for hairlines and card borders; **Line strong** `#cbd1dc` for controls and the composer.
+- **Accent** `#2455d4` (hover `#1b44b0`): primary buttons, user bubble, active nav, links, citation chips, focus ring. **Accent soft / mid** for selected states and chip backgrounds.
+- **Warn** (`#b42318`) for errors and destructive actions, **Ok** for success/relevance, **Caution** for advisory states. Red is never the brand colour.
 
-### Neutral
-- **Ash Ground** (`#f5f5f5`): Page/`body` background; chat composer dock backdrop.
-- **Module White** (`#ffffff`): Panels, shell chrome, composer surface.
-- **Near-Black Ink** (`#111111`): Primary text and focus outline (`--focus`).
-- **Muted Ink** (`#6b6b6b`): Secondary copy, hints, inactive nav.
-- **Hairline** (`#d0d0d0`): All module borders, column rules, list dividers.
-- **Module Fill** (`#f0f0f0`): Nested wells, hover fills on inactive nav, demo user bubbles.
-- **Signal Soft / Mid** (`#fce8e8` / `#f5c2c0`): Active nav wash, citation chips, soft hover on chips.
-- **On-Signal** (`#ffffff`): Text on red tabs and primary fills.
-
-### Warning
-- **Warn Ink / Wash / Line** (`#9a3412` / `#fff1f0` / `#f5c2c0`): Alerts, sign-in failure, destructive affordances — never as brand accent.
-
-Legacy CSS aliases `--forest`, `--lime`, and `--warm` remap to `--signal`, `--signal-soft`, and `--focus`. New work should use the signal-family names.
-
-### Named Rules
-**The Signal Tab Rule.** Signal red owns module tabs and primary commitment actions. It is not a decorative wash across the canvas; soft pink is for selection and citations only.
-
-**The Hairline Neutrals Rule.** Structure is ash + white + `#d0d0d0`. Do not reintroduce mint grounds, forest greens, or warm cream paper as product neutrals.
+**The One Accent Rule.** Cobalt is the only brand colour. Soft accent tints mark selection; status colours are reserved for status.
 
 ## Typography
 
-**Display Font:** Segoe UI (with Noto Sans + Indic script fallbacks)  
-**Body Font:** Same stack  
-**Document sheet (exception):** Times New Roman / Times for `.document-sheet` draft previews only — not product chrome.
+System UI stack with Noto Sans fallbacks for Devanagari, Tamil, Bengali, Telugu, Gujarati, Kannada, Malayalam, Gurmukhi and Odia (`--font-ui`). No webfont is downloaded, so Indic scripts always have a matching fallback and there is no layout shift. Document previews (`.document-sheet`) use Times New Roman and are the only exception.
 
-**Character:** Compact gothic sans — utilitarian, dense, bilingual-ready. No separate marketing serif or display face for UI chrome.
+- **Display** 600, `clamp(2.25rem, 5vw, 3.5rem)`, tight leading — landing hero only.
+- **Headline** 600, 1.5–2.25rem — page titles, empty states.
+- **Title** 600, 1rem — card and section headings (including answer sections).
+- **Body** 15px / 1.55 (answers use 15px / 1.75). **Label** 12–13px, 600, sentence case.
+- Headings use `text-wrap: balance`; paragraphs `text-wrap: pretty`.
 
-### Hierarchy
-- **Display** (700, clamp ~2.25–3.75rem, ~1.05): Landing hero brand + signal subline only.
-- **Headline** (600, ~1.5rem): Empty-state prompts (“Describe your situation”), sign-in titles.
-- **Title** (700, 0.875rem): Shell page titles, conversation titles, brand wordmark.
-- **Body** (400, 0.875rem / 1.5): Answers, forms, list copy. Prefer readable measure inside modules, not full-bleed walls of text.
-- **Label** (700, ~11px / 0.6875rem, tracking ~0.02em, often uppercase): Module tabs, nav items, primary button labels, mobile tab bar.
-
-### Named Rules
-**The Indic Stack Rule.** Product UI must keep the Segoe UI + Noto Sans (Devanagari / Tamil / Bengali) stack. Never ship a Latin-only display face for chrome or answers.
-
-**The Label Plate Rule.** Zone names and primary actions read as uppercase utility plates (tabs, nav, CTAs) — functional naming, not decorative eyebrows.
+**The Sentence Case Rule.** No `uppercase` + tracking labels. Names of regions are plain headings or quiet `section-label` captions.
 
 ## Layout
 
-Operate shell: ash full-bleed canvas; desktop left product rail (~14rem / `w-56`) with hairline right edge; sticky/top header (`h-12`); mobile fixed bottom 4-up tab bar (`min-h-14`) with hairline column rules. Chat Operate packs history | answer+composer | evidence as abutting modules (history `lg:w-72`; evidence as edge drawer). Landing Persuade uses a max-width mosaic (`max-w-6xl`) with a two-column hairline split: brand/CTA module beside a structured-answer demo module.
+- **Sidebar (desktop):** one left sidebar on every product page: logo + wordmark, a collapse toggle, a "New chat" row, the four product links, and Account / Sign in at the bottom. It is 16rem wide and collapses to a 4.25rem icon rail; the choice is saved. On Chat the sidebar also holds the conversation history (search + date-grouped single-line rows, delete on hover/focus) between the links and the account row. Chat history is plugged in through `ChatSidebarContext`, so the shell owns the sidebar and the chat page owns its content.
+- **Sidebar (mobile):** other pages keep the five-item bottom tab bar and a slim top bar. Chat has no tab bar: a menu button in the chat header opens the same sidebar as a left drawer (85% wide, scrim, Esc to close), so the composer gets the full height.
+- **Chat:** sidebar | one centred column (max `3xl`) on a white surface. The header is borderless: menu (mobile), conversation title, language, and a new-chat icon on mobile. Empty state: logo, "What legal question can I help with?", the coverage line, the composer and four suggestion cards, all centred vertically. Once there are messages the composer docks at the bottom. User messages are right-aligned `fill` bubbles; assistant replies are flat text with the logo avatar (hidden on phones) — no card around the answer. The composer is a 24px-radius box with an auto-growing textarea; below it: dictation mic + speech language, a Voice button (opens the voice conversation panel) and a round send button. The character counter only appears under 1,000 characters left.
+- **Pages:** `max-w-6xl` content, 16–32px gutters, one primary action per page header.
+- Touch floor: primary controls ≥ 44px (`min-h-11`), compact controls ≥ 40px.
 
-Rhythm is tight: module body padding `0.75rem`, tab padding `0.4rem 0.65rem`, denser gaps `0.5rem`, primary controls `min-h-11` (44px). Modules abut — prefer shared hairlines over large gutters. Chat scroll and document sheets use thin gray scrollbars.
+**The One Surface Rule.** A card contains content, not other bordered cards. Separate sub-regions with a hairline (`border-t`) or whitespace.
 
-### Named Rules
-**The Abutting Mosaic Rule.** Columns and stacked panels share 1px hairlines; do not float isolated cards in empty mint space.
+## Elevation & Shape
 
-**The Touch Floor Rule.** Primary controls stay at least `min-h-11` (44px); icon-only chrome at least `min-h-10` / `min-w-10`.
-
-## Elevation & Depth
-
-Flat by default. Depth comes from hairline borders, white-on-ash stacking, and occasional `module-fill` / `signal-soft` wells — not drop shadows. Modal/drawer scrims use light black overlays (`bg-black/25`–`/30`). Focus is a 2px near-black ring/outline (`--focus`), offset 2px.
-
-Motion is state-only: color transitions, 200ms panel slide, voice-bar scale animation. Honor `prefers-reduced-motion` (globals collapse animations/transitions).
-
-### Named Rules
-**The Flat Mosaic Rule.** No ambient or multi-layer shadows on modules. If it needs “lift,” use a border or a tonal fill, not a shadow stack.
-
-## Shapes
-
-Near-square geometry. `.module` uses `border-radius: 2px` with 1px `--line` stroke. Primary solid buttons, module tabs, and the “CL” mark are square (`0`). Secondary controls and inputs follow the module corner (`2px` / `rounded-sm`). Avoid pill shapes and large soft radii as identity.
-
-### Named Rules
-**The Square Commitment Rule.** Primary actions and red tabs stay square. Soft large radii (`rounded-2xl`, pills) are outside this world.
+Mostly flat: 1px `line` borders, with `--shadow-soft` on cards and `--shadow-raised` only for floating layers (dropdowns, dialogs, hero demo). Corners: controls 10px, panels 14–18px, composer 16–24px, chips and status badges fully rounded. Native `button`/`input`/`select` default to the control radius in `@layer base`; Tailwind `rounded-*` utilities override it.
 
 ## Components
 
-### Buttons
-- **Shape:** Square primary (`0`); secondary bordered modules (`2px` max).
-- **Primary:** Signal fill, white uppercase bold label (~11–14px), `min-h-11`, horizontal pad ~`1.25rem`. Hover deepens red (`#a01010` where implemented).
-- **Secondary / Ghost:** White fill, hairline border, uppercase bold ink; hover may bring signal border.
-- **Focus:** `focus-visible` ring/outline on `--focus` (`#111111`), offset 2px.
+Reusable classes in `app/globals.css` (`@layer components`, so utilities can override them):
 
-### Module tabs
-- **Style:** Full-bleed or inline signal bar; white 11px bold label; padding `0.4rem 0.65rem`. Names the zone (“Conversations”, “Structured answer”, “Question input”, “Menu”).
-- **Role:** Signature device of the world — every major Operate/Persuade zone should read as a tabbed module.
+- `.btn-primary`, `.btn-secondary` (+ `.btn-sm`): 44px (40px small) buttons/links.
+- `.section-label`: 12px muted caption for a region.
+- `.panel`, `.panel-flat`: standard surface.
+- `.rise-in` (+ `-delay-1…3`): short entrance on landing and empty states; honours `prefers-reduced-motion`.
+- `BrandMark` (`components/layout/BrandMark.tsx`): round ChatLaw logo (same artwork as the favicon, `public/ChatLaw Logo.png`) + wordmark, used by landing, sign-in and shell.
+- `CategoryIcon` (`components/documents/CategoryIcon.tsx`) and `ChatIcons`/`NavIcons`: the only icon sources — stroke SVGs, 1.8 width. No emoji.
 
-### Cards / Containers
-- **Corner Style:** 2px (`.module` / `rounded-sm`).
-- **Background:** White surface on ash ground; nested wells use `module-fill`.
-- **Shadow Strategy:** None — see Elevation.
-- **Border:** 1px `--line`; stacked lists use `hairline-grid` or `divide-y`.
-- **Internal Padding:** `0.75rem` module body; denser `0.5rem` in chrome.
+## Motion
 
-### Inputs / Fields
-- **Style:** Hairline border, white or transparent-in-module fill, body 14px, `min-h-11`.
-- **Focus:** Near-black ring (`--focus`), not a colored glow.
-- **Composer:** Abutting module with red “Question input” tab, textarea + square Send.
-- **Error:** Warn wash/line/ink triad; do not use signal red for errors.
-
-### Navigation
-- **Desktop rail:** White column, red “Menu” tab, uppercase bold labels + 11px hints; active = `signal-soft` wash + signal text; hover = `module-fill`.
-- **Header:** Hairline bottom, brand mark + title, language control, square Sign in.
-- **Mobile:** Four equal cells, hairline separators, 10px uppercase labels, active soft-signal wash.
-
-### Citation chips (signature)
-- Inline bordered soft-signal chips with signal text (`[n]`); hover shifts to `signal-mid`. Sources modules stack as abutting hairline rows with small Act/status plates.
-
-### Brand mark
-- 28×28 (`h-7 w-7`) square signal tile with 10px bold white “CL” beside the ChatLaw wordmark.
+State changes only: 150ms colour/border transitions, 420ms rise-in for first paint, voice-bar scale while recording, `animate-pulse` for loading. No bounce or elastic easing. Reduced-motion collapses all of it.
 
 ## Do's and Don'ts
 
-### Do:
-- **Do** label major zones with `.module-tab` (signal red, white uppercase plate).
-- **Do** pack content into hairline modules on ash/white; abut columns and stacks.
-- **Do** use signal red for tabs, primary CTAs, brand mark, and active emphasis only.
-- **Do** keep the Indic-capable Segoe / Noto stack for all product UI copy.
-- **Do** keep primary controls ≥44px tall and visible near-black focus rings.
-- **Do** honor `prefers-reduced-motion` for voice and panel motion.
+**Do** keep every answer sourced and visible disclaimers on landing, sign-in and the composer. **Do** use `var(--accent)` for emphasis, links and selection. **Do** keep Indic fallbacks in the font stack. **Do** use real icons.
 
-### Don't:
-- **Don't** revive mint grounds, forest green primaries, or warm cream paper as the product palette.
-- **Don't** build sparse ChatGPT-clone chrome or floating soft cards with large radii and shadows.
-- **Don't** use purple/indigo AI gradients, glassmorphism, or glow accents.
-- **Don't** ship Latin-only display typography that breaks Indic scripts.
-- **Don't** treat module tabs as decorative kickers unrelated to the zone’s function.
-- **Don't** use signal red for error/warning — use the warn triad.
+**Don't** add uppercase labels, coloured top bars, nested bordered cards, gradients, glow, or red as a brand colour. **Don't** use `ink-faint` for text users must read. **Don't** invent testimonials, accuracy claims or pricing.

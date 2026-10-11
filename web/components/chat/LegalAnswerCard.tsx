@@ -60,7 +60,7 @@ function CitationReference({
 
       onClick={() => onOpen(citation)}
 
-      className="mx-0.5 inline-flex min-h-7 items-center gap-1 rounded-sm border border-[var(--line)] bg-[var(--signal-soft)] px-2 py-0.5 align-baseline text-xs font-semibold text-[var(--signal)] hover:bg-[var(--signal-mid)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
+      className="mx-0.5 inline-flex min-h-6 items-center rounded-md bg-[var(--accent-soft)] px-1.5 align-baseline text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent-mid)]"
 
       title={citation.document || "Source"}
 
@@ -88,7 +88,7 @@ function renderCitationReferences(
 
 ): ReactNode {
 
-  const parts = text.split(/(\[(\d+)\])/g);
+  const parts = text.split(/(\[\d+\])/g);
 
   return parts.map((part, index) => {
 
@@ -210,7 +210,7 @@ function MarkdownBody({
 
   return (
 
-    <div className="space-y-3 text-[0.95rem] leading-7 [&_a]:font-medium [&_a]:text-[var(--forest)] [&_a]:underline [&_a]:underline-offset-2 [&_li]:ml-5 [&_li]:list-disc [&_ol>li]:list-decimal [&_strong]:font-semibold">
+    <div className="space-y-3 text-[15px] leading-7 [&_a]:font-medium [&_a]:text-[var(--accent)] [&_a]:underline [&_a]:underline-offset-2 [&_li]:ml-5 [&_li]:list-disc [&_ol>li]:list-decimal [&_strong]:font-semibold">
 
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
 
@@ -230,11 +230,9 @@ export function ClarificationCard({ content }: { content: string }) {
 
   return (
 
-    <div className="rounded-sm border border-[var(--line)] bg-[var(--surface)] p-4">
-
-      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--forest)]">Need a bit more</p>
-
-      <p className="mt-3 text-[0.95rem] leading-7">{content}</p>
+    <div>
+      <p className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent)]">Need a bit more</p>
+      <p className="mt-3 text-[15px] leading-7">{content}</p>
 
       <p className="mt-3 text-xs text-[var(--ink-muted)]">Answer this so ChatLaw can retrieve the right legal sources.</p>
 
@@ -282,11 +280,9 @@ export function DocumentDraftCard({
 
   return (
 
-    <div className="rounded-sm border border-[var(--line)] bg-[var(--surface)] p-4">
-
-      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--forest)]">{title}</p>
-
-      <p className="mt-3 text-[0.95rem] leading-7">{content}</p>
+    <div>
+      <p className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent)]">{title}</p>
+      <p className="mt-3 text-[15px] leading-7">{content}</p>
 
       {kind === "document_clarification" ? (
 
@@ -310,7 +306,7 @@ export function DocumentDraftCard({
 
       {kind === "document_unsupported" && templateId ? (
 
-        <Link href={`/documents/new?template=${templateId}`} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-[var(--forest)] underline-offset-2 hover:underline">
+        <Link href={`/documents/new?template=${templateId}`} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-[var(--accent)] underline-offset-2 hover:underline">
 
           Open document builder
 
@@ -322,9 +318,9 @@ export function DocumentDraftCard({
 
         <div className="mt-3 flex flex-wrap gap-3 text-sm">
 
-          <Link href="/documents/new" className="font-semibold text-[var(--forest)] underline-offset-2 hover:underline">Browse templates</Link>
+          <Link href="/documents/new" className="font-semibold text-[var(--accent)] underline-offset-2 hover:underline">Browse templates</Link>
 
-          <Link href="/research" className="font-semibold text-[var(--forest)] underline-offset-2 hover:underline">Open Research</Link>
+          <Link href="/research" className="font-semibold text-[var(--accent)] underline-offset-2 hover:underline">Open Research</Link>
 
         </div>
 
@@ -341,11 +337,11 @@ export function DocumentDraftCard({
 function getRelevanceBadgeClass(level: string): string {
   switch (level) {
     case "Highly relevant":
-      return "bg-[#e8f5e9] text-[#1b5e20] border-[#a5d6a7]";
+      return "bg-[var(--ok-bg)] text-[var(--ok)] border-[var(--ok-line)]";
     case "Relevant":
-      return "bg-[#e3f2fd] text-[#0d47a1] border-[#90caf9]";
+      return "bg-[var(--accent-soft)] text-[var(--accent)] border-[var(--accent-mid)]";
     default:
-      return "bg-[#f5f5f5] text-[#424242] border-[#e0e0e0]";
+      return "bg-[var(--fill)] text-[var(--ink-muted)] border-[var(--line)]";
   }
 }
 
@@ -428,13 +424,9 @@ export function LegalAnswerCard({
 
   return (
 
-    <div className="space-y-3">
-
-      <div className="border border-[var(--line)] bg-[var(--surface)]">
-
-        <div className="module-tab">Structured answer</div>
-
-        <div className="space-y-4 p-3 sm:p-4">
+    <div className="space-y-5">
+      <div>
+        <div className="space-y-5">
 
       {visibleSections.length > 0 ? (
 
@@ -442,7 +434,7 @@ export function LegalAnswerCard({
 
           <section key={`${section.id}-${section.title}`} className="space-y-2">
 
-            <h3 className="text-sm font-bold text-[var(--signal)]">{section.title}</h3>
+            <h3 className="text-base font-semibold tracking-tight">{section.title}</h3>
 
             <MarkdownBody answer={section.body} citations={response.citations} onOpenCitation={onOpenCitation} />
 
@@ -465,10 +457,10 @@ export function LegalAnswerCard({
       {officialJudgments.length > 0 ? (
         <div className="border-t border-[var(--line)] pt-4">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--ink-muted)]">
+            <h3 className="text-xs font-semibold text-[var(--ink-muted)]">
               Relevant Official Judgments
             </h3>
-            <span className="text-[11px] font-medium text-[var(--forest)]">
+            <span className="text-[11px] font-medium text-[var(--accent)]">
               Official Indian Judiciary
             </span>
           </div>
@@ -477,7 +469,7 @@ export function LegalAnswerCard({
               const sourceUrl = isSafeExternalUrl(item.source_url);
               const badgeClass = getRelevanceBadgeClass(item.relevance_level);
               return (
-                <li key={item.id} className="rounded-sm border border-[var(--line)] bg-[var(--background)] p-3 sm:p-4 text-sm space-y-2.5">
+                <li key={item.id} className="rounded-xl border border-[var(--line)] bg-[var(--background)] p-3 sm:p-4 text-sm space-y-2.5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -495,24 +487,24 @@ export function LegalAnswerCard({
                         href={sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="min-h-9 shrink-0 inline-flex items-center rounded-sm border border-[var(--line)] px-3 text-xs font-medium text-[var(--forest)] hover:border-[var(--forest)] bg-white"
+                        className="btn-secondary btn-sm shrink-0"
                       >
                         Official judgment ↗
                       </a>
                     ) : null}
                   </div>
 
-                  <div className="pt-2 text-xs space-y-1.5 border-t border-[var(--line)] text-[var(--ink)]">
+                  <div className="pt-2 text-xs space-y-1.5 border-t border-[var(--line)] text-[var(--foreground)]">
                     <div>
-                      <span className="font-semibold text-[var(--signal)]">Relevant issue: </span>
+                      <span className="font-semibold text-[var(--accent)]">Relevant issue: </span>
                       <span>{item.legal_issue}</span>
                     </div>
                     <div>
-                      <span className="font-semibold text-[var(--signal)]">Relevant law: </span>
+                      <span className="font-semibold text-[var(--accent)]">Relevant law: </span>
                       <span className="text-[var(--ink-muted)]">{item.relevant_law}</span>
                     </div>
                     <div>
-                      <span className="font-semibold text-[var(--signal)]">Why this case is relevant: </span>
+                      <span className="font-semibold text-[var(--accent)]">Why this case is relevant: </span>
                       <span className="leading-5 text-[var(--ink-muted)]">{item.why_relevant}</span>
                     </div>
                     <div className="text-[11px] text-[var(--ink-muted)]">
@@ -526,7 +518,7 @@ export function LegalAnswerCard({
           </ul>
           <Link
             href={`/research?q=${researchQuery}`}
-            className="mt-3 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--forest)] underline-offset-2 hover:underline"
+            className="mt-3 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--accent)] underline-offset-2 hover:underline"
           >
             View all in Research →
           </Link>
@@ -534,12 +526,12 @@ export function LegalAnswerCard({
       ) : showFallback ? (
         <div className="border-t border-[var(--line)] pt-4">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--ink-muted)]">
+            <h3 className="text-xs font-semibold text-[var(--ink-muted)]">
               Relevant cases
             </h3>
             <span className="text-[11px] font-medium text-[var(--ink-muted)]">Official Sources</span>
           </div>
-          <p className="mt-2 text-xs text-[var(--ink-muted)] rounded-sm border border-[var(--line)] bg-[var(--background)] p-3">
+          <p className="mt-2 text-xs text-[var(--ink-muted)] rounded-xl border border-[var(--line)] bg-[var(--background)] p-3">
             No sufficiently relevant judgment was found in the available official case-law sources.
           </p>
         </div>
@@ -549,7 +541,7 @@ export function LegalAnswerCard({
 
       {response.no_relevant_context ? (
 
-        <div className="rounded-sm border border-[var(--line)] bg-[var(--background)] p-3 text-sm">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--background)] p-3 text-sm">
 
           <p className="font-medium">The indexed library does not cover this topic yet.</p>
 
@@ -577,7 +569,7 @@ export function LegalAnswerCard({
 
             href={`/research?q=${researchQuery}`}
 
-            className="inline-flex min-h-10 items-center rounded-sm border border-[var(--line)] px-3 text-xs font-semibold"
+            className="btn-secondary !min-h-10 !px-3.5 !text-[13px]"
 
           >
 
@@ -593,7 +585,7 @@ export function LegalAnswerCard({
 
             href={`/documents/new?template=${template}`}
 
-            className="inline-flex min-h-10 items-center rounded-sm border border-[var(--line)] px-3 text-xs font-semibold"
+            className="btn-secondary !min-h-10 !px-3.5 !text-[13px]"
 
           >
 
@@ -611,7 +603,7 @@ export function LegalAnswerCard({
 
             onClick={() => setShowSimple(true)}
 
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-xs font-semibold"
+            className="btn-secondary !min-h-10 !px-3.5 !text-[13px]"
 
           >
 
@@ -627,7 +619,7 @@ export function LegalAnswerCard({
 
           onClick={() => onAskAnother?.()}
 
-          className="min-h-10 rounded-sm bg-[var(--forest)] px-3 text-xs font-semibold text-white"
+          className="btn-primary !min-h-10 !px-3.5 !text-[13px]"
 
         >
 

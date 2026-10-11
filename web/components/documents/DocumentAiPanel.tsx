@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { STATUS_LABELS } from "@/lib/documents/constants";
 import type { DocumentStatus, DocumentWarning, GeneratedDocumentPayload } from "@/lib/documents/types";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
+import { MicIcon, StopIcon, SpeakerIcon } from "@/components/chat/ChatIcons";
 import {
   AudioRecorderSession,
   chatLanguageToSpeechCode,
@@ -131,7 +132,7 @@ export default function DocumentAiPanel({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4">
         <h2 className="text-sm font-semibold">AI Assistant</h2>
         <p className="mt-1 text-sm text-[var(--ink-muted)]">
           Ask for document revisions by text or voice. Suggestions are previewed before replacing your draft.
@@ -142,17 +143,18 @@ export default function DocumentAiPanel({
             <p className="text-sm text-[var(--ink-muted)]">Examples: &ldquo;Make the termination period 30 days&rdquo; or &ldquo;Add a confidentiality clause.&rdquo;</p>
           ) : (
             messages.map((item, index) => (
-              <div key={`${item.role}-${index}`} className={`rounded-sm px-3 py-2 text-sm ${item.role === "user" ? "bg-[var(--signal-soft)]" : "bg-[var(--module-fill)]"}`}>
+              <div key={`${item.role}-${index}`} className={`rounded-sm px-3 py-2 text-sm ${item.role === "user" ? "bg-[var(--accent-soft)]" : "bg-[var(--fill)]"}`}>
                 <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--ink-muted)]">{item.role === "user" ? "You" : "Assistant"}</p>
+                  <p className="text-[11px] font-semibold text-[var(--ink-muted)]">{item.role === "user" ? "You" : "Assistant"}</p>
                   {item.role === "assistant" && (
                     <button
                       type="button"
                       onClick={() => speakMessage(index, item.content)}
-                      className="text-xs text-[var(--forest)] hover:underline flex items-center gap-1 font-medium"
+                      className="text-xs text-[var(--accent)] hover:underline flex items-center gap-1 font-medium"
                       aria-label={isSpeakingIndex === index ? "Stop reading" : "Read aloud"}
                     >
-                      <span>{isSpeakingIndex === index ? "⏹️ Stop" : "🔊 Listen"}</span>
+                      {isSpeakingIndex === index ? <StopIcon className="h-3.5 w-3.5" /> : <SpeakerIcon className="h-3.5 w-3.5" />}
+                      <span>{isSpeakingIndex === index ? "Stop" : "Listen"}</span>
                     </button>
                   )}
                 </div>
@@ -163,16 +165,16 @@ export default function DocumentAiPanel({
         </div>
 
         {pendingRevise ? (
-          <div className="mt-3 rounded-sm border border-[var(--line)] bg-[#f8faf6] p-3">
+          <div className="mt-3 rounded-xl border border-[var(--line)] bg-[var(--accent-soft)] p-3">
             <p className="text-sm font-medium">Pending document changes</p>
             <p className="mt-1 text-sm text-[var(--ink-muted)]">
               {pendingRevise.sections.length} sections in proposal. Accept to apply locally, then save a version.
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
-              <button type="button" onClick={onAcceptRevise} disabled={busy !== null} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
+              <button type="button" onClick={onAcceptRevise} disabled={busy !== null} className="btn-primary disabled:opacity-60">
                 Accept
               </button>
-              <button type="button" onClick={onRejectRevise} disabled={busy !== null} className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-4 text-sm">
+              <button type="button" onClick={onRejectRevise} disabled={busy !== null} className="btn-secondary">
                 Reject
               </button>
             </div>
@@ -182,7 +184,7 @@ export default function DocumentAiPanel({
         <form onSubmit={submit} className="mt-3 space-y-2">
           <label htmlFor="doc-ai-instruction" className="sr-only">Document change instruction</label>
           <div className="flex flex-wrap gap-1.5 pb-1">
-            <span className="text-[10px] uppercase font-semibold text-[var(--ink-muted)] w-full">Quick suggestions:</span>
+            <span className="text-[11px] font-semibold text-[var(--ink-muted)] w-full">Quick suggestions:</span>
             {[
               "Add a 60-day notice period",
               "Include a pet restriction clause",
@@ -194,7 +196,7 @@ export default function DocumentAiPanel({
                 key={tip}
                 type="button"
                 onClick={() => setInstruction(tip)}
-                className="rounded-xs border border-[var(--line)] bg-[var(--canvas)] px-2 py-1 text-[11px] text-[var(--ink-muted)] hover:border-[var(--forest)] hover:text-[var(--foreground)]"
+                className="rounded-md border border-[var(--line)] bg-[var(--background)] px-2 py-1 text-[11px] text-[var(--ink-muted)] hover:border-[var(--accent)] hover:text-[var(--foreground)]"
               >
                 {tip}
               </button>
@@ -208,13 +210,13 @@ export default function DocumentAiPanel({
               onChange={(event) => setInstruction(event.target.value)}
               rows={3}
               placeholder="Describe the clause change or speak your instruction..."
-              className="w-full rounded-sm border border-[var(--line)] p-3 text-sm focus:border-[var(--forest)] focus:outline-none"
+              className="w-full rounded-sm border border-[var(--line)] p-3 text-sm focus:border-[var(--accent)] focus:outline-none"
               disabled={busy !== null}
             />
           </div>
 
           {voiceError && (
-            <p className="text-xs text-red-600">{voiceError}</p>
+            <p className="text-xs text-[var(--warn)]">{voiceError}</p>
           )}
 
           <div className="flex items-center gap-2">
@@ -224,19 +226,19 @@ export default function DocumentAiPanel({
               disabled={busy !== null}
               className={`min-h-11 rounded-sm px-4 text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 ${
                 isRecording
-                  ? "bg-red-600 text-white animate-pulse"
-                  : "border border-[var(--line)] bg-[var(--canvas)] text-[var(--foreground)] hover:border-[var(--forest)]"
+                  ? "bg-[var(--warn)] text-white animate-pulse"
+                  : "border border-[var(--line)] bg-[var(--background)] text-[var(--foreground)] hover:border-[var(--accent)]"
               }`}
               title={isRecording ? "Stop recording" : "Speak instruction"}
               aria-label={isRecording ? "Stop recording instruction" : "Speak instruction with microphone"}
             >
-              <span>{isRecording ? "⏹️" : "🎙️"}</span>
+              {isRecording ? <StopIcon className="h-4 w-4" /> : <MicIcon className="h-4 w-4" />}
               <span>{isRecording ? "Done" : "Voice"}</span>
             </button>
             <button
               type="submit"
               disabled={busy !== null || !instruction.trim()}
-              className="min-h-11 flex-1 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60"
+              className="btn-primary flex-1 disabled:opacity-60"
             >
               {busy === "revise" ? "Working…" : "Propose targeted changes"}
             </button>
@@ -244,7 +246,7 @@ export default function DocumentAiPanel({
         </form>
       </div>
 
-      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4">
         <h2 className="text-sm font-semibold">Warnings and legal context</h2>
         <ul className="mt-3 space-y-2">
           {(payload.warnings as DocumentWarning[]).map((warning) => (
@@ -265,31 +267,31 @@ export default function DocumentAiPanel({
         ) : null}
       </div>
 
-      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4">
         <h2 className="text-sm font-semibold">Draft status</h2>
         <div className="mt-2 flex items-center gap-2">
-          <span className="rounded-xs bg-[var(--module-fill)] px-2 py-0.5 text-xs font-semibold">{STATUS_LABELS[status]}</span>
+          <span className="rounded-md bg-[var(--fill)] px-2 py-0.5 text-xs font-semibold">{STATUS_LABELS[status]}</span>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
-          <button type="button" onClick={() => onStatus("draft")} className="rounded-xs border border-[var(--line)] px-2.5 py-1 text-xs">
+          <button type="button" onClick={() => onStatus("draft")} className="rounded-md border border-[var(--line)] px-2.5 py-1 text-xs">
             Mark draft
           </button>
-          <button type="button" onClick={() => onStatus("in_review")} className="rounded-xs border border-[var(--line)] px-2.5 py-1 text-xs">
+          <button type="button" onClick={() => onStatus("in_review")} className="rounded-md border border-[var(--line)] px-2.5 py-1 text-xs">
             Mark in review
           </button>
-          <button type="button" onClick={() => onStatus("ready_for_execution")} className="rounded-xs border border-[var(--line)] px-2.5 py-1 text-xs">
+          <button type="button" onClick={() => onStatus("ready_for_execution")} className="rounded-md border border-[var(--line)] px-2.5 py-1 text-xs">
             Mark ready for execution
           </button>
         </div>
       </div>
 
-      <div className="rounded-sm border border-[var(--line)] bg-white p-4">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-4">
         <h2 className="text-sm font-semibold">Version history</h2>
         <ol className="mt-3 space-y-2 text-sm text-[var(--ink-muted)]">
           {versions.map((ver) => (
             <li key={ver.id} className="flex items-center justify-between gap-2">
               <span>v{ver.versionNumber} ({ver.status})</span>
-              <button type="button" onClick={() => onRestore(ver.versionNumber)} className="text-xs text-[var(--forest)] underline">
+              <button type="button" onClick={() => onRestore(ver.versionNumber)} className="text-xs text-[var(--accent)] underline">
                 Restore
               </button>
             </li>

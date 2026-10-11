@@ -26,7 +26,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-3 font-semibold tracking-tight">
-            <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-[var(--forest)] text-xs text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-[var(--accent)] text-xs text-white">
               CL
             </span>
             <span>ChatLaw</span>
@@ -39,7 +39,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded-sm px-3 py-2 text-sm font-medium ${active ? "bg-white text-[var(--forest)]" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
+                  className={`rounded-sm px-3 py-2 text-sm font-medium ${active ? "bg-[var(--surface)] text-[var(--accent)]" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
                 >
                   {link.label}
                 </Link>
@@ -50,7 +50,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
         <div className="flex min-w-0 items-center gap-3">
           <LanguageSelector compact />
           {subtitle ? (
-            <span className="hidden rounded-sm border border-[var(--line)] bg-white px-3 py-1 text-xs font-medium text-[var(--ink-muted)] md:inline">
+            <span className="hidden rounded-sm border border-[var(--line)] bg-[var(--surface)] px-3 py-1 text-xs font-medium text-[var(--ink-muted)] md:inline">
               {subtitle}
             </span>
           ) : null}
@@ -58,7 +58,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-3 text-sm font-medium"
+              className="btn-secondary btn-sm"
             >
               Sign out
             </button>
@@ -66,7 +66,7 @@ export default function AppHeader({ subtitle }: { subtitle?: string }) {
             <button
               type="button"
               onClick={() => signIn("google", { callbackUrl: signInTarget })}
-              className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white"
+              className="btn-primary"
             >
               Sign in
             </button>

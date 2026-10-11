@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import CategoryIcon from "@/components/documents/CategoryIcon";
+
 const EXAMPLE_PROMPTS = [
   {
     label: "Rental Agreement in Coimbatore (₹18,000/mo)",
@@ -36,7 +38,7 @@ const CATEGORIES = [
     title: "Agreements & Contracts",
     description: "Rental agreements, commercial leases, NDAs, employment, founder & loan contracts.",
     badge: "11 Templates",
-    icon: "📄",
+    icon: "agreement",
     examples: "Rental, Lease, NDA, Employment, Loan",
   },
   {
@@ -44,7 +46,7 @@ const CATEGORIES = [
     title: "Deeds & Conveyance",
     description: "Absolute sale deeds, gift deeds, release & relinquishment deeds, General & Special POA.",
     badge: "6 Templates",
-    icon: "📜",
+    icon: "deed",
     examples: "Sale Deed, GPA, SPA, Gift Deed, Release",
   },
   {
@@ -52,7 +54,7 @@ const CATEGORIES = [
     title: "Legal Notices",
     description: "Section 138 cheque bounce demand, tenant eviction notice, and breach cure notices.",
     badge: "4 Templates",
-    icon: "⚖️",
+    icon: "notice",
     examples: "Sec 138 NI Act, Eviction, Demand",
   },
   {
@@ -60,7 +62,7 @@ const CATEGORIES = [
     title: "Complaints & Petitions",
     description: "Consumer forum complaints under CPA 2019, police complaints, and FIR narratives.",
     badge: "2 Templates",
-    icon: "🏛️",
+    icon: "complaint",
     examples: "Consumer Court, Police / FIR",
   },
   {
@@ -68,7 +70,7 @@ const CATEGORIES = [
     title: "Affidavits & Declarations",
     description: "Sworn affidavits for notaries, name change declarations, and indemnity bonds.",
     badge: "3 Templates",
-    icon: "✍️",
+    icon: "affidavit",
     examples: "Name Change, Notary Affidavit, Indemnity",
   },
   {
@@ -76,7 +78,7 @@ const CATEGORIES = [
     title: "Statutory Applications",
     description: "Form A RTI applications under RTI Act 2005, and NALSA free legal aid petitions.",
     badge: "2 Templates",
-    icon: "📋",
+    icon: "application",
     examples: "RTI Form A, NALSA Legal Aid",
   },
 ];
@@ -99,24 +101,23 @@ export default function DocumentsHero() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Hero Conversational Intake Card */}
-      <div className="rounded-sm border border-[var(--line)] bg-white p-6 shadow-xs sm:p-8">
+    <div className="mx-auto w-full max-w-6xl space-y-10">
+      <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[var(--shadow-soft)] sm:p-8">
         <div className="max-w-2xl">
-          <span className="inline-flex items-center rounded-xs bg-[var(--module-fill)] px-2.5 py-1 text-xs font-medium text-[var(--forest)]">
-            AI-Assisted Legal Drafting • Indian Law Models
+          <span className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+            AI-assisted drafting · Indian law templates
           </span>
-          <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-3xl">
+          <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
             What legal document do you need?
           </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-            Describe your document in natural English or Tamil. ChatLaw identifies the model template, extracts terms, asks only necessary clarification questions, and structures an authentic legal draft.
+          <p className="mt-3 text-[15px] leading-7 text-[var(--ink-muted)]">
+            Describe it in plain English or Tamil. ChatLaw picks the matching template, pulls out the terms you gave,
+            asks only what it still needs, and structures a draft you can edit.
           </p>
         </div>
 
-        {/* Input area */}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <div className="relative flex-1">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-start">
+          <div className="flex-1">
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -127,30 +128,23 @@ export default function DocumentsHero() {
                 }
               }}
               rows={3}
+              aria-label="Describe the document you need"
               placeholder="e.g. I need an 11-month rental agreement for my flat in Coimbatore. Rent is ₹18,000/mo, deposit ₹1 Lakh, tenant is Vignesh..."
-              className="w-full resize-none rounded-sm border border-[var(--line)] bg-[var(--canvas)] p-3.5 text-sm text-[var(--foreground)] placeholder:text-[var(--ink-muted)] focus:border-[var(--forest)] focus:bg-white focus:outline-none"
+              className="w-full resize-none rounded-xl border border-[var(--line-strong)] bg-[var(--background)] p-3.5 text-[15px] leading-6 text-[var(--foreground)] placeholder:text-[var(--ink-faint)] focus:border-[var(--accent)] focus:bg-[var(--surface)] focus:outline-none"
             />
-            <div className="mt-1 flex justify-between text-xs text-[var(--ink-muted)]">
-              <span>Supports English & regional terms (e.g. வாடகை ஒப்பந்தம்)</span>
-              <span>Press Ctrl+Enter to start</span>
+            <div className="mt-1.5 flex flex-wrap justify-between gap-x-4 text-xs text-[var(--ink-faint)]">
+              <span>Supports English and regional terms (e.g. வாடகை ஒப்பந்தம்)</span>
+              <span>Ctrl+Enter to start</span>
             </div>
           </div>
-          <div className="flex sm:flex-col sm:justify-start">
-            <button
-              onClick={() => handleStart()}
-              className="flex min-h-11 w-full items-center justify-center rounded-sm bg-[var(--forest)] px-6 text-sm font-semibold text-white shadow-xs hover:opacity-95 focus:outline-none"
-            >
-              Start Drafting
-            </button>
-          </div>
+          <button onClick={() => handleStart()} className="btn-primary w-full sm:w-auto">
+            Start drafting
+          </button>
         </div>
 
-        {/* Quick-Prompt suggestions */}
-        <div className="mt-5 border-t border-[var(--line)] pt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-[var(--ink-muted)]">
-            Common Quick Starts:
-          </p>
-          <div className="mt-2.5 flex flex-wrap gap-2">
+        <div className="mt-6 border-t border-[var(--line)] pt-5">
+          <p className="text-xs font-semibold text-[var(--ink-muted)]">Quick starts</p>
+          <div className="mt-3 flex flex-wrap gap-2">
             {EXAMPLE_PROMPTS.map((item) => (
               <button
                 key={item.label}
@@ -158,54 +152,44 @@ export default function DocumentsHero() {
                   setPrompt(item.prompt);
                   handleStart(item.prompt);
                 }}
-                className="rounded-xs border border-[var(--line)] bg-[var(--module-fill)] px-2.5 py-1.5 text-xs text-[var(--foreground)] hover:border-[var(--forest)] hover:bg-white transition-colors"
+                className="min-h-9 rounded-full border border-[var(--line-strong)] bg-[var(--surface)] px-3.5 text-[13px] text-[var(--foreground)] hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]"
               >
                 {item.label}
               </button>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Category Quick-Start Cards */}
-      <div>
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
-              Document Categories
-            </h3>
-            <p className="text-xs text-[var(--ink-muted)]">
-              Select a category to browse templates or start a targeted legal draft
-            </p>
-          </div>
-        </div>
+      <section aria-labelledby="doc-categories">
+        <h3 id="doc-categories" className="text-xl font-semibold tracking-tight">
+          Browse by category
+        </h3>
+        <p className="mt-1 text-sm text-[var(--ink-muted)]">Pick a category to see its templates, or start a targeted draft.</p>
 
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CATEGORIES.map((cat) => (
-            <div
+            <button
               key={cat.id}
+              type="button"
               onClick={() => handleCategoryClick(cat.id)}
-              className="group cursor-pointer rounded-sm border border-[var(--line)] bg-white p-5 transition-all hover:border-[var(--forest)] hover:shadow-xs"
+              className="group flex flex-col rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5 text-left shadow-[var(--shadow-soft)] hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-raised)]"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">{cat.icon}</span>
-                <span className="rounded-xs bg-[var(--module-fill)] px-2 py-0.5 text-xs font-medium text-[var(--ink-muted)] group-hover:text-[var(--forest)]">
+              <span className="flex items-center justify-between">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
+                  <CategoryIcon kind={cat.icon} className="h-5 w-5" />
+                </span>
+                <span className="rounded-full bg-[var(--fill)] px-2.5 py-0.5 text-xs font-medium text-[var(--ink-muted)]">
                   {cat.badge}
                 </span>
-              </div>
-              <h4 className="mt-3 text-base font-semibold text-[var(--foreground)] group-hover:text-[var(--forest)]">
-                {cat.title}
-              </h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--ink-muted)]">
-                {cat.description}
-              </p>
-              <div className="mt-3 border-t border-[var(--line)] pt-2.5 text-xs text-[var(--ink-muted)]">
-                <span className="font-medium text-[var(--foreground)]">Formats:</span> {cat.examples}
-              </div>
-            </div>
+              </span>
+              <span className="mt-4 text-base font-semibold group-hover:text-[var(--accent)]">{cat.title}</span>
+              <span className="mt-1.5 text-sm leading-6 text-[var(--ink-muted)]">{cat.description}</span>
+              <span className="mt-4 border-t border-[var(--line)] pt-3 text-xs text-[var(--ink-faint)]">{cat.examples}</span>
+            </button>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

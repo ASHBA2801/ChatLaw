@@ -3,6 +3,37 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { DISCLAIMER } from "../constants";
 import type { GeneratedDocumentPayload } from "../types";
 
+const WIN_ANSI_EXTRA = new Set("€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ");
+
+/**
+ * The built-in PDF fonts only cover WinAnsi (Latin). Replace the rupee sign, drop everything
+ * else that cannot be encoded (e.g. Tamil script glosses) and tidy what is left behind.
+ */
+export function toWinAnsi(text: string): string {
+  const out = (text ?? "")
+    .replace(/₹/g, "Rs. ")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/\t/g, " ")
+    .split("")
+    .filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return ch === "\n" || (code >= 0x20 && code <= 0x7e) || (code >= 0xa0 && code <= 0xff) || WIN_ANSI_EXTRA.has(ch);
+    })
+    .join("");
+  return out
+    .replace(/\(\s*\)/g, "")
+    .replace(/ +([:;,.])/g, "$1")
+    .replace(/\s+\/\s+-\s*/g, " - ")
+    .replace(/\s+\/\s*(?=[,.;:)\n]|$)/gm, "")
+    .replace(/\s+-\s*(?=[,.;:)\n]|$)/gm, "")
+    .replace(/[ ]{2,}/g, " ")
+    .replace(/[ ]+\n/g, "\n")
+    .replace(/^\s*[/|,;:-]+\s*$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 function wrap(
   text: string,
   font: { widthOfTextAtSize: (text: string, size: number) => number },
@@ -61,7 +92,7 @@ export async function buildPdf(payload: GeneratedDocumentPayload): Promise<Uint8
     align: "left" | "center" = "left",
     color = ink,
   ) => {
-    for (const line of wrap(text, face, size, maxWidth)) {
+    for (const line of wrap(toWinAnsi(text), face, size, maxWidth)) {
       if (y < bottomThreshold) addPage();
       if (line) {
         let x = margin;
@@ -114,7 +145,7 @@ export async function buildPdf(payload: GeneratedDocumentPayload): Promise<Uint8
       );
     } else {
       y -= 4;
-      const heading = `${section.number}. ${section.title}`;
+      const heading = `${section.number}. ${section.title.replace(/^\d+\.\s*/, "")}`;
       write(heading, 11, bold, 6, "left");
     }
 

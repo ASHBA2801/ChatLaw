@@ -15,6 +15,8 @@ import { getTemplate, listTemplates } from "@/lib/documents/templates";
 import type { DocumentValues, TemplateSpec } from "@/lib/documents/types";
 import { validateValues } from "@/lib/documents/validation";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
+import CategoryIcon from "@/components/documents/CategoryIcon";
+import { MicIcon, StopIcon, SpeakerIcon } from "@/components/chat/ChatIcons";
 import {
   AudioRecorderSession,
   isAudioRecordingSupported,
@@ -300,7 +302,7 @@ export default function ConversationalDrafting() {
       {/* View Toggle Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
             New Legal Document
           </h1>
           <p className="mt-1 text-sm text-[var(--ink-muted)]">
@@ -308,28 +310,28 @@ export default function ConversationalDrafting() {
           </p>
         </div>
 
-        <div className="flex rounded-sm border border-[var(--line)] bg-[var(--module-fill)] p-1">
+        <div className="flex rounded-sm border border-[var(--line)] bg-[var(--fill)] p-1">
           <button
             type="button"
             onClick={() => setMode("conversational")}
-            className={`rounded-xs px-3.5 py-1.5 text-xs font-medium transition-colors ${
+            className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
               mode === "conversational"
-                ? "bg-white text-[var(--foreground)] shadow-xs"
+                ? "bg-[var(--surface)] text-[var(--foreground)] shadow-xs"
                 : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"
             }`}
           >
-            💬 Conversational Drafter
+            Conversational drafter
           </button>
           <button
             type="button"
             onClick={() => setMode("form")}
-            className={`rounded-xs px-3.5 py-1.5 text-xs font-medium transition-colors ${
+            className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
               mode === "form"
-                ? "bg-white text-[var(--foreground)] shadow-xs"
+                ? "bg-[var(--surface)] text-[var(--foreground)] shadow-xs"
                 : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"
             }`}
           >
-            📋 Manual Form
+            Manual form
           </button>
         </div>
       </div>
@@ -339,11 +341,11 @@ export default function ConversationalDrafting() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           {/* Main Conversational Thread */}
-          <div className="flex min-h-[580px] flex-col rounded-sm border border-[var(--line)] bg-white shadow-xs">
+          <div className="flex min-h-[580px] flex-col rounded-sm border border-[var(--line)] bg-[var(--surface)] shadow-xs">
             {/* Thread Header */}
-            <div className="border-b border-[var(--line)] px-5 py-3.5 flex items-center justify-between bg-[var(--module-fill)]">
+            <div className="border-b border-[var(--line)] px-5 py-3.5 flex items-center justify-between bg-[var(--fill)]">
               <div className="flex items-center gap-2">
-                <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-600 animate-pulse" />
+                <span className="flex h-2.5 w-2.5 rounded-full bg-[var(--ok)] animate-pulse" />
                 <span className="text-xs font-semibold text-[var(--foreground)]">
                   ChatLaw Legal Drafting Engine
                 </span>
@@ -354,12 +356,12 @@ export default function ConversationalDrafting() {
                     type="checkbox"
                     checked={autoSpeakQuestions}
                     onChange={(e) => setAutoSpeakQuestions(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-[var(--line)] text-[var(--forest)]"
+                    className="h-3.5 w-3.5 rounded border-[var(--line)] text-[var(--accent)]"
                   />
-                  <span>🔊 Spoken questions</span>
+                  <span>Spoken questions</span>
                 </label>
                 {activeTemplate && (
-                  <span className="rounded-xs bg-white px-2 py-0.5 text-xs font-medium text-[var(--forest)] border border-[var(--line)]">
+                  <span className="rounded-md bg-[var(--surface)] px-2 py-0.5 text-xs font-medium text-[var(--accent)] border border-[var(--line)]">
                     {activeTemplate.documentType}
                   </span>
                 )}
@@ -370,8 +372,8 @@ export default function ConversationalDrafting() {
             <div className="flex-1 space-y-4 overflow-y-auto p-5">
               {messages.length === 0 ? (
                 <div className="py-12 text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--module-fill)] text-2xl">
-                    ⚖️
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
+                    <CategoryIcon kind="notice" className="h-6 w-6" />
                   </div>
                   <h3 className="mt-3 text-base font-semibold text-[var(--foreground)]">
                     Describe what legal document you need
@@ -389,8 +391,8 @@ export default function ConversationalDrafting() {
                     <div
                       className={`max-w-[85%] rounded-sm p-4 text-sm leading-relaxed ${
                         msg.role === "user"
-                          ? "bg-[var(--forest)] text-white"
-                          : "border border-[var(--line)] bg-[var(--canvas)] text-[var(--foreground)] whitespace-pre-wrap"
+                          ? "bg-[var(--accent)] text-white"
+                          : "border border-[var(--line)] bg-[var(--background)] text-[var(--foreground)] whitespace-pre-wrap"
                       }`}
                     >
                       {msg.content}
@@ -400,10 +402,11 @@ export default function ConversationalDrafting() {
                         <button
                           type="button"
                           onClick={() => speakMessage(msg.id, msg.content)}
-                          className="text-xs font-medium text-[var(--forest)] hover:underline flex items-center gap-1"
+                          className="text-xs font-medium text-[var(--accent)] hover:underline flex items-center gap-1"
                           aria-label={isSpeaking === msg.id ? "Stop reading" : "Read aloud"}
                         >
-                          <span>{isSpeaking === msg.id ? "⏹️ Stop" : "🔊 Listen"}</span>
+                          {isSpeaking === msg.id ? <StopIcon className="h-3.5 w-3.5" /> : <SpeakerIcon className="h-3.5 w-3.5" />}
+                          <span>{isSpeaking === msg.id ? "Stop" : "Listen"}</span>
                         </button>
                       </div>
                     )}
@@ -413,8 +416,8 @@ export default function ConversationalDrafting() {
 
               {busy && (
                 <div className="flex justify-start">
-                  <div className="rounded-sm border border-[var(--line)] bg-[var(--canvas)] px-4 py-3 text-xs text-[var(--ink-muted)] flex items-center gap-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-[var(--forest)] animate-bounce" />
+                  <div className="rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--ink-muted)] flex items-center gap-2">
+                    <span className="inline-block h-2 w-2 rounded-full bg-[var(--accent)] animate-pulse" />
                     Analyzing legal requirements & extracting terms...
                   </div>
                 </div>
@@ -424,9 +427,9 @@ export default function ConversationalDrafting() {
             </div>
 
             {/* Input Box with Voice & Text */}
-            <div className="border-t border-[var(--line)] p-4 bg-white">
+            <div className="border-t border-[var(--line)] p-4 bg-[var(--surface)]">
               {error && (
-                <div className="mb-3 rounded-xs border border-red-200 bg-red-50 p-2.5 text-xs text-red-700">
+                <div className="mb-3 rounded-md border border-[var(--warn-line)] bg-[var(--warn-bg)] p-2.5 text-xs text-[var(--warn)]">
                   {error}
                 </div>
               )}
@@ -436,19 +439,25 @@ export default function ConversationalDrafting() {
                   e.preventDefault();
                   void sendPrompt(inputMessage);
                 }}
-                className="flex items-center gap-2"
+                className="flex items-end gap-2"
               >
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                      e.preventDefault();
+                      if (!busy && !generating && inputMessage.trim()) void sendPrompt(inputMessage);
+                    }
+                  }}
                   placeholder={
                     activeTemplate
-                      ? "Reply with missing details (or use microphone)..."
+                      ? "Reply with missing details (Shift+Enter for a new line)..."
                       : "e.g. Rental agreement for Coimbatore flat at ₹18,000/mo..."
                   }
                   disabled={busy || generating}
-                  className="flex-1 rounded-sm border border-[var(--line)] bg-[var(--canvas)] px-3.5 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--ink-muted)] focus:border-[var(--forest)] focus:bg-white focus:outline-none"
+                  className="max-h-40 min-h-11 flex-1 resize-none rounded-lg border border-[var(--line)] bg-[var(--background)] px-3.5 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:bg-[var(--surface)] focus:outline-none"
                 />
                 <button
                   type="button"
@@ -456,19 +465,19 @@ export default function ConversationalDrafting() {
                   disabled={busy || generating}
                   className={`min-h-10 rounded-sm px-3.5 py-2 text-sm font-semibold transition-colors flex items-center gap-1.5 ${
                     isRecording
-                      ? "bg-red-600 text-white animate-pulse"
-                      : "border border-[var(--line)] bg-[var(--canvas)] text-[var(--foreground)] hover:border-[var(--forest)]"
+                      ? "bg-[var(--warn)] text-white animate-pulse"
+                      : "border border-[var(--line)] bg-[var(--background)] text-[var(--foreground)] hover:border-[var(--accent)]"
                   }`}
                   title={isRecording ? "Stop recording" : "Speak your answers"}
                   aria-label={isRecording ? "Stop voice recording" : "Start voice recording"}
                 >
-                  <span>{isRecording ? "⏹️" : "🎙️"}</span>
+                  {isRecording ? <StopIcon className="h-4 w-4" /> : <MicIcon className="h-4 w-4" />}
                   <span className="hidden sm:inline">{isRecording ? "Done" : "Voice"}</span>
                 </button>
                 <button
                   type="submit"
                   disabled={busy || !inputMessage.trim() || generating}
-                  className="rounded-sm bg-[var(--forest)] px-5 py-2.5 text-sm font-semibold text-white hover:opacity-95 disabled:opacity-50"
+                  className="btn-primary disabled:opacity-50"
                 >
                   Send
                 </button>
@@ -478,7 +487,7 @@ export default function ConversationalDrafting() {
 
           {/* Right Sidebar: Extracted Legal Slots & Generation Control */}
           <div className="space-y-4">
-            <div className="rounded-sm border border-[var(--line)] bg-white p-5 shadow-xs">
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-5 shadow-xs">
               <h3 className="text-sm font-semibold text-[var(--foreground)] border-b border-[var(--line)] pb-2.5">
                 Draft Specification
               </h3>
@@ -486,21 +495,21 @@ export default function ConversationalDrafting() {
               {activeTemplate ? (
                 <div className="mt-3.5 space-y-3.5">
                   <div>
-                    <span className="text-xs uppercase tracking-wider text-[var(--ink-muted)] font-medium">
+                    <span className="text-xs tracking-wider text-[var(--ink-muted)] font-medium">
                       Identified Model
                     </span>
                     <p className="mt-0.5 text-sm font-semibold text-[var(--foreground)]">
                       {activeTemplate.title}
                     </p>
                     {activeTemplate.source && (
-                      <p className="mt-0.5 text-xs text-[var(--forest)]">
+                      <p className="mt-0.5 text-xs text-[var(--accent)]">
                         Model: {activeTemplate.source.authority}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <span className="text-xs uppercase tracking-wider text-[var(--ink-muted)] font-medium">
+                    <span className="text-xs tracking-wider text-[var(--ink-muted)] font-medium">
                       Jurisdiction
                     </span>
                     <p className="mt-0.5 text-xs text-[var(--foreground)]">
@@ -510,7 +519,7 @@ export default function ConversationalDrafting() {
 
                   {/* Recorded parameters summary */}
                   <div>
-                    <span className="text-xs uppercase tracking-wider text-[var(--ink-muted)] font-medium">
+                    <span className="text-xs tracking-wider text-[var(--ink-muted)] font-medium">
                       Recorded Parameters
                     </span>
                     <div className="mt-1.5 space-y-1.5 max-h-48 overflow-y-auto text-xs">
@@ -520,7 +529,7 @@ export default function ConversationalDrafting() {
                           const field = activeTemplate.fields.find((f) => f.id === k);
                           const label = field?.label || k.replace(/_/g, " ");
                           return (
-                            <div key={k} className="flex justify-between rounded-xs bg-[var(--canvas)] p-2">
+                            <div key={k} className="flex justify-between rounded-md bg-[var(--background)] p-2">
                               <span className="font-medium text-[var(--foreground)]">{label}:</span>
                               <span className="text-[var(--ink-muted)] truncate max-w-[140px] text-right">
                                 {typeof v === "number" && (k.includes("rent") || k.includes("deposit") || k.includes("salary") || k.includes("price") || k.includes("amount"))
@@ -535,21 +544,21 @@ export default function ConversationalDrafting() {
 
                   {/* Required Checklist Status */}
                   <div className="pt-2 border-t border-[var(--line)]">
-                    <span className="text-xs uppercase tracking-wider text-[var(--ink-muted)] font-medium">
+                    <span className="text-xs tracking-wider text-[var(--ink-muted)] font-medium">
                       Draft Completeness
                     </span>
                     {validation && (
                       <div className="mt-2 space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
                           <span>Required items:</span>
-                          <span className={validation.canGenerate ? "font-semibold text-emerald-700" : "font-semibold text-amber-700"}>
+                          <span className={validation.canGenerate ? "font-semibold text-[var(--ok)]" : "font-semibold text-[var(--caution)]"}>
                             {validation.canGenerate
                               ? "Ready to draft"
                               : `${validation.blocking.length} missing`}
                           </span>
                         </div>
                         {validation.blocking.length > 0 && (
-                          <div className="mt-1 space-y-1 text-xs text-amber-800 bg-amber-50 rounded-xs p-2">
+                          <div className="mt-1 space-y-1 text-xs text-[var(--caution)] bg-[var(--caution-bg)] rounded-md p-2">
                             <span className="font-medium">Needed:</span>
                             {validation.blocking.slice(0, 3).map((b) => (
                               <p key={b.fieldId}>• {b.message}</p>
@@ -566,7 +575,7 @@ export default function ConversationalDrafting() {
                       type="button"
                       onClick={() => void handleGenerateDocument()}
                       disabled={generating || busy}
-                      className="w-full flex items-center justify-center gap-2 rounded-sm bg-[var(--forest)] py-3 px-4 text-sm font-semibold text-white shadow-xs hover:opacity-95 disabled:opacity-50"
+                      className="btn-primary w-full disabled:opacity-50"
                     >
                       {generating ? (
                         <>
@@ -574,7 +583,7 @@ export default function ConversationalDrafting() {
                           Generating Draft...
                         </>
                       ) : (
-                        "✨ Generate Legal Document Draft"
+                        "Generate document draft"
                       )}
                     </button>
                     <p className="mt-2 text-center text-xs text-[var(--ink-muted)]">
@@ -590,7 +599,7 @@ export default function ConversationalDrafting() {
             </div>
 
             {/* Legal Safety Notice */}
-            <div className="rounded-sm border border-[var(--line)] bg-[var(--module-fill)] p-4 text-xs leading-5 text-[var(--ink-muted)]">
+            <div className="rounded-sm border border-[var(--line)] bg-[var(--fill)] p-4 text-xs leading-5 text-[var(--ink-muted)]">
               <span className="font-medium text-[var(--foreground)]">Legal Notice:</span> AI-assisted drafts provide structural models under Indian law. They are not legal advice and do not constitute an official court filing.
             </div>
           </div>

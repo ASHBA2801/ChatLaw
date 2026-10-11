@@ -14,7 +14,7 @@ export default async function CasePage({ params }: { params: Promise<{ id: strin
   const publicItem = toPublicCase(item);
   return (
     <section className="mx-auto w-full max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
-      <Link href="/cases" className="text-sm font-medium text-[var(--forest)] underline-offset-2 hover:underline">
+      <Link href="/cases" className="text-sm font-medium text-[var(--accent)] underline-offset-2 hover:underline">
         ← All cases
       </Link>
       <div className="mt-5">

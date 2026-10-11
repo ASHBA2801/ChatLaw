@@ -21,3 +21,4 @@ services:
 
 volumes:
   chatlaw_redisdata:
+    name: chatlaw_redisdata

@@ -51,16 +51,16 @@ export default function SelectionAiBar({
 
   if (pending) {
     return (
-      <div className="rounded-sm border border-[var(--line)] bg-[#f8faf6] p-3" role="region" aria-label="AI suggestion preview">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--ink-muted)]">Suggestion preview</p>
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--accent-soft)] p-3" role="region" aria-label="AI suggestion preview">
+        <p className="text-xs font-semibold text-[var(--ink-muted)]">Suggestion preview</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
           <div>
             <p className="text-xs text-[var(--ink-muted)]">Selected</p>
-            <p className="mt-1 whitespace-pre-wrap rounded-sm border border-[var(--line)] bg-white p-2 font-serif text-sm">{pending.original}</p>
+            <p className="mt-1 whitespace-pre-wrap rounded-sm border border-[var(--line)] bg-[var(--surface)] p-2 font-serif text-sm">{pending.original}</p>
           </div>
           <div>
             <p className="text-xs text-[var(--ink-muted)]">{pending.action === "explain" ? "Explanation" : "Suggested"}</p>
-            <p className="mt-1 whitespace-pre-wrap rounded-sm border border-[var(--line)] bg-white p-2 font-serif text-sm">
+            <p className="mt-1 whitespace-pre-wrap rounded-sm border border-[var(--line)] bg-[var(--surface)] p-2 font-serif text-sm">
               {pending.action === "explain" ? pending.explanation : pending.suggestion || pending.explanation}
             </p>
           </div>
@@ -75,14 +75,14 @@ export default function SelectionAiBar({
         ) : null}
         <div className="mt-3 flex flex-wrap gap-2">
           {pending.action !== "explain" ? (
-            <button type="button" onClick={onAccept} disabled={busy || !pending.suggestion} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
+            <button type="button" onClick={onAccept} disabled={busy || !pending.suggestion} className="btn-primary disabled:opacity-60">
               Accept
             </button>
           ) : null}
-          <button type="button" onClick={onReject} disabled={busy} className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-4 text-sm">
+          <button type="button" onClick={onReject} disabled={busy} className="btn-secondary">
             Reject
           </button>
-          <button type="button" onClick={onRegenerate} disabled={busy} className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-4 text-sm">
+          <button type="button" onClick={onRegenerate} disabled={busy} className="btn-secondary">
             {busy ? "Working…" : "Regenerate"}
           </button>
         </div>
@@ -93,8 +93,8 @@ export default function SelectionAiBar({
   if (!hasSelection) return null;
 
   return (
-    <div className="rounded-sm border border-[var(--line)] bg-white p-3" role="toolbar" aria-label="Selected text AI actions">
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--ink-muted)]">AI edit selection</p>
+    <div className="rounded-sm border border-[var(--line)] bg-[var(--surface)] p-3" role="toolbar" aria-label="Selected text AI actions">
+      <p className="text-xs font-semibold text-[var(--ink-muted)]">AI edit selection</p>
       <div className="mt-2 flex flex-wrap gap-2">
         {ACTIONS.map((action) => (
           <button
@@ -102,7 +102,7 @@ export default function SelectionAiBar({
             type="button"
             disabled={disabled || busy}
             onClick={() => onAction(action.id)}
-            className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-sm disabled:opacity-50"
+            className="btn-secondary btn-sm disabled:opacity-50"
           >
             {action.label}
           </button>
@@ -127,7 +127,7 @@ export default function SelectionAiBar({
           disabled={disabled || busy}
           className="min-h-11 flex-1 rounded-sm border border-[var(--line)] px-3 text-sm"
         />
-        <button type="submit" disabled={disabled || busy || !custom.trim()} className="min-h-11 rounded-sm bg-[var(--forest)] px-4 text-sm font-semibold text-white disabled:opacity-60">
+        <button type="submit" disabled={disabled || busy || !custom.trim()} className="btn-primary disabled:opacity-60">
           Apply
         </button>
       </form>

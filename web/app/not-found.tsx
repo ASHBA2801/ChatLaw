@@ -2,35 +2,22 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="mx-auto flex min-h-[60vh] max-w-lg flex-col justify-center px-4 py-16 sm:px-6">
-      <div className="border border-[var(--line)] bg-[var(--surface)]">
-        <div className="module-tab">ChatLaw</div>
-        <div className="p-5">
-          <h1 className="text-2xl font-bold tracking-tight">Page not found</h1>
-          <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
-            That link may be outdated or mistyped. Try one of the main workspaces below.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link
-              href="/chat"
-              className="inline-flex min-h-11 items-center bg-[var(--signal)] px-4 text-xs font-bold uppercase tracking-wide text-white"
-            >
-              Open Chat
-            </Link>
-            <Link
-              href="/research"
-              className="inline-flex min-h-11 items-center border border-[var(--line)] bg-white px-4 text-xs font-bold uppercase tracking-wide text-[var(--foreground)]"
-            >
-              Research
-            </Link>
-            <Link
-              href="/cases"
-              className="inline-flex min-h-11 items-center border border-[var(--line)] bg-white px-4 text-xs font-bold uppercase tracking-wide text-[var(--foreground)]"
-            >
-              My cases
-            </Link>
-          </div>
-        </div>
+    <main className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16 sm:px-6">
+      <p className="text-sm font-semibold text-[var(--accent)]">404</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight">Page not found</h1>
+      <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
+        That link may be outdated or mistyped. Try one of the main workspaces instead.
+      </p>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <Link href="/chat" className="btn-primary">
+          Open Chat
+        </Link>
+        <Link href="/research" className="btn-secondary">
+          Research
+        </Link>
+        <Link href="/cases" className="btn-secondary">
+          My cases
+        </Link>
       </div>
     </main>
   );

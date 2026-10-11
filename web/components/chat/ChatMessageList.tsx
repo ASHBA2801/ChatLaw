@@ -2,6 +2,7 @@
 
 import { memo, useMemo } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import type { ChatResponse, StoredMessage } from "@/lib/api/rag";
 import type { UseAnswerPlaybackResult } from "@/lib/speech/useAnswerPlayback";
 import type { ChatInputMode } from "@/lib/speech/types";
@@ -111,6 +112,18 @@ function responseFromStoredMessage(message: ChatMessage): ChatResponse | undefin
   };
 }
 
+function AssistantAvatar() {
+  return (
+    <Image
+      src="/ChatLaw Logo.png"
+      alt=""
+      width={56}
+      height={56}
+      className="mt-0.5 h-7 w-7 shrink-0 rounded-full object-contain max-sm:hidden"
+    />
+  );
+}
+
 type ChatMessageItemProps = {
   message: ChatMessage;
   priorUserText: string;
@@ -137,45 +150,50 @@ const ChatMessageItem = memo(function ChatMessageItem({
   const response =
     message.role === "assistant" ? message.response || responseFromStoredMessage(message) : undefined;
 
+  if (message.role === "user") {
+    return (
+      <article className="ml-auto w-fit max-w-[88%] rounded-3xl bg-[var(--fill)] px-5 py-3 text-[15px] text-[var(--foreground)] sm:max-w-[80%] [content-visibility:auto]">
+        <p className="whitespace-pre-wrap leading-6">{message.content}</p>
+      </article>
+    );
+  }
+
   return (
-    <article
-      className={
-        message.role === "user"
-          ? "ml-auto w-full max-w-[96%] rounded-sm rounded-br-md bg-[var(--forest)] px-4 py-3 text-sm text-white sm:max-w-[80%] [content-visibility:auto]"
-          : `w-full rounded-sm rounded-bl-md border px-4 py-4 text-[var(--foreground)] [content-visibility:auto] ${message.error ? "border-[var(--warn-line)] bg-[var(--warn-bg)]" : "border-[var(--line)] bg-white"}`
-      }
-    >
-      {message.role === "user" ? (
-        <p className="whitespace-pre-wrap leading-6">{message.content}</p>
-      ) : message.error ? (
-        <div role="alert">
-          <p className="leading-6">{message.content}</p>
-        </div>
-      ) : response?.response_kind === "clarification" ? (
-        <ClarificationCard content={message.content} />
-      ) : response?.response_kind === "document_clarification" ||
-        response?.response_kind === "document_ready" ||
-        response?.response_kind === "document_unsupported" ? (
-        <DocumentDraftCard
-          content={message.content}
-          response={response}
-          generating={response.response_kind === "document_ready" && draftGenerating}
-        />
-      ) : response ? (
-        <LegalAnswerCard
-          messageId={message.id}
-          content={message.content}
-          response={response}
-          priorUserText={priorUserText}
-          onOpenCitation={onOpenCitation}
-          onAskAnother={onAskAnother}
-          playback={playback}
-          chatMode={chatMode}
-          disabledPlayback={isLoading || speechListening}
-        />
-      ) : (
-        <p className="whitespace-pre-wrap leading-6">{message.content}</p>
-      )}
+    <article className="flex w-full gap-3 text-[var(--foreground)] [content-visibility:auto]">
+      <AssistantAvatar />
+      <div
+        className={`min-w-0 flex-1 ${message.error ? "rounded-2xl border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-[var(--warn)]" : ""}`}
+      >
+        {message.error ? (
+          <div role="alert">
+            <p className="leading-6">{message.content}</p>
+          </div>
+        ) : response?.response_kind === "clarification" ? (
+          <ClarificationCard content={message.content} />
+        ) : response?.response_kind === "document_clarification" ||
+          response?.response_kind === "document_ready" ||
+          response?.response_kind === "document_unsupported" ? (
+          <DocumentDraftCard
+            content={message.content}
+            response={response}
+            generating={response.response_kind === "document_ready" && draftGenerating}
+          />
+        ) : response ? (
+          <LegalAnswerCard
+            messageId={message.id}
+            content={message.content}
+            response={response}
+            priorUserText={priorUserText}
+            onOpenCitation={onOpenCitation}
+            onAskAnother={onAskAnother}
+            playback={playback}
+            chatMode={chatMode}
+            disabledPlayback={isLoading || speechListening}
+          />
+        ) : (
+          <p className="whitespace-pre-wrap leading-6">{message.content}</p>
+        )}
+      </div>
     </article>
   );
 });
@@ -206,7 +224,7 @@ const ChatMessageList = memo(function ChatMessageList({
   const priorUserTexts = useMemo(() => buildPriorUserTexts(messages), [messages]);
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       {messages.map((message, index) => (
         <ChatMessageItem
           key={message.id}
@@ -222,11 +240,13 @@ const ChatMessageList = memo(function ChatMessageList({
         />
       ))}
       {isLoading && (
-        <div
-          className="w-full rounded-sm rounded-bl-md border border-[var(--line)] bg-white px-4 py-4 text-sm text-[var(--ink-muted)]"
-          role="status"
-          aria-busy="true"
-        >
+        <div className="flex w-full items-center gap-3 text-sm text-[var(--ink-muted)]" role="status" aria-busy="true">
+          <AssistantAvatar />
+          <span aria-hidden="true" className="flex gap-1">
+            <span className="voice-bar h-3 w-1 rounded-full bg-[var(--accent)]" />
+            <span className="voice-bar voice-bar-delay-1 h-3 w-1 rounded-full bg-[var(--accent)]" />
+            <span className="voice-bar voice-bar-delay-2 h-3 w-1 rounded-full bg-[var(--accent)]" />
+          </span>
           {loadingStepLabel}
         </div>
       )}

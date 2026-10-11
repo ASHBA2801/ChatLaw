@@ -24,7 +24,7 @@ export default function TemplateField({
   const describedBy = [error ? `${field.id}-error` : null, recommended ? `${field.id}-hint` : null, field.help ? `${field.id}-help` : null]
     .filter(Boolean)
     .join(" ") || undefined;
-  const className = `min-h-11 w-full rounded-sm border bg-white px-3 text-sm text-[var(--foreground)] ${error ? "border-[#8a3b2b]" : "border-[var(--line)]"}`;
+  const className = `min-h-11 w-full rounded-sm border bg-[var(--surface)] px-3 text-sm text-[var(--foreground)] ${error ? "border-[var(--warn)]" : "border-[var(--line)]"}`;
 
   if (field.type === "checkbox") {
     return (
@@ -37,7 +37,7 @@ export default function TemplateField({
             checked={Boolean(value)}
             onChange={(event) => onChange(field.id, event.target.checked)}
             aria-describedby={describedBy}
-            className="mt-1 h-4 w-4 accent-[var(--forest)]"
+            className="mt-1 h-4 w-4 accent-[var(--accent)]"
           />
           <span>
             <span className="font-medium">{field.label}</span>
@@ -45,7 +45,7 @@ export default function TemplateField({
           </span>
         </label>
         {field.help ? <p id={`${field.id}-help`} className="text-xs text-[var(--ink-muted)]">{field.help}</p> : null}
-        {error ? <p id={`${field.id}-error`} role="alert" className="text-sm text-[#8a3b2b]">{error.message}</p> : null}
+        {error ? <p id={`${field.id}-error`} role="alert" className="text-sm text-[var(--warn)]">{error.message}</p> : null}
       </div>
     );
   }
@@ -102,7 +102,7 @@ export default function TemplateField({
       )}
       {field.help ? <p id={`${field.id}-help`} className="text-xs text-[var(--ink-muted)]">{field.help}</p> : null}
       {recommended && !error ? <p id={`${field.id}-hint`} className="text-xs text-[var(--ink-muted)]">{recommended.message}</p> : null}
-      {error ? <p id={`${field.id}-error`} role="alert" className="text-sm text-[#8a3b2b]">{error.message}</p> : null}
+      {error ? <p id={`${field.id}-error`} role="alert" className="text-sm text-[var(--warn)]">{error.message}</p> : null}
     </div>
   );
 }

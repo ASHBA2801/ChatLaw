@@ -1,16 +1,32 @@
 FROM python:3.14-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/app
-WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app/rag-engine
 
-COPY requirements.txt ./
+WORKDIR /app/rag-engine
+
+COPY rag-engine/requirements.prod.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-COPY api ./api
-COPY embeddings ./embeddings
-COPY generation ./generation
-COPY retrieval ./retrieval
-COPY context ./context
-COPY verification ./verification
+
+COPY rag-engine/api ./api
+COPY rag-engine/embeddings ./embeddings
+COPY rag-engine/generation ./generation
+COPY rag-engine/retrieval ./retrieval
+COPY rag-engine/context ./context
+COPY rag-engine/verification ./verification
+COPY rag-engine/conversation ./conversation
+COPY rag-engine/documents ./documents
+COPY rag-engine/extraction ./extraction
+COPY rag-engine/cases ./cases
+COPY rag-engine/scenario ./scenario
+COPY rag-engine/acts ./acts
+COPY rag-engine/database ./database
+COPY rag-engine/config ./config
+COPY rag-engine/ingestion ./ingestion
+COPY legal_corpus /app/legal_corpus
+COPY legal-data/metadata/eighth-schedule-languages.json /app/legal-data/metadata/eighth-schedule-languages.json
+COPY web/data/legal/official-judgments.json /app/web/data/legal/official-judgments.json
 
 RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /app
 USER appuser

@@ -280,5 +280,74 @@ class TestChunkValidator(unittest.TestCase):
         self.assertGreater(len(errors), 0)
 
 
+class TestAmendedActChunking(unittest.TestCase):
+    """Footnotes, tables of contents and amended headings in consolidated Acts."""
+
+    def _doc(self, pages):
+        return DocumentData(
+            document_id="RPATEST",
+            filename="RPATEST.pdf",
+            source_path="RPATEST.pdf",
+            sha256="0" * 64,
+            file_size_bytes=1,
+            page_count=len(pages),
+            detected_act_title="THE REPRESENTATION OF THE PEOPLE ACT, 1951",
+            extraction_quality=ExtractionQuality(
+                total_pages=len(pages), pages_with_text=len(pages), pages_without_text=0,
+                text_coverage=1.0, avg_chars_per_page=100.0, ocr_required=False, flags=[QualityFlag.OK],
+            ),
+            pages=[PageData(page_number=i + 1, raw_text=t, cleaned_text=t) for i, t in enumerate(pages)],
+        )
+
+    def _chunk(self, pages):
+        return LegalChunker(max_chunk_chars=2000).chunk_document(self._doc(pages))
+
+    def test_page_footnotes_do_not_become_sections(self):
+        chunks = self._chunk([
+            "7. Definitions.—In this Chapter, words have the meanings given here.\n"
+            "\n1. Ins. by Act 8 of 1980, s. 3 (w.e.f. 1-9-1979).\n"
+            "2. The words \u201cor the Rajpramukh\u201d omitted by the Adaptation of Laws Order, 1956.",
+            "8. Disqualification on conviction.\u2014A person convicted of an offence is disqualified.",
+        ])
+        self.assertEqual([c.section for c in chunks if c.section], ["7", "8"])
+        self.assertFalse(any("Ins. by Act" in c.content for c in chunks))
+
+    def test_section_opening_with_footnote_marker_is_detected(self):
+        chunks = self._chunk([
+            "2. Interpretation.\u2014In this Act, words have these meanings.\n"
+            "6[3. Qualification for membership of the Council of States.\u2014A person shall not be qualified.\n"
+            "1[25A. Provision of polling stations.\u2014The officer shall provide stations.",
+        ])
+        self.assertEqual([c.section for c in chunks if c.section], ["2", "3", "25A"])
+
+    def test_table_of_contents_is_not_chunked(self):
+        chunks = self._chunk([
+            "ARRANGEMENT OF SECTIONS\nSECTIONS\n1. Short title.\n2. Interpretation.\n123. Corrupt practices.",
+            "THE REPRESENTATION OF THE PEOPLE ACT, 1951\nACT NO. 43 OF 1951\n[17th July, 1951.]\n"
+            "1. Short title.\u2014This Act may be called the Representation of the People Act, 1951.\n"
+            "123. Corrupt practices.\u2014The following shall be deemed to be corrupt practices.",
+        ])
+        contents = [c.content for c in chunks]
+        self.assertFalse(any("ARRANGEMENT OF SECTIONS" in c for c in contents))
+        self.assertEqual(sum(1 for c in chunks if c.section == "123"), 1)
+        self.assertTrue(any("deemed to be corrupt practices" in c for c in contents))
+
+    def test_lowercase_schedule_reference_is_not_a_schedule_header(self):
+        chunks = self._chunk([
+            "27. Electoral colleges.\u2014Each local authority listed in\nthe Fourth Schedule;\n"
+            "28. Power to make rules.\u2014The Central Government may make rules.",
+        ])
+        self.assertEqual([c.section for c in chunks if c.section], ["27", "28"])
+        self.assertNotIn(ChunkType.SCHEDULE, [c.chunk_type for c in chunks])
+
+    def test_schedule_header_with_footnote_marker_is_detected(self):
+        chunks = self._chunk([
+            "28. Power to make rules.\u2014The Central Government may make rules.\n"
+            "1[THE FIRST SCHEDULE\n(See section 3)\nAllocation of Seats\n2. Arunachal Pradesh",
+        ])
+        self.assertIn(ChunkType.SCHEDULE, [c.chunk_type for c in chunks])
+        self.assertEqual([c.section for c in chunks if c.section], ["28"])
+
+
 if __name__ == "__main__":
     unittest.main()

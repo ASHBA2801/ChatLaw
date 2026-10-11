@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const FIELD_CLASS =
-  "mt-1 h-11 w-full rounded-sm border border-[var(--line)] bg-white px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]";
+  "mt-1 h-11 w-full rounded-sm border border-[var(--line)] bg-[var(--surface)] px-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)]";
 
 export default function NewCaseForm() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function NewCaseForm() {
   }
 
   return (
-    <form onSubmit={submit} className="mt-8 space-y-4 rounded-sm border border-[var(--line)] bg-white p-5 sm:p-6">
+    <form onSubmit={submit} className="mt-8 space-y-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-5 sm:p-6">
       <p className="text-sm text-[var(--ink-muted)]">
         Start with a clear title and optional location. You can upload documents and ask grounded questions after the case is created.
       </p>
@@ -63,7 +63,7 @@ export default function NewCaseForm() {
           value={form.description}
           onChange={(event) => update("description", event.target.value)}
           rows={4}
-          className="mt-1 w-full rounded-sm border border-[var(--line)] bg-white px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
+          className="mt-1 w-full rounded-sm border border-[var(--line)] bg-[var(--surface)] px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)]"
           maxLength={4000}
         />
       </label>
@@ -95,7 +95,7 @@ export default function NewCaseForm() {
       <button
         type="submit"
         disabled={saving || !form.title.trim()}
-        className="min-h-11 rounded-sm bg-[var(--forest)] px-5 text-sm font-semibold text-white disabled:opacity-50"
+        className="btn-primary disabled:opacity-50"
       >
         {saving ? "Creating..." : "Create case"}
       </button>

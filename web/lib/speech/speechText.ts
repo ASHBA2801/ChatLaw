@@ -3,9 +3,11 @@
  * Strips citations, URLs, and markdown without calling an LLM.
  */
 
+import { stripSourceReferences } from "./speechNormalizer";
+
 /** Remove citation markers such as [1], [SOURCE 1], [12]. */
 export function stripCitationMarkers(text: string): string {
-  return text
+  return stripSourceReferences(text)
     .replace(/\[SOURCE\s+\d+\]/gi, "")
     .replace(/\[\d+\]/g, "")
     .replace(/\(\s*\d+\s*\)/g, (match) => (match.length <= 5 ? "" : match));
@@ -70,7 +72,8 @@ export function segmentSpeechText(
   if (!normalized) return [];
   if (normalized.length <= maxChars) return [normalized];
 
-  const sentences = normalized.match(/[^.!?]+[.!?]+|[^.!?]+$/g) ?? [normalized];
+  // Includes the Devanagari danda (।) so Hindi/Marathi split on sentence ends, not mid-sentence.
+  const sentences = normalized.match(/[^.!?।]+[.!?।]+|[^.!?।]+$/g) ?? [normalized];
   const segments: string[] = [];
   let current = "";
 

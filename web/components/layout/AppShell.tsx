@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, type ComponentType } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import { ChevronLeftIcon, MenuIcon } from "@/components/chat/ChatIcons";
+import { CloseIcon, PlusIcon, SidebarIcon } from "@/components/chat/ChatIcons";
+import BrandMark from "@/components/layout/BrandMark";
+import { ChatSidebarContext, type ChatSidebarContextValue } from "@/components/layout/ChatSidebarContext";
 import LanguageSelector from "@/components/layout/LanguageSelector";
 import {
   AccountNavIcon,
@@ -47,6 +49,9 @@ export default function AppShell({
   const session = useSession();
   const user = session.data?.user;
   const [isNavMinimized, setIsNavMinimized] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const newChatRef = useRef<(() => void) | null>(null);
   const signInTarget = useMemo(() => {
     const query = searchParams.toString();
     return query ? `${pathname}?${query}` : pathname;
@@ -82,39 +87,106 @@ export default function AppShell({
     NAV.find((item) => navActive(pathname, item.href))?.label ??
     (pathname.startsWith("/account") ? "Account" : "ChatLaw");
 
+  const accountActive = pathname.startsWith("/account");
+  const authed = session.status === "authenticated" && Boolean(user);
+  const signedOut = session.status === "unauthenticated";
+  const accountLabel = signedOut ? "Sign in" : user?.name || user?.email || "Account";
+  const initial = (user?.name || user?.email || "?").trim().charAt(0).toUpperCase();
+  const registerNewChat = useCallback((handler: (() => void) | null) => {
+    newChatRef.current = handler;
+  }, []);
+  const openSidebar = useCallback(() => setMobileOpen(true), []);
+  const closeSidebar = useCallback(() => setMobileOpen(false), []);
+  const sidebarContext = useMemo<ChatSidebarContextValue>(
+    () => ({ slot, openSidebar, closeSidebar, registerNewChat }),
+    [slot, openSidebar, closeSidebar, registerNewChat],
+  );
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
+  /** Collapsed state only applies on desktop (lg+); the mobile drawer always shows full labels. */
+  const labelClass = "min-w-0 truncate group-data-[compact=true]/sb:lg:hidden";
+  const rowClass = (active: boolean) =>
+    `flex h-10 w-full items-center gap-3 rounded-lg px-2.5 text-sm font-medium group-data-[compact=true]/sb:lg:justify-center group-data-[compact=true]/sb:lg:px-0 ${
+      active
+        ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+        : "text-[var(--foreground)] hover:bg-[var(--line)]/50"
+    }`;
+  const iconButton =
+    "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--ink-muted)] hover:bg-[var(--line)]/50 hover:text-[var(--foreground)]";
+
+  const newChatLabel = (
+    <>
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--on-accent)]">
+        <PlusIcon className="h-4 w-4" />
+      </span>
+      <span className={labelClass}>New chat</span>
+    </>
+  );
+
   return (
+    <ChatSidebarContext.Provider value={sidebarContext}>
     <div
       className={
         isChatPage
-          ? "flex h-dvh flex-col overflow-hidden bg-[var(--background)] lg:flex-row"
+          ? "flex h-dvh overflow-hidden bg-[var(--background)]"
           : "min-h-screen bg-[var(--background)] lg:flex"
       }
     >
       <aside
-        className={`${isChatPage ? "hidden" : "hidden w-56 shrink-0 flex-col border-r border-[var(--line)] bg-[var(--surface)] lg:flex"} ${
-          isNavMinimized ? "lg:hidden" : ""
-        }`}
+        data-compact={isNavMinimized}
+        className={`group/sb shrink-0 flex-col border-r border-[var(--line)] ${
+          isChatPage
+            ? `fixed inset-y-0 left-0 z-[60] flex w-[85%] max-w-xs bg-[var(--background)] pt-[env(safe-area-inset-top)] transition-[transform,visibility] duration-200 ease-out lg:static lg:z-auto lg:h-full lg:w-64 lg:max-w-none lg:translate-x-0 lg:pt-0 lg:visible ${
+                mobileOpen ? "visible translate-x-0 shadow-[var(--shadow-raised)]" : "invisible -translate-x-full"
+              }`
+            : "hidden bg-[var(--surface)] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64"
+        } lg:data-[compact=true]:w-[4.25rem]`}
         aria-label="Product menu"
-        aria-hidden={isNavMinimized ? true : undefined}
       >
-        <div className="flex h-12 items-center justify-between gap-2 border-b border-[var(--line)] px-2">
-          <Link href="/" className="flex min-w-0 items-center gap-2 text-sm font-bold tracking-tight">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-[var(--signal)] text-[10px] font-bold text-white">
-              CL
-            </span>
-            <span className="truncate">ChatLaw</span>
-          </Link>
+        <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-3 group-data-[compact=true]/sb:lg:h-auto group-data-[compact=true]/sb:lg:flex-col group-data-[compact=true]/sb:lg:justify-center group-data-[compact=true]/sb:lg:py-3">
+          <BrandMark labelClassName="group-data-[compact=true]/sb:lg:hidden" />
           <button
             type="button"
-            onClick={() => setNavMinimized(true)}
-            className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center border border-[var(--line)] text-sm text-[var(--ink-muted)] transition-colors hover:border-[var(--signal)] hover:text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-[var(--focus)]"
-            aria-label="Minimize menu"
+            onClick={() => setNavMinimized(!isNavMinimized)}
+            aria-label={isNavMinimized ? "Expand sidebar" : "Collapse sidebar"}
+            title={isNavMinimized ? "Expand sidebar" : "Collapse sidebar"}
+            className={`${iconButton} max-lg:hidden`}
           >
-            <ChevronLeftIcon className="h-4 w-4" />
+            <SidebarIcon className="h-5 w-5" />
           </button>
+          {isChatPage ? (
+            <button type="button" onClick={closeSidebar} aria-label="Close menu" className={`${iconButton} lg:hidden`}>
+              <CloseIcon className="h-5 w-5" />
+            </button>
+          ) : null}
         </div>
-        <div className="module-tab mx-0">Menu</div>
-        <nav aria-label="Primary" className="flex flex-1 flex-col">
+
+        <div className="shrink-0 px-2 pb-1 pt-1">
+          {isChatPage ? (
+            <button
+              type="button"
+              onClick={() => newChatRef.current?.()}
+              title="New chat"
+              className={`${rowClass(false)} !font-semibold`}
+            >
+              {newChatLabel}
+            </button>
+          ) : (
+            <Link href="/chat" title="New chat" className={`${rowClass(false)} !font-semibold`}>
+              {newChatLabel}
+            </Link>
+          )}
+        </div>
+
+        <nav aria-label="Primary" className="flex shrink-0 flex-col gap-0.5 px-2 pt-1">
           {NAV.map((item) => {
             const active = navActive(pathname, item.href);
             const Icon = item.Icon;
@@ -122,148 +194,140 @@ export default function AppShell({
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={closeSidebar}
                 aria-current={active ? "page" : undefined}
-                className={`border-b border-[var(--line)] px-3 py-2.5 transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--focus)] ${
-                  active
-                    ? "bg-[var(--signal-soft)] text-[var(--signal)]"
-                    : "text-[var(--ink-muted)] hover:bg-[var(--module-fill)] hover:text-[var(--foreground)]"
-                }`}
+                title={`${item.label} — ${item.hint}`}
+                className={rowClass(active)}
               >
-                <span className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 shrink-0" />
-                  <span className="block text-xs font-bold uppercase tracking-wide">{item.label}</span>
-                </span>
-                <span className="mt-0.5 block pl-6 text-[11px] text-[var(--ink-muted)]">{item.hint}</span>
+                <Icon className="h-5 w-5 shrink-0" />
+                <span className={labelClass}>{item.label}</span>
               </Link>
             );
           })}
         </nav>
-        <div className="mt-auto border-t border-[var(--line)]">
-          <Link
-            href="/account"
-            className={`flex min-h-11 items-center gap-2 px-3 text-xs font-bold uppercase tracking-wide transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--focus)] ${
-              pathname.startsWith("/account")
-                ? "bg-[var(--signal-soft)] text-[var(--signal)]"
-                : "text-[var(--ink-muted)] hover:bg-[var(--module-fill)]"
-            }`}
-          >
-            <AccountNavIcon className="h-4 w-4 shrink-0" />
-            <span>Account</span>
-          </Link>
+
+        {isChatPage ? (
+          <div ref={setSlot} className="flex min-h-0 flex-1 flex-col group-data-[compact=true]/sb:lg:hidden" />
+        ) : (
+          <div className="flex-1" />
+        )}
+
+        <div className="mt-auto shrink-0 border-t border-[var(--line)] p-2">
+          {!signedOut ? (
+            <Link
+              href="/account"
+              onClick={closeSidebar}
+              aria-current={accountActive ? "page" : undefined}
+              title={accountLabel}
+              className={rowClass(accountActive)}
+            >
+              <span
+                aria-hidden="true"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-semibold text-[var(--on-accent)]"
+              >
+                {user ? initial : <AccountNavIcon className="h-4 w-4" />}
+              </span>
+              <span className={labelClass}>{accountLabel}</span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => signIn("google", { callbackUrl: signInTarget })}
+              title="Sign in"
+              className={rowClass(false)}
+            >
+              <AccountNavIcon className="h-5 w-5 shrink-0" />
+              <span className={labelClass}>Sign in</span>
+            </button>
+          )}
         </div>
       </aside>
+      {isChatPage && mobileOpen ? (
+        <button
+          type="button"
+          className="fixed inset-0 z-[55] bg-[#12151c]/45 lg:hidden"
+          onClick={closeSidebar}
+          aria-label="Close menu"
+        />
+      ) : null}
 
-      <div
-        className={`flex min-w-0 flex-1 flex-col ${isChatPage ? "min-h-0 overflow-hidden pb-0" : "pb-16 lg:pb-0"}`}
-      >
-        <header
-          className={`z-30 shrink-0 border-b border-[var(--line)] bg-[var(--surface)] ${isChatPage ? "" : "sticky top-0"}`}
-        >
-          <div className={`flex items-center justify-between gap-2 px-3 sm:px-4 ${isChatPage ? "h-11" : "h-12"}`}>
-            <div className="flex min-w-0 items-center gap-2">
-              {!isChatPage && isNavMinimized ? (
-                <button
-                  type="button"
-                  onClick={() => setNavMinimized(false)}
-                  className="hidden min-h-10 min-w-10 shrink-0 items-center justify-center border border-[var(--line)] text-sm text-[var(--ink-muted)] transition-colors hover:border-[var(--signal)] hover:text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-[var(--focus)] lg:inline-flex"
-                  aria-label="Show menu"
-                >
-                  <MenuIcon className="h-4 w-4" />
-                </button>
-              ) : null}
-              {isChatPage ? (
-                <Link href="/" className="flex items-center gap-2 text-sm font-bold">
-                  <span className="flex h-7 w-7 items-center justify-center bg-[var(--signal)] text-[10px] text-white">CL</span>
-                  <span className="hidden truncate sm:inline">ChatLaw</span>
-                </Link>
-              ) : (
-                <>
-              <div className="min-w-0 lg:hidden">
-                <Link href="/" className="flex items-center gap-2 text-sm font-bold">
-                  <span className="flex h-7 w-7 items-center justify-center bg-[var(--signal)] text-[10px] text-white">
-                    CL
-                  </span>
-                  <span className="truncate">ChatLaw</span>
-                </Link>
+      <div className={`flex min-w-0 flex-1 flex-col ${isChatPage ? "min-h-0 overflow-hidden" : "pb-16 lg:pb-0"}`}>
+        {isChatPage ? null : (
+          <header className="sticky top-0 z-30 shrink-0 border-b border-[var(--line)] bg-[var(--surface)]">
+            <div className="flex h-14 items-center justify-between gap-2 px-3 sm:px-5">
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="min-w-0 lg:hidden">
+                  <BrandMark />
+                </div>
+                {title ? (
+                  <div className="hidden min-w-0 lg:block">
+                    <p className="truncate text-base font-semibold tracking-tight">{pageTitle}</p>
+                    {subtitle ? <p className="truncate text-xs text-[var(--ink-muted)]">{subtitle}</p> : null}
+                  </div>
+                ) : null}
               </div>
-              <div className="hidden min-w-0 lg:block">
-                <h1 className="truncate text-sm font-bold tracking-tight">{pageTitle}</h1>
-                {subtitle ? <p className="truncate text-[11px] text-[var(--ink-muted)]">{subtitle}</p> : null}
-              </div>
-                </>
-              )}
-            </div>
-            <div className="flex shrink-0 items-center gap-1.5">
-              {!isChatPage ? <LanguageSelector compact /> : null}
-              <Link
-                href="/account"
-                aria-current={pathname.startsWith("/account") ? "page" : undefined}
-                className={`inline-flex min-h-10 items-center border border-[var(--line)] bg-white px-2.5 text-xs font-bold uppercase tracking-wide lg:hidden ${pathname.startsWith("/account") ? "text-[var(--signal)]" : "text-[var(--ink-muted)]"}`}
-              >
-                Account
-              </Link>
-              {session.status === "authenticated" && user ? (
-                <div className="flex items-center gap-1.5">
-                  <Link
-                    href="/account"
-                    className="hidden max-w-36 truncate text-xs text-[var(--ink-muted)] hover:text-[var(--foreground)] sm:inline lg:inline"
-                  >
-                    {user.name || user.email}
-                  </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                <LanguageSelector compact />
+                {authed ? (
                   <button
                     type="button"
                     onClick={() => signOut({ callbackUrl: "/" })}
-                    className="min-h-10 border border-[var(--line)] bg-white px-2.5 text-xs font-bold uppercase tracking-wide transition-colors hover:border-[var(--signal)] focus-visible:ring-2 focus-visible:ring-[var(--focus)]"
+                    className="btn-secondary btn-sm !font-medium"
                   >
                     Sign out
                   </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => signIn("google", { callbackUrl: signInTarget })}
-                  className="min-h-10 bg-[var(--signal)] px-3 text-xs font-bold uppercase tracking-wide text-white"
-                >
-                  Sign in
-                </button>
-              )}
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => signIn("google", { callbackUrl: signInTarget })}
+                    className="btn-primary btn-sm"
+                  >
+                    Sign in
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-          {!isChatPage ? (
-            <div className="border-t border-[var(--line)] px-3 py-1.5 lg:hidden">
-              <p className="truncate text-xs font-bold uppercase tracking-wide">{pageTitle}</p>
-              {subtitle ? <p className="truncate text-[11px] text-[var(--ink-muted)]">{subtitle}</p> : null}
-            </div>
-          ) : null}
-        </header>
+            {title ? (
+              <div className="border-t border-[var(--line)] px-4 py-2 lg:hidden">
+                <p className="truncate text-sm font-semibold">{pageTitle}</p>
+                {subtitle ? <p className="truncate text-xs text-[var(--ink-muted)]">{subtitle}</p> : null}
+              </div>
+            ) : null}
+          </header>
+        )}
 
         <div className={`flex min-h-0 flex-1 flex-col ${isChatPage ? "overflow-hidden" : ""}`}>
           {children}
         </div>
       </div>
 
+      {isChatPage ? null : (
       <nav
         aria-label="Primary"
-        className={`fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[var(--surface)] lg:hidden ${isChatPage ? "" : ""}`}
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[var(--surface)]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
-        <div className="grid grid-cols-4">
-          {NAV.map((item) => {
+        <div className="grid grid-cols-5">
+          {[...NAV, { href: "/account", label: signedOut ? "Sign in" : "Account", hint: "", Icon: AccountNavIcon }].map((item) => {
             const active = navActive(pathname, item.href);
             const Icon = item.Icon;
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={signedOut && item.href === "/account" ? `/signin?callbackUrl=${encodeURIComponent(signInTarget)}` : item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-14 flex-col items-center justify-center gap-0.5 border-r border-[var(--line)] text-center text-[10px] font-bold uppercase tracking-wide last:border-r-0 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--focus)] ${active ? "bg-[var(--signal-soft)] text-[var(--signal)]" : "text-[var(--ink-muted)]"}`}
+                className={`flex min-h-14 flex-col items-center justify-center gap-1 text-center text-[11px] font-medium ${active ? "text-[var(--accent)]" : "text-[var(--ink-muted)]"}`}
               >
-                <Icon className="h-4 w-4" />
+                <span className={`flex h-7 w-12 items-center justify-center rounded-full ${active ? "bg-[var(--accent-soft)]" : ""}`}>
+                  <Icon className="h-5 w-5" />
+                </span>
                 {item.label}
               </Link>
             );
           })}
         </div>
       </nav>
+      )}
     </div>
+    </ChatSidebarContext.Provider>
   );
 }

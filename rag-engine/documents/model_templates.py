@@ -2317,6 +2317,156 @@ INDEMNITY_BOND_TEMPLATE: TemplateSpec = {
 
 
 # =============================================================================
+# 17. WILL (உயில்)
+# =============================================================================
+WILL_TEMPLATE: TemplateSpec = {
+    "id": "will",
+    "category": "deed",
+    "title": "Last Will and Testament (உயில்)",
+    "description": "Testamentary disposition of the testator's immovable property to a named beneficiary, with an executor, under the Indian Succession Act, 1925.",
+    "document_type": "Will",
+    "jurisdiction_country": "IN",
+    "jurisdiction_region": "All India",
+    "language": ["English", "Tamil"],
+    "version": "2026.1",
+    "applicability": "Wills of persons of sound mind who are not minors, governed by Sections 59 to 63 of the Indian Succession Act, 1925 (Hindu, Christian, Parsi and other communities; Muslims are governed by personal law for testamentary limits).",
+    "source": {
+        "authority": "Department of Legal Affairs, Government of India",
+        "url": "https://www.indiacode.nic.in/handle/123456789/2385",
+        "document_name": "Indian Succession Act, 1925 (Part VI, Testamentary Succession)",
+        "reference_date": "2024",
+    },
+    "execution_requirements": [
+        "Must be signed by the testator in the presence of at least two witnesses, each of whom signs in the testator's presence (Section 63, Indian Succession Act, 1925)",
+        "Witnesses should not be beneficiaries under the Will (Section 67)",
+        "Registration before the Sub-Registrar is optional but strongly recommended (Section 18, Registration Act, 1908)",
+        "No stamp duty is payable on a Will",
+    ],
+    "legal_query": "will testament indian succession act section 63 testator executor beneficiary attestation India",
+    "parties": [
+        {"id": "testator", "role": "Testator (உயில் எழுதுபவர்)", "name_field": "testator_name",
+         "type_field": "testator_type", "address_field": "testator_address"},
+    ],
+    "witnesses": [
+        {"id": "witness_1", "role": "Witness 1", "name_field": "witness_1_name", "address_field": "witness_1_address"},
+        {"id": "witness_2", "role": "Witness 2", "name_field": "witness_2_name", "address_field": "witness_2_address"},
+    ],
+    "steps": [
+        {"id": "type", "title": "Document type", "description": "Will.", "field_ids": ["document_title"]},
+        {"id": "jurisdiction", "title": "Jurisdiction", "description": "Place of execution.", "field_ids": ["jurisdiction_country", "jurisdiction_region", "governing_law_seat"]},
+        {"id": "parties", "title": "Testator and Beneficiary", "description": "Who makes the Will and who inherits.",
+         "field_ids": ["testator_name", "testator_parent_spouse", "testator_address", "beneficiary_name", "beneficiary_parent_spouse", "beneficiary_address", "relationship", "executor_name", "executor_address"]},
+        {"id": "property", "title": "Property Schedule", "description": "Property bequeathed.",
+         "field_ids": ["property_address", "survey_number", "extent_sqft", "boundary_north", "boundary_south", "boundary_east", "boundary_west", "effective_date"]},
+        {"id": "review", "title": "Review", "description": "Review details before generation.", "field_ids": []},
+    ],
+    "fields": [
+        _field("document_title", "Document title", "DOCUMENT TITLE", "text", "optional", "type"),
+        *_jurisdiction_fields(),
+        _field("testator_name", "Testator full name", "TESTATOR NAME", "text", "required", "parties"),
+        _field("testator_parent_spouse", "Testator Father / Spouse name", "TESTATOR PARENT OR SPOUSE", "text", "required", "parties"),
+        _field("testator_address", "Testator permanent address", "TESTATOR ADDRESS", "textarea", "required", "parties"),
+        _field("beneficiary_name", "Beneficiary full name", "BENEFICIARY NAME", "text", "required", "parties"),
+        _field("beneficiary_parent_spouse", "Beneficiary Father / Spouse name", "BENEFICIARY PARENT OR SPOUSE", "text", "required", "parties"),
+        _field("beneficiary_address", "Beneficiary address", "BENEFICIARY ADDRESS", "textarea", "required", "parties"),
+        _field("relationship", "Relationship of Beneficiary to Testator (e.g. son, daughter, spouse)", "RELATIONSHIP", "text", "required", "parties"),
+        _field("executor_name", "Executor name (person who will carry out the Will)", "EXECUTOR NAME", "text", "required", "parties"),
+        _field("executor_address", "Executor address", "EXECUTOR ADDRESS", "textarea", "optional", "parties"),
+        _field("property_address", "Property complete location", "PROPERTY LOCATION", "textarea", "required", "property"),
+        _field("survey_number", "Survey / Plot number", "SURVEY NUMBER", "text", "required", "property"),
+        _field("extent_sqft", "Extent / Measurement", "PROPERTY EXTENT", "text", "required", "property"),
+        _field("boundary_north", "North boundary", "NORTH BOUNDARY", "text", "optional", "property"),
+        _field("boundary_south", "South boundary", "SOUTH BOUNDARY", "text", "optional", "property"),
+        _field("boundary_east", "East boundary", "EAST BOUNDARY", "text", "optional", "property"),
+        _field("boundary_west", "West boundary", "WEST BOUNDARY", "text", "optional", "property"),
+        _field("effective_date", "Date of execution", "EXECUTION DATE", "date", "required", "property"),
+        _field("witness_1_name", "Witness 1 name", "WITNESS 1 NAME", "text", "optional", "property"),
+        _field("witness_1_address", "Witness 1 address", "WITNESS 1 ADDRESS", "text", "optional", "property"),
+        _field("witness_2_name", "Witness 2 name", "WITNESS 2 NAME", "text", "optional", "property"),
+        _field("witness_2_address", "Witness 2 address", "WITNESS 2 ADDRESS", "text", "optional", "property"),
+    ],
+    "clauses": [
+        {
+            "id": "title",
+            "title": "Title and Preamble",
+            "required": True,
+            "provision_class": "required",
+            "body": (
+                "உயில்\n"
+                "LAST WILL AND TESTAMENT\n\n"
+                "THIS WILL is made on this {effective_date} at {governing_law_seat}, {jurisdiction_region}, by "
+                "{testator_name}, son/daughter/wife of {testator_parent_spouse}, residing at {testator_address} "
+                "(hereinafter called the \"TESTATOR\")."
+            ),
+        },
+        {
+            "id": "declaration",
+            "title": "1. Declaration",
+            "required": True,
+            "provision_class": "required",
+            "body": (
+                "1.1. I, the Testator, being of sound and disposing mind and in good health, make this Will voluntarily, "
+                "without any coercion, undue influence or fraud, and hereby revoke all earlier Wills and codicils made by me.\n"
+                "1.2. I am the absolute owner in possession of the immovable property described in the Schedule below "
+                "(the \"Schedule Property\"), which is my self-acquired property, free from encumbrances."
+            ),
+        },
+        {
+            "id": "bequest",
+            "title": "2. Bequest",
+            "required": True,
+            "provision_class": "required",
+            "body": (
+                "2.1. I give, devise and bequeath the Schedule Property, with all rights, easements and appurtenances, to my {relationship} "
+                "{beneficiary_name}, son/daughter/wife of {beneficiary_parent_spouse}, residing at {beneficiary_address} "
+                "(the \"BENEFICIARY\"), absolutely, to take effect after my death.\n"
+                "2.2. Until my death I shall continue to enjoy the Schedule Property and may deal with it as I wish; "
+                "this Will may be revoked or altered by me at any time during my lifetime."
+            ),
+        },
+        {
+            "id": "executor",
+            "title": "3. Executor",
+            "required": True,
+            "provision_class": "required",
+            "body": (
+                "3.1. I appoint {executor_name} as the Executor of this Will, who shall administer my estate, "
+                "settle my lawful debts and funeral expenses, and give effect to this Will."
+            ),
+        },
+        {
+            "id": "schedule",
+            "title": "Schedule of Property",
+            "required": True,
+            "provision_class": "required",
+            "body": (
+                "SCHEDULE OF THE PROPERTY:\n\n"
+                "Location: {property_address}\n"
+                "Survey / Sub-Division No: {survey_number}\n"
+                "Extent: {extent_sqft}\n"
+                "Boundaries:\n"
+                "North by: {boundary_north}\n"
+                "South by: {boundary_south}\n"
+                "East by:  {boundary_east}\n"
+                "West by:  {boundary_west}"
+            ),
+        },
+        {
+            "id": "signatures",
+            "title": "Signatures and Attestation",
+            "required": True,
+            "provision_class": "required",
+            "include_signature": True,
+            "body": (
+                "IN WITNESS WHEREOF, I, the Testator, have signed this Will on the date above, in the presence of the "
+                "witnesses named below, who have each signed as attesting witnesses in my presence and in the presence of each other."
+            ),
+        },
+    ],
+}
+
+
+# =============================================================================
 # MODEL REGISTRY MAPPING
 # =============================================================================
 MODEL_TEMPLATES: dict[str, TemplateSpec] = {
@@ -2336,5 +2486,6 @@ MODEL_TEMPLATES: dict[str, TemplateSpec] = {
     FOUNDER_AGREEMENT_TEMPLATE["id"]: FOUNDER_AGREEMENT_TEMPLATE,
     NAME_CHANGE_AFFIDAVIT_TEMPLATE["id"]: NAME_CHANGE_AFFIDAVIT_TEMPLATE,
     INDEMNITY_BOND_TEMPLATE["id"]: INDEMNITY_BOND_TEMPLATE,
+    WILL_TEMPLATE["id"]: WILL_TEMPLATE,
 }
 

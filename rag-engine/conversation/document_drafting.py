@@ -100,7 +100,7 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ),
     (
         "gift_deed",
-        re.compile(r"(?:\b(?:gift\s+deed|deed\s+of\s+gift)\b|தான\s+செட்டில்மென்ட்|தானப்\s+பத்திரம்)", re.I),
+        re.compile(r"(?:\b(?:gift\s+deed|deed\s+of\s+gift|(?:family\s+|voluntary\s+)?settlement\s+deed|deed\s+of\s+settlement|inheritance\s+deed|deed\s+(?:for|of)\s+inheritance|inheritance\s+(?:settlement|transfer))\b|தான\s+செட்டில்மென்ட்|தானப்\s+பத்திரம்)", re.I),
     ),
     (
         "release_deed",
@@ -154,6 +154,7 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
         "indemnity_bond",
         re.compile(r"\b(?:indemnity\s+bond|bond\s+of\s+indemnity)\b", re.I),
     ),
+    ("will", re.compile(r"(?:\b(?:last\s+will|will\s+(?:and|&)\s+testament|will\s+deed|testament|(?:a|my|the|their|his|her)\s+will)\b|உயில்)", re.I)),
     ("nda", re.compile(r"\b(?:nda|non[\s-]?disclosure|confidentiality agreement)\b", re.I)),
     ("employment_agreement", re.compile(r"\b(?:employment|employee|employer)\s+agreement\b|\bcontract of employment\b|\bjob\s+contract\b", re.I)),
     ("partnership_agreement", re.compile(r"\bpartnership\s+(?:agreement|deed)\b|\bpartners?\s+agreement\b", re.I)),
@@ -169,7 +170,7 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ]
 
 _UNSUPPORTED = re.compile(
-    r"\b(?:will\b|testament\b|divorce\s+petition\b|bail\s+application\b|writ\s+petition\b|probate\b)",
+    r"\b(?:divorce\s+petition\b|bail\s+application\b|writ\s+petition\b|probate\b)",
     re.I,
 )
 
@@ -494,6 +495,47 @@ def extract_entities_from_text(template_id: str, text: str, values: dict[str, An
             pass
 
 
+_MONTHS = {m: i for i, m in enumerate(
+    ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
+
+
+def _normalize_date(text: str) -> str | None:
+    """Parse a user-typed date (Indian day-first convention) into ISO YYYY-MM-DD, or None."""
+    text = (text or "").strip()
+    candidates: list[tuple[int, int, int]] = []
+    m = re.search(r"\b(\d{4})-(\d{1,2})-(\d{1,2})\b", text)
+    if m:
+        candidates.append((int(m.group(1)), int(m.group(2)), int(m.group(3))))
+    m = re.search(r"\b(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{2}|\d{4})\b", text)
+    if m:
+        year = int(m.group(3))
+        candidates.append((year + 2000 if year < 100 else year, int(m.group(2)), int(m.group(1))))
+    m = re.search(r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?([A-Za-z]{3,9}),?\s+(\d{4})\b", text)
+    if m and m.group(2)[:3].lower() in _MONTHS:
+        candidates.append((int(m.group(3)), _MONTHS[m.group(2)[:3].lower()], int(m.group(1))))
+    m = re.search(r"\b([A-Za-z]{3,9})\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b", text)
+    if m and m.group(1)[:3].lower() in _MONTHS:
+        candidates.append((int(m.group(3)), _MONTHS[m.group(1)[:3].lower()], int(m.group(2))))
+    for y, mo, d in candidates:
+        try:
+            return datetime.date(y, mo, d).isoformat()
+        except ValueError:
+            continue
+    return None
+
+
+def _normalize_date_values(template_id: str, values: dict[str, Any]) -> None:
+    """Convert any free-form date values to ISO so validation recognises them."""
+    for field in get_template(template_id)["fields"]:
+        if field["type"] != "date":
+            continue
+        raw = values.get(field["id"])
+        if isinstance(raw, str) and raw.strip():
+            iso = _normalize_date(raw)
+            if iso:
+                values[field["id"]] = iso
+
+
 def _question_for_field(field: dict[str, Any], language: str = "en") -> str:
     lang = (language or "en").lower().split("-")[0]
     field_id = field.get("id", "")
@@ -571,10 +613,59 @@ def _assign_answer(field: dict[str, Any], message: str, values: dict[str, Any]) 
             values[field_id] = text
         return
     if field_type == "date":
-        match = re.search(r"\d{4}-\d{2}-\d{2}", text)
-        values[field_id] = match.group(0) if match else text
+        values[field_id] = _normalize_date(text) or text
         return
     values[field_id] = text
+
+
+def _split_multi_answers(message: str, count: int) -> list[str]:
+    """Split a reply that answers several questions at once into per-question answers.
+
+    Supports sequentially numbered replies ("1. ... 2. ... 3. ...") and one answer per line.
+    Returns an empty list when the reply cannot be split reliably.
+    """
+    text = (message or "").strip()
+    if count < 2 or not text:
+        return []
+
+    # Sequential numbering: find "1." / "2)" markers in order, ignoring other digits (e.g. "21/6").
+    markers: list[tuple[int, int]] = []
+    expected = 1
+    for match in re.finditer(r"(?:^|(?<=[\s,;]))(\d{1,2})\s*[.)]\s+", text):
+        if int(match.group(1)) == expected:
+            markers.append((match.start(), match.end()))
+            expected += 1
+    if len(markers) >= 2:
+        parts = []
+        for idx, (_, end) in enumerate(markers):
+            stop = markers[idx + 1][0] if idx + 1 < len(markers) else len(text)
+            parts.append(text[end:stop].strip(" \t\r\n,;"))
+        return parts
+
+    lines = [line.strip(" \t,;") for line in text.splitlines() if line.strip()]
+    if len(lines) >= 2:
+        return lines
+    return []
+
+
+_LABEL_PREFIX = re.compile(r"^\s*[A-Za-z][A-Za-z /'\-]{1,40}\s*[:\-]\s+(?=\S)")
+
+
+def _assign_multi_answers(template_id: str, message: str, state: dict[str, Any]) -> bool:
+    """Map a multi-answer reply onto the pending fields in the order they were asked."""
+    pending_ids = list(state.get("pending_fields") or [])
+    parts = _split_multi_answers(message, len(pending_ids))
+    if not parts:
+        return False
+    fields = {field["id"]: field for field in get_template(template_id)["fields"]}
+    for fid, part in zip(pending_ids, parts):
+        field = fields.get(fid)
+        if not field or not part:
+            continue
+        if field["type"] in {"text", "textarea"}:
+            part = _LABEL_PREFIX.sub("", part, count=1)
+        _assign_answer(field, part, state["values"])
+    return True
 
 
 def _seed_from_message(template_id: str, message: str, values: dict[str, Any]) -> None:
@@ -678,6 +769,13 @@ def process_document_turn(
                 state,
             )
         template_id = detect_template_id(message)
+        if template_id is None and re.search(r"\bdeeds?\b", message, re.I):
+            return DocumentDraftResult(
+                "clarify",
+                "Which kind of deed do you need? I can draft a Sale Deed, Gift/Settlement Deed (for passing property to family, e.g. inheritance), "
+                "Release Deed, Partnership Deed, or a Will. Tell me the type (and any details you already have).",
+                _empty_state(None, message),
+            )
         if template_id is None or template_id not in TEMPLATES:
             state = _empty_state(None, message)
             state["unsupported"] = True
@@ -704,6 +802,11 @@ def process_document_turn(
             "pending_fields": list(prior.get("pending_fields") or []),
         }
         template_id = state["template_id"]
+        if not template_id:
+            template_id = detect_template_id(message)
+            if template_id in TEMPLATES:
+                state["template_id"] = template_id
+                _seed_from_message(template_id, message, state["values"])
         if not template_id or template_id not in TEMPLATES:
             return DocumentDraftResult("pass", "", {})
 
@@ -712,13 +815,16 @@ def process_document_turn(
 
         # Also support single-field targeted answers
         pending_id = state.get("pending_field")
-        if pending_id:
+        if pending_id and len(state["pending_fields"]) > 1 and _assign_multi_answers(template_id, message, state):
+            pass
+        elif pending_id:
             fields = {field["id"]: field for field in get_template(template_id)["fields"]}
             field = fields.get(pending_id)
             if field and pending_id not in state["values"]:
                 _assign_answer(field, message, state["values"])
 
     assert template_id
+    _normalize_date_values(template_id, state["values"])
     template = get_template(template_id)
     missing = _missing_required(template_id, state["values"])
 

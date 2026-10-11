@@ -1,8 +1,10 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
   createConversation,
@@ -26,8 +28,19 @@ import {
 } from "@/lib/speech";
 import VoiceInputControls from "@/components/chat/VoiceInputControls";
 import ChatMessageList, { type ChatMessage } from "@/components/chat/ChatMessageList";
-import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, MenuIcon } from "@/components/chat/ChatIcons";
-import { composeCitationText, formatRelativeDate, formatCitationEvidence, groupConversationsByDate, runConversationBoot, type CitationPanelState } from "@/components/chat/chatUtils";
+import {
+  ArrowUpIcon,
+  ChevronLeftIcon,
+  CloseIcon,
+  HistoryIcon,
+  MenuIcon,
+  PlusIcon,
+  SearchIcon,
+  TrashIcon,
+  WaveformIcon,
+} from "@/components/chat/ChatIcons";
+import { composeCitationText, formatCitationEvidence, groupConversationsByDate, runConversationBoot, type CitationPanelState } from "@/components/chat/chatUtils";
+import { useChatSidebar } from "@/components/layout/ChatSidebarContext";
 import LanguageSelector from "@/components/layout/LanguageSelector";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
 import { formatLanguageLabel } from "@/lib/i18n/languages";
@@ -50,13 +63,17 @@ const LOADING_STATES = [
   "Preparing a plain-language answer...",
 ];
 
-export default function ChatInterface({ caseId }: { caseId?: string }) {
+/** `initialPrompt` pre-fills the composer (used by the landing page prompt box); it is never sent automatically. */
+export default function ChatInterface({ caseId, initialPrompt }: { caseId?: string; initialPrompt?: string }) {
   const router = useRouter();
+  const sidebar = useChatSidebar();
+  const closeSidebar = sidebar?.closeSidebar;
+  const registerNewChat = sidebar?.registerNewChat;
   const { language, languageOption } = useLanguage();
   const speechLang = useMemo(() => chatLanguageToSpeechCode(language), [language]);
   const voiceSupportedForLanguage = useMemo(() => isSpeechLocaleLikelySupported(speechLang), [speechLang]);
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(() => initialPrompt?.slice(0, MESSAGE_LIMIT) ?? "");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,8 +81,6 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
   const [history, setHistory] = useState<ConversationSummary[]>([]);
   const [loadingConversation, setLoadingConversation] = useState(true);
   const [sidebarSearch, setSidebarSearch] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [citationPanel, setCitationPanel] = useState<CitationPanelState | null>(null);
   const [loadingStepIndex, setLoadingStepIndex] = useState(0);
   const [chatMode, setChatMode] = useState<ChatInputMode>("text");
@@ -319,13 +334,19 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
   async function startNewChat() {
     speech.cancel();
     voiceChat.reset();
+    closeSidebar?.();
     if (caseId) {
       window.localStorage.removeItem(`chatlaw-case-conversation:${caseId}`);
       setConversationId(null);
       setMessages([]);
       setError(null);
       setCitationPanel(null);
-      setIsSidebarOpen(false);
+      inputRef.current?.focus();
+      return;
+    }
+    if (conversationId && messages.length === 0) {
+      /* Already on an empty conversation: reuse it instead of creating another. */
+      setChatMode("text");
       inputRef.current?.focus();
       return;
     }
@@ -346,7 +367,6 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
         },
         ...current,
       ]);
-      setIsSidebarOpen(false);
     } catch (requestError) {
       setError(requestError instanceof RagApiError ? requestError.message : "Unable to create a new conversation.");
     }
@@ -362,7 +382,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
       setMessages(conversation.messages);
       setCitationPanel(null);
       window.localStorage.setItem("chatlaw-active-conversation", id);
-      setIsSidebarOpen(false);
+      closeSidebar?.();
     } catch (requestError) {
       setError(requestError instanceof RagApiError ? requestError.message : "Unable to load conversation.");
     } finally {
@@ -440,9 +460,50 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
 
   const composerValue = speech.isListening ? speech.displayValue : input;
   const remainingChars = MESSAGE_LIMIT - composerValue.length;
-  const conversationTitle =
-    history.find((item) => item.id === conversationId)?.title ||
-    (caseId ? "Case conversation" : "New conversation");
+  const activeTitle = history.find((item) => item.id === conversationId)?.title;
+  const conversationTitle = caseId
+    ? "Case conversation"
+    : activeTitle && activeTitle !== "New conversation"
+      ? activeTitle
+      : "New chat";
+  /** Empty text chat: greeting and composer sit in the middle of the page, like other chat apps. */
+  const showHero = chatMode === "text" && messages.length === 0;
+  /** Empty voice chat: the voice stage is centred like the hero. With messages it docks under the thread. */
+  const showVoiceStage = chatMode === "voice" && messages.length === 0;
+  const centred = showHero || showVoiceStage;
+
+  /*
+   * The answer card and voice panel are lazy chunks. If one first loads while rendering, React suspends up to the
+   * layout-level boundary, hides the whole shell and re-runs effects — which disposes an in-flight spoken answer and
+   * re-boots the conversation. Preload them, and keep a local Suspense boundary around each (below).
+   */
+  useEffect(() => {
+    void import("@/components/chat/LegalAnswerCard");
+    void import("@/components/chat/VoiceChatPanel");
+  }, []);
+
+  const focusedInitialRef = useRef(false);
+  useEffect(() => {
+    if (!initialPrompt || loadingConversation || focusedInitialRef.current) return;
+    focusedInitialRef.current = true;
+    inputRef.current?.focus();
+  }, [initialPrompt, loadingConversation]);
+
+  const startNewChatRef = useRef(startNewChat);
+  useEffect(() => {
+    startNewChatRef.current = startNewChat;
+  });
+  useEffect(() => {
+    registerNewChat?.(() => void startNewChatRef.current());
+    return () => registerNewChat?.(null);
+  }, [registerNewChat]);
+
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 208)}px`;
+  }, [composerValue, showHero, chatMode]);
 
   const citationEvidenceParagraphs = useMemo(
     () => (citationPanel?.citation.evidence ? formatCitationEvidence(citationPanel.citation.evidence) : []),
@@ -458,378 +519,350 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [citationPanel]);
 
-  return (
-    <div
-      className={`grid h-full min-h-0 w-full overflow-hidden ${
-        isSidebarCollapsed ? "lg:grid-cols-1" : "lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)]"
-      }`}
-    >
-      <aside
-        className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 w-[86%] max-w-sm border-r border-[var(--line)] bg-white transition-transform duration-200 ease-out lg:static lg:inset-auto lg:z-0 lg:flex lg:h-full lg:max-w-none lg:translate-x-0 ${
-          isSidebarCollapsed ? "lg:hidden" : ""
-        }`}
-        aria-label="Conversations"
-        aria-hidden={isSidebarCollapsed && !isSidebarOpen ? true : undefined}
-      >
-        <div className="flex h-full min-h-0 w-full flex-col pt-16 lg:pt-0">
-          <div className="module-tab">Conversations</div>
-          <div className="border-b border-[var(--line)] p-2">
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => void startNewChat()}
-                className="min-h-11 flex-1 bg-[var(--signal)] px-3 text-xs font-bold uppercase tracking-wide text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
-              >
-                New conversation
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsSidebarCollapsed(true)}
-                className="hidden min-h-11 min-w-11 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:inline-flex focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-                aria-label="Hide conversations"
-              >
-                <ChevronLeftIcon className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsSidebarOpen(false)}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-                aria-label="Close conversations panel"
-              >
-                <CloseIcon className="h-5 w-5" />
-              </button>
-            </div>
-            <label className="mt-3 block">
-              <span className="sr-only">Search conversations</span>
-              <input
-                value={sidebarSearch}
-                onChange={(event) => setSidebarSearch(event.target.value)}
-                placeholder="Search conversations"
-                className="h-11 w-full rounded-sm border border-[var(--line)] px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[var(--warm)]"
-              />
-            </label>
+  const historyPanel = (
+    <div className="mt-2 flex min-h-0 flex-1 flex-col border-t border-[var(--line)] pt-3">
+      <div className="shrink-0 px-3 pb-2">
+        <label className="relative block">
+          <span className="sr-only">Search conversations</span>
+          <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-faint)]" />
+          <input
+            value={sidebarSearch}
+            onChange={(event) => setSidebarSearch(event.target.value)}
+            placeholder="Search chats"
+            type="search"
+            className="h-9 w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] pl-9 pr-3 text-sm outline-none placeholder:text-[var(--ink-muted)]"
+          />
+        </label>
+      </div>
+      <div className="chat-scroll min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+        {loadingConversation && history.length === 0 ? (
+          <p className="px-3 py-4 text-sm text-[var(--ink-muted)]" role="status">
+            Loading chats…
+          </p>
+        ) : filteredHistory.length === 0 ? (
+          <div className="px-3 py-8 text-center">
+            <HistoryIcon className="mx-auto h-6 w-6 text-[var(--ink-faint)]" />
+            <p className="mt-2 text-sm text-[var(--ink-muted)]">
+              {caseId
+                ? "Case chats stay on this matter."
+                : sidebarSearch
+                  ? "No chats match your search."
+                  : "Your chats will appear here."}
+            </p>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
-            {loadingConversation && history.length === 0 ? (
-              <p className="px-2 py-3 text-sm text-[var(--ink-muted)]" role="status">
-                Loading conversations…
-              </p>
-            ) : filteredHistory.length === 0 ? (
-              <p className="px-2 py-3 text-sm text-[var(--ink-muted)]">
-                {caseId ? "Case chats stay on this matter." : "No matching conversations."}
-              </p>
-            ) : (
-              <>
-                {groupedHistory.map((group) => (
-                  <div key={group.label} className="mb-3">
-                    <p className="px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[var(--ink-muted)]">{group.label}</p>
-                    {group.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`mb-1 border ${item.id === conversationId ? "border-[var(--signal)] bg-[var(--signal-soft)]" : "border-transparent hover:border-[var(--line)]"}`}
+        ) : (
+          groupedHistory.map((group) => (
+            <section key={group.label} aria-label={group.label}>
+              <h3 className="px-3 pb-1 pt-3 text-xs font-medium text-[var(--ink-muted)]">{group.label}</h3>
+              <ul className="space-y-0.5">
+                {group.items.map((item) => {
+                  const active = item.id === conversationId;
+                  return (
+                    <li
+                      key={item.id}
+                      className={`group relative rounded-lg ${active ? "bg-[var(--line)]/70" : "hover:bg-[var(--line)]/50"}`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => void openChat(item.id)}
+                        aria-current={active ? "true" : undefined}
+                        title={item.title}
+                        className={`flex h-10 w-full items-center rounded-lg pl-3 pr-10 text-left text-sm lg:pr-3 lg:group-focus-within:pr-10 lg:group-hover:pr-10 ${active ? "font-medium" : ""}`}
                       >
-                        <button type="button" onClick={() => void openChat(item.id)} className="w-full p-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]">
-                          <p className="truncate text-sm font-semibold">{item.title}</p>
-                          <div className="mt-1 flex items-center justify-between gap-2">
-                            <p className="truncate text-[11px] text-[var(--ink-muted)]">Legal chat thread</p>
-                            <span className="shrink-0 text-[10px] text-[var(--ink-muted)]">{formatRelativeDate(item.updated_at)}</span>
-                          </div>
-                        </button>
-                        <div className="flex items-center justify-end px-3 pb-2">
-                          <button
-                            type="button"
-                            onClick={() => void handleDeleteConversation(item.id)}
-                            className="min-h-10 text-xs text-[var(--warn)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
-                            aria-label={`Delete conversation: ${item.title}`}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-                {history.length > 0 ? (
-                  <p className="border-t border-[var(--line)] px-2 py-2 text-center text-[11px] font-bold text-[var(--signal)]">
-                    Show all history ({history.length})
-                  </p>
-                ) : null}
-              </>
-            )}
-          </div>
+                        <span className="truncate">{item.title === "New conversation" ? "New chat" : item.title}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void handleDeleteConversation(item.id)}
+                        className="absolute right-1 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-[var(--ink-faint)] hover:bg-[var(--warn-bg)] hover:text-[var(--warn)] focus-visible:opacity-100 lg:opacity-0 lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                        aria-label={`Delete chat: ${item.title}`}
+                        title="Delete chat"
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))
+        )}
+      </div>
+    </div>
+  );
+
+  const composer = (
+    <form
+      onSubmit={handleSubmit}
+      className="w-full rounded-3xl border border-[var(--line-strong)] bg-[var(--surface)] shadow-[var(--shadow-soft)] focus-within:border-[var(--accent)]"
+    >
+      <label className="sr-only" htmlFor="chatlaw-message">
+        Message input
+      </label>
+      <textarea
+        id="chatlaw-message"
+        ref={inputRef}
+        value={composerValue}
+        onChange={(event) => setInput(event.target.value.slice(0, MESSAGE_LIMIT))}
+        onKeyDown={handleInputKeyDown}
+        rows={1}
+        disabled={isLoading || loadingConversation || speech.isListening}
+        placeholder={messages.length === 0 ? "Describe your situation in your own words..." : "Ask a follow-up..."}
+        className="block max-h-52 min-h-14 w-full resize-none bg-transparent px-5 pb-1 pt-4 text-[15px] leading-6 outline-none placeholder:text-[var(--ink-muted)] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+      />
+      <div className="flex items-center gap-1 px-2.5 pb-2.5 pt-1">
+        <div className="min-w-0 flex-1">
+          <VoiceInputControls
+            variant="composer"
+            status={speech.status}
+            supported={speech.supported}
+            language={speech.language}
+            onLanguageChange={speech.setLanguage}
+            error={speech.error}
+            interimText={speech.interimText}
+            disabled={isLoading || loadingConversation}
+            onStart={speech.start}
+            onStop={speech.stop}
+            onCancel={speech.cancel}
+            onClearError={speech.clearError}
+          />
         </div>
-      </aside>
-      {isSidebarOpen && (
+        {remainingChars < 1000 ? (
+          <span
+            className={`shrink-0 px-1 text-xs ${remainingChars < 200 ? "text-[var(--warn)]" : "text-[var(--ink-muted)]"}`}
+            aria-live={remainingChars < 200 ? "polite" : "off"}
+          >
+            {remainingChars.toLocaleString("en-IN")} left
+          </span>
+        ) : null}
         <button
           type="button"
-          className="fixed inset-0 z-30 bg-black/25 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-          aria-label="Close conversations panel"
-        />
-      )}
+          onClick={() => {
+            speech.cancel();
+            answerPlayback.stop();
+            setChatMode("voice");
+          }}
+          disabled={isLoading || loadingConversation}
+          className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full px-3 text-sm font-medium text-[var(--ink-muted)] hover:bg-[var(--fill)] hover:text-[var(--foreground)] disabled:opacity-50"
+          aria-label="Start a voice conversation"
+          title="Voice conversation"
+        >
+          <WaveformIcon className="h-5 w-5" />
+          <span className="hidden sm:inline">Voice</span>
+        </button>
+        <button
+          type="submit"
+          disabled={isLoading || loadingConversation || speech.isListening || !input.trim()}
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--on-accent)] hover:bg-[var(--accent-strong)] disabled:cursor-not-allowed disabled:bg-[var(--line)] disabled:text-[var(--ink-faint)] sm:h-10 sm:w-10"
+          aria-label={isLoading ? "Sending message" : "Send message"}
+          title="Send (Enter)"
+        >
+          <ArrowUpIcon className="h-5 w-5" />
+        </button>
+      </div>
+    </form>
+  );
 
-      <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--line)] px-4 py-2 sm:px-6">
+  const iconButton =
+    "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[var(--ink-muted)] hover:bg-[var(--fill)] hover:text-[var(--foreground)]";
+
+  return (
+    <div className="flex h-full min-h-0 w-full overflow-hidden">
+      {sidebar?.slot ? createPortal(historyPanel, sidebar.slot) : null}
+
+      <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[var(--surface)]">
+        <header className="flex h-14 shrink-0 items-center gap-2 px-2 sm:px-4">
           {caseId ? (
-            <Link
-              href={`/cases/${caseId}`}
-              className="inline-flex min-h-11 shrink-0 items-center rounded-sm border border-[var(--line)] px-3 text-xs font-semibold text-[var(--forest)] sm:text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-            >
-              <span className="sm:hidden">← Case</span>
-              <span className="hidden sm:inline">← Back to case</span>
+            <Link href={`/cases/${caseId}`} className="btn-secondary btn-sm shrink-0 !px-3">
+              <ChevronLeftIcon className="h-4 w-4" />
+              <span className="sm:hidden">Case</span>
+              <span className="hidden sm:inline">Back to case</span>
             </Link>
           ) : (
-            <button
-              type="button"
-              onClick={() => setIsSidebarOpen(true)}
-              className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-              aria-label="Open conversations panel"
-            >
+            <button type="button" onClick={sidebar?.openSidebar} className={`${iconButton} lg:hidden`} aria-label="Open menu">
               <MenuIcon className="h-5 w-5" />
             </button>
           )}
-          {isSidebarCollapsed ? (
-            <button
-              type="button"
-              onClick={() => setIsSidebarCollapsed(false)}
-              className="hidden min-h-11 min-w-11 shrink-0 items-center justify-center rounded-sm border border-[var(--line)] text-sm lg:inline-flex focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-              aria-label="Show conversations"
-            >
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
-          ) : null}
-          <div className="min-w-0 flex-1">
-            <h2 className="truncate text-sm font-semibold">{conversationTitle}</h2>
-            <p className="truncate text-xs text-[var(--ink-muted)]">
-              {interviewStep ? (
-                <>
-                  Step {interviewStep.current} of {interviewStep.total} · {interviewStep.label}
-                </>
-              ) : (
-                <>Answering in {formatLanguageLabel(languageOption)}</>
-              )}
-            </p>
+          <div className="min-w-0 flex-1 px-1">
+            <h1 className="truncate text-[15px] font-semibold leading-tight">{conversationTitle}</h1>
+            {messages.length > 0 && interviewStep ? (
+              <p className="truncate text-xs leading-tight text-[var(--ink-muted)]">
+                Step {interviewStep.current} of {interviewStep.total} · {interviewStep.label}
+              </p>
+            ) : null}
           </div>
-          <LanguageSelector compact />
-          <div className="flex rounded-sm border border-[var(--line)] p-0.5" role="group" aria-label="Input mode">
-            <button
-              type="button"
-              onClick={() => {
-                voiceChat.reset();
-                answerPlayback.stop();
-                setChatMode("text");
-              }}
-              className={`min-h-11 rounded-none px-3 text-xs font-bold uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] ${chatMode === "text" ? "bg-[var(--signal)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
-              aria-pressed={chatMode === "text"}
-            >
-              Text
+          <LanguageSelector compact variant="ghost" />
+          {caseId ? null : (
+            <button type="button" onClick={() => void startNewChat()} className={`${iconButton} lg:hidden`} aria-label="New chat">
+              <PlusIcon className="h-5 w-5" />
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                speech.cancel();
-                answerPlayback.stop();
-                setChatMode("voice");
-              }}
-              className={`min-h-11 rounded-none px-3 text-xs font-bold uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] ${chatMode === "voice" ? "bg-[var(--signal)] text-white" : "text-[var(--ink-muted)] hover:text-[var(--foreground)]"}`}
-              aria-pressed={chatMode === "voice"}
-            >
-              Voice
-            </button>
-          </div>
-        </div>
+          )}
+        </header>
 
         {caseId ? (
-          <p className="shrink-0 border-b border-[var(--line)] bg-[var(--signal-soft)] px-4 py-2 text-sm text-[var(--forest)]">
+          <p className="shrink-0 border-y border-[var(--accent-mid)] bg-[var(--accent-soft)] px-4 py-2 text-[13px] text-[var(--accent)]">
             This conversation may use official legal sources and your authorized case documents. Uploaded files are not
             official law.
           </p>
         ) : null}
 
-        <div ref={scrollRef} className="chat-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4 sm:px-4 md:px-8 md:py-6">
-          {chatMode === "voice" && (
-            <div className="mb-6">
-              {!voiceSupportedForLanguage ? (
-                <p className="mb-3 rounded-sm border border-[var(--line)] bg-white px-4 py-3 text-sm text-[var(--ink-muted)]">
-                  Voice may not be available for {formatLanguageLabel(languageOption)} in this browser. Text chat still
-                  works in your selected language.
-                </p>
-              ) : null}
-              <VoiceChatPanel
-                state={voiceChat.state === "thinking" && isLoading ? "thinking" : voiceChat.state}
-                stateLabel={voiceChat.state === "thinking" && isLoading ? "Researching…" : voiceChat.stateLabel}
-                supported={voiceChat.supported}
-                ttsSupported={voiceChat.ttsSupported}
-                language={voiceChat.language}
-                onLanguageChange={voiceChat.setLanguage}
-                muted={voiceChat.muted}
-                onMutedChange={voiceChat.setMuted}
-                autoSend={voiceChat.autoSend}
-                onAutoSendChange={voiceChat.setAutoSend}
-                continuousMode={voiceChat.continuousMode}
-                onContinuousModeChange={voiceChat.setContinuousMode}
-                autoplayBlocked={voiceChat.autoplayBlocked}
-                onUnlockAutoplay={voiceChat.unlockAutoplay}
-                audioLevel={voiceChat.audioLevel}
-                error={voiceChat.error}
-                interimText={voiceChat.interimText}
-                draftText={voiceChat.draftText}
-                onDraftTextChange={voiceChat.setDraftText}
-                lastUserText={voiceChat.lastUserText}
-                lastAssistantText={voiceChat.lastAssistantText}
-                disabled={loadingConversation || isLoading}
-                onStartListening={voiceChat.startListening}
-                onStopListening={voiceChat.stopListening}
-                onCancelListening={voiceChat.cancelListening}
-                onConfirmSend={voiceChat.confirmSend}
-                onDiscardDraft={voiceChat.discardDraft}
-                onStopSpeaking={voiceChat.stopSpeaking}
-                onPauseSpeaking={voiceChat.pauseSpeaking}
-                onResumeSpeaking={voiceChat.resumeSpeaking}
-                onReplaySpeaking={voiceChat.replaySpeaking}
-                onClearError={voiceChat.clearError}
-                onSwitchToText={() => {
-                  voiceChat.reset();
-                  answerPlayback.stop();
-                  setChatMode("text");
-                }}
+        <div
+          className={`flex min-h-0 flex-1 flex-col ${centred ? "overflow-y-auto pb-[6vh] [&>*:first-child]:mt-auto [&>*:last-child]:mb-auto" : ""}`}
+        >
+          {showHero ? (
+            <div className="rise-in mx-auto w-full max-w-3xl shrink-0 px-5 pt-6 text-center">
+              <Image
+                src="/ChatLaw Logo.png"
+                alt=""
+                width={112}
+                height={112}
+                priority
+                className="mx-auto h-14 w-14 rounded-full object-contain"
               />
-            </div>
-          )}
-
-          {loadingConversation ? (
-            <p className="mt-16 text-center text-sm text-[var(--ink-muted)]" role="status" aria-busy="true">
-              Loading conversation…
-            </p>
-          ) : messages.length === 0 ? (
-            <div className="mx-auto mt-8 max-w-xl text-center sm:mt-12">
-              {error ? (
-                <div
-                  className="mb-6 rounded-sm border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-left text-sm text-[var(--warn)]"
-                  role="alert"
-                >
-                  <p>{error}</p>
-                  <button
-                    type="button"
-                    onClick={() => setError(null)}
-                    className="mt-2 underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-                  >
-                    Dismiss
-                  </button>
-                </div>
-              ) : null}
-              <h3 className="text-2xl font-semibold tracking-tight">Describe your situation</h3>
-              <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
-                ChatLaw currently answers from the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita, and Bharatiya Sakshya Adhiniyam. Ask a section or offence from those codes.
+              <h2 className="mt-5 text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-[2rem]">
+                What legal question can I help with?
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-[15px] leading-7 text-[var(--ink-muted)]">
+                ChatLaw currently answers from the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita, and
+                Bharatiya Sakshya Adhiniyam. Ask a section or offence from those codes.
               </p>
-              <div className="mt-6 grid gap-2 text-left">
-                {SUGGESTED_QUESTIONS.map((question) => (
-                  <button
-                    key={question}
-                    type="button"
-                    onClick={() => applySuggestedQuestion(question)}
-                    className="min-h-11 rounded-sm border border-[var(--line)] bg-white px-3 py-2 text-sm hover:border-[var(--forest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+            </div>
+          ) : null}
+
+          {centred ? null : (
+            <div
+              ref={scrollRef}
+              className="chat-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-6 pt-2 sm:px-5"
+            >
+              {loadingConversation ? (
+                <p className="mt-16 text-center text-sm text-[var(--ink-muted)]" role="status" aria-busy="true">
+                  Loading conversation…
+                </p>
+              ) : (
+                <Suspense
+                  fallback={
+                    <p className="mt-16 text-center text-sm text-[var(--ink-muted)]" role="status" aria-busy="true">
+                      Loading…
+                    </p>
+                  }
+                >
+                  <ChatMessageList
+                    messages={messages}
+                    isLoading={isLoading}
+                    loadingStepLabel={loadingStepLabel}
+                    chatMode={chatMode}
+                    draftGenerating={draftGenerating}
+                    speechListening={speech.isListening}
+                    playback={answerPlayback}
+                    onOpenCitation={handleOpenCitation}
+                    onAskAnother={handleAskAnother}
+                  />
+                </Suspense>
+              )}
+            </div>
+          )}
+
+          {chatMode === "text" ? (
+            <div className={`shrink-0 px-3 sm:px-5 ${showHero ? "pb-3 pt-6" : "pb-3 pt-1"}`}>
+              <div className="mx-auto w-full max-w-3xl">
+                {error ? (
+                  <div
+                    className="mb-3 w-full rounded-xl border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn)]"
+                    role="alert"
                   >
-                    {question}
-                  </button>
-                ))}
+                    {error}{" "}
+                    <button
+                      type="button"
+                      onClick={() => setError(null)}
+                      className="underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                ) : null}
+                {composer}
+                {showHero ? (
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    {SUGGESTED_QUESTIONS.map((question, index) => (
+                      <button
+                        key={question}
+                        type="button"
+                        onClick={() => applySuggestedQuestion(question)}
+                        className={`${index >= 2 ? "hidden sm:block" : ""} rounded-2xl border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-left text-sm leading-6 hover:bg-[var(--fill)]`}
+                      >
+                        {question}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+                <p className="mt-3 px-1 text-center text-xs leading-5 text-[var(--ink-faint)]">
+                  Informational assistance only — not a substitute for a lawyer or court.
+                </p>
               </div>
             </div>
-          ) : (
-            <ChatMessageList
-              messages={messages}
-              isLoading={isLoading}
-              loadingStepLabel={loadingStepLabel}
-              chatMode={chatMode}
-              draftGenerating={draftGenerating}
-              speechListening={speech.isListening}
-              playback={answerPlayback}
-              onOpenCitation={handleOpenCitation}
-              onAskAnother={handleAskAnother}
-            />
-          )}
+          ) : null}
+          {chatMode === "voice" ? (
+            <div className={`shrink-0 px-3 sm:px-5 ${showVoiceStage ? "pb-3 pt-6" : "pb-3 pt-1"}`}>
+              <div className="mx-auto w-full max-w-3xl">
+                {!voiceSupportedForLanguage ? (
+                  <p className="mb-3 rounded-xl border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm text-[var(--ink-muted)]">
+                    Voice may not be available for {formatLanguageLabel(languageOption)} in this browser. Text chat
+                    still works in your selected language.
+                  </p>
+                ) : null}
+                <Suspense fallback={<div className="h-40" aria-busy="true" />}>
+                  <VoiceChatPanel
+                    compact={!showVoiceStage}
+                    state={voiceChat.state === "thinking" && isLoading ? "thinking" : voiceChat.state}
+                    stateLabel={voiceChat.state === "thinking" && isLoading ? "Researching…" : voiceChat.stateLabel}
+                    supported={voiceChat.supported}
+                    ttsSupported={voiceChat.ttsSupported}
+                    language={voiceChat.language}
+                    muted={voiceChat.muted}
+                    onMutedChange={voiceChat.setMuted}
+                    autoSend={voiceChat.autoSend}
+                    onAutoSendChange={voiceChat.setAutoSend}
+                    continuousMode={voiceChat.continuousMode}
+                    onContinuousModeChange={voiceChat.setContinuousMode}
+                    autoplayBlocked={voiceChat.autoplayBlocked}
+                    onUnlockAutoplay={voiceChat.unlockAutoplay}
+                    audioLevel={voiceChat.audioLevel}
+                    error={voiceChat.error}
+                    interimText={voiceChat.interimText}
+                    draftText={voiceChat.draftText}
+                    onDraftTextChange={voiceChat.setDraftText}
+                    lastUserText={voiceChat.lastUserText}
+                    lastAssistantText={voiceChat.lastAssistantText}
+                    disabled={loadingConversation || isLoading}
+                    onStartListening={voiceChat.startListening}
+                    onStopListening={voiceChat.stopListening}
+                    onCancelListening={voiceChat.cancelListening}
+                    onConfirmSend={voiceChat.confirmSend}
+                    onDiscardDraft={voiceChat.discardDraft}
+                    onStopSpeaking={voiceChat.stopSpeaking}
+                    onPauseSpeaking={voiceChat.pauseSpeaking}
+                    onResumeSpeaking={voiceChat.resumeSpeaking}
+                    onReplaySpeaking={voiceChat.replaySpeaking}
+                    onClearError={voiceChat.clearError}
+                    onSwitchToText={() => {
+                      voiceChat.reset();
+                      answerPlayback.stop();
+                      setChatMode("text");
+                    }}
+                  />
+                </Suspense>
+                <p className="mt-3 px-1 text-center text-xs leading-5 text-[var(--ink-faint)]">
+                  Informational assistance only — not a substitute for a lawyer or court.
+                </p>
+              </div>
+            </div>
+          ) : null}
         </div>
-
-        {chatMode === "text" && (
-          <div className="shrink-0 border-t border-[var(--line)] bg-[var(--background)] px-2 py-2 sm:px-3 sm:py-2">
-            {error && messages.length > 0 ? (
-              <div
-                className="mb-2 w-full border border-[var(--warn-line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--warn)]"
-                role="alert"
-              >
-                {error}{" "}
-                <button
-                  type="button"
-                  onClick={() => setError(null)}
-                  className="underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
-                >
-                  Dismiss
-                </button>
-              </div>
-            ) : null}
-            <form onSubmit={handleSubmit} className="w-full border border-[var(--line)] bg-white">
-              <div className="module-tab">Question input</div>
-              <div className="flex items-end gap-2 p-2">
-                <label className="sr-only" htmlFor="chatlaw-message">
-                  Message input
-                </label>
-                <textarea
-                  id="chatlaw-message"
-                  ref={inputRef}
-                  value={composerValue}
-                  onChange={(event) => setInput(event.target.value.slice(0, MESSAGE_LIMIT))}
-                  onKeyDown={handleInputKeyDown}
-                  rows={2}
-                  disabled={isLoading || loadingConversation || speech.isListening}
-                  placeholder="Describe your situation in your own words..."
-                  className="max-h-48 min-h-11 w-full resize-y bg-transparent px-3 py-2 text-sm leading-6 outline-none placeholder:text-[var(--ink-muted)] focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:cursor-not-allowed disabled:opacity-60"
-                />
-                <button
-                  type="submit"
-                  disabled={isLoading || loadingConversation || speech.isListening || !input.trim()}
-                  className="min-h-11 shrink-0 bg-[var(--signal)] px-4 text-xs font-bold uppercase tracking-wide text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
-                  aria-label="Send message"
-                >
-                  {isLoading ? "Sending..." : "Send"}
-                </button>
-              </div>
-              <div className="flex flex-col gap-2 border-t border-[var(--line)] px-2 py-2 sm:flex-row sm:items-start sm:justify-between">
-                <VoiceInputControls
-                  status={speech.status}
-                  supported={speech.supported}
-                  language={speech.language}
-                  onLanguageChange={speech.setLanguage}
-                  error={speech.error}
-                  interimText={speech.interimText}
-                  disabled={isLoading || loadingConversation}
-                  onStart={speech.start}
-                  onStop={speech.stop}
-                  onCancel={speech.cancel}
-                  onClearError={speech.clearError}
-                />
-                <div className="flex items-center justify-between gap-3 text-xs text-[var(--ink-muted)] sm:flex-col sm:items-end sm:justify-start">
-                  <span>
-                    Language: {languageOption.nativeName} · Enter to send
-                  </span>
-                  <span
-                    className={remainingChars < 200 ? "text-[var(--warn)]" : ""}
-                    aria-live={remainingChars < 200 ? "polite" : "off"}
-                  >
-                    {remainingChars} characters left
-                  </span>
-                </div>
-              </div>
-            </form>
-            <p className="mt-2 px-1 text-[10px] leading-5 text-[var(--ink-muted)]">
-              Informational assistance only — not a substitute for a lawyer or court.
-            </p>
-          </div>
-        )}
       </section>
 
       {citationPanel && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#12151c]/45 p-4"
           role="dialog"
           aria-modal="true"
           aria-label="Source citation"
@@ -840,17 +873,15 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
             onClick={() => setCitationPanel(null)}
             aria-label="Close citation"
           />
-          <div className="relative z-10 flex max-h-[min(85vh,720px)] w-full max-w-xl flex-col overflow-hidden border border-[var(--line)] bg-white shadow-lg">
-            <div className="module-tab shrink-0">
-              Source [{citationPanel.citation.id}]
-            </div>
+          <div className="relative z-10 flex max-h-[min(85vh,720px)] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-raised)]">
             <div className="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--line)] px-4 py-3">
               <div className="min-w-0">
+                <p className="mb-1 text-xs font-semibold text-[var(--accent)]">Source [{citationPanel.citation.id}]</p>
                 <h3 className="text-base font-semibold leading-snug">
                   {citationPanel.citation.document || "Source unavailable"}
                 </h3>
                 {isCaseDocumentCitation(citationPanel.citation) ? (
-                  <p className="mt-1 text-xs font-semibold text-[var(--forest)]">
+                  <p className="mt-1 text-xs font-semibold text-[var(--accent)]">
                     Case document — not an official legal source
                   </p>
                 ) : (
@@ -881,7 +912,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
               <button
                 type="button"
                 onClick={() => setCitationPanel(null)}
-                className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-sm border border-[var(--line)] text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--warm)]"
+                className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg text-[var(--ink-muted)] hover:bg-[var(--fill)]"
                 aria-label="Close citation"
               >
                 <CloseIcon className="h-5 w-5" />
@@ -902,7 +933,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
               <button
                 type="button"
                 onClick={() => navigator.clipboard.writeText(composeCitationText(citationPanel.citation))}
-                className="min-h-10 rounded-sm border border-[var(--line)] px-3 text-sm"
+                className="btn-secondary !min-h-10 !px-3.5 !text-[13px]"
               >
                 Copy citation
               </button>
@@ -910,7 +941,7 @@ export default function ChatInterface({ caseId }: { caseId?: string }) {
                 const sourceUrl = isSafeExternalUrl(citationPanel.citation.source?.url);
                 return sourceUrl ? (
                   <a
-                    className="inline-flex min-h-10 items-center rounded-sm border border-[var(--line)] px-3 text-sm text-[var(--forest)] underline"
+                    className="btn-secondary !min-h-10 !px-3.5 !text-[13px] !text-[var(--accent)]"
                     href={sourceUrl}
                     target="_blank"
                     rel="noreferrer"

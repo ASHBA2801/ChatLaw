@@ -3,8 +3,8 @@ import { getSessionUser } from "@/lib/auth/session";
 import { getOwnedCase } from "@/lib/cases/store";
 import { redirect } from "next/navigation";
 
-export default async function ChatPage({ searchParams }: { searchParams: Promise<{ caseId?: string }> }) {
-  const { caseId } = await searchParams;
+export default async function ChatPage({ searchParams }: { searchParams: Promise<{ caseId?: string; q?: string }> }) {
+  const { caseId, q } = await searchParams;
   if (caseId) {
     const user = await getSessionUser();
     if (!user) redirect(`/signin?callbackUrl=/chat?caseId=${encodeURIComponent(caseId)}`);
@@ -13,7 +13,7 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   }
   return (
     <section className="flex h-full min-h-0 w-full flex-1 overflow-hidden px-0">
-      <ChatInterface caseId={caseId} />
+      <ChatInterface caseId={caseId} initialPrompt={typeof q === "string" ? q : undefined} />
     </section>
   );
 }
