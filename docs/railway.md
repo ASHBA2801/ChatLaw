@@ -49,6 +49,7 @@ AUTH_SECRET=<openssl rand -base64 32>
 AUTH_GOOGLE_ID=...
 AUTH_GOOGLE_SECRET=...
 AUTH_TRUST_HOST=true
+AUTH_URL=https://${{web.RAILWAY_PUBLIC_DOMAIN}}   # stops redirects to 0.0.0.0:3000
 CASE_STORAGE_ROOT=/data/case-documents
 ```
 

@@ -5,6 +5,12 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/db/client";
 import { getAuthConfiguration } from "@/lib/auth/config";
 
+// Behind Railway the server binds to 0.0.0.0:3000, so Auth.js would build redirects
+// from that internal address. Pin the public origin when AUTH_URL is not set.
+if (!process.env.AUTH_URL && !process.env.NEXTAUTH_URL && process.env.RAILWAY_PUBLIC_DOMAIN) {
+  process.env.AUTH_URL = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+}
+
 const authConfiguration = getAuthConfiguration();
 const googleConfigured = authConfiguration.googleConfigured;
 
