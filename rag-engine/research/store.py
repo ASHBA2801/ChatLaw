@@ -51,6 +51,16 @@ class Provision:
 
 
 @dataclass(frozen=True)
+class CorpusAct:
+    act_id: str
+    title: str
+    short_title: str
+    domain: str | None
+    source_url: str | None
+    document_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class LawLink:
     law_key: str
     is_landmark: bool = False
@@ -162,6 +172,7 @@ _CASE_COLUMNS = '''
 class CaseLawStore:
     def __init__(self, connection: Any):
         self.connection = connection
+        self._corpus_acts: dict[str, CorpusAct] | None = None
 
     def _cursor(self):
         from psycopg.rows import dict_row  # type: ignore
@@ -173,15 +184,60 @@ class CaseLawStore:
 
     # ------------------------------------------------------------------ statutes
 
+    def corpus_acts(self) -> dict[str, CorpusAct]:
+        """Acts in the statute corpus, keyed by catalog act id.
+
+        Older ingests did not write act_id into legal_documents.metadata, so the
+        id is resolved from the metadata, then the source document id, then the title.
+        """
+        if self._corpus_acts is None:
+            from acts.catalog import get_catalog
+
+            catalog = get_catalog()
+            cursor = self._cursor()
+            cursor.execute('SELECT d."id", d."title", d."metadata" FROM "legal_documents" d')
+            grouped: dict[str, list[dict[str, Any]]] = {}
+            for row in cursor.fetchall():
+                meta = _json(row["metadata"]) or {}
+                act_id = meta.get("act_id")
+                if not act_id:
+                    entry = (catalog.find_by_alias(meta.get("source_document_id"))
+                             or catalog.find_by_alias(row["title"]) or catalog.get(row["title"]))
+                    act_id = entry.act_id if entry else None
+                if act_id:
+                    grouped.setdefault(act_id, []).append({**row, "meta": meta})
+            acts: dict[str, CorpusAct] = {}
+            for act_id, rows in grouped.items():
+                entry = catalog.get(act_id)
+                meta = rows[0]["meta"]
+                acts[act_id] = CorpusAct(
+                    act_id=act_id,
+                    title=rows[0]["title"],
+                    short_title=(entry.short_title if entry else None) or meta.get("short_title") or rows[0]["title"],
+                    domain=(entry.domain if entry else None) or meta.get("domain"),
+                    source_url=meta.get("source_url") or (entry.official_url if entry else None),
+                    document_ids=tuple(row["id"] for row in rows),
+                )
+            self._corpus_acts = acts
+        return self._corpus_acts
+
+    def act_for_document(self, document_id: str) -> str | None:
+        for act in self.corpus_acts().values():
+            if document_id in act.document_ids:
+                return act.act_id
+        return None
+
     def statute_section(self, act_id: str, section: str) -> Provision | None:
+        act = self.corpus_acts().get(act_id)
+        if act is None:
+            return None
         cursor = self._cursor()
         cursor.execute('''
-            SELECT c."content", c."chapter", c."pageNumber", d."title",
-                   d.metadata->>'short_title' AS short_title, d.metadata->>'source_url' AS source_url
-            FROM "legal_chunks" c JOIN "legal_documents" d ON d."id" = c."documentId"
-            WHERE d.metadata->>'act_id' = %s AND upper(c."sectionNumber") = upper(%s)
+            SELECT c."content", c."chapter", c."pageNumber"
+            FROM "legal_chunks" c
+            WHERE c."documentId" = ANY(%s) AND upper(c."sectionNumber") = upper(%s)
             ORDER BY c."chunkIndex"
-        ''', (act_id, section))
+        ''', (list(act.document_ids), section))
         rows = cursor.fetchall()
         if not rows:
             return None
@@ -190,56 +246,52 @@ class CaseLawStore:
             text = text[:MAX_SECTION_CHARS].rsplit("\n", 1)[0] + "\n…"
         first = rows[0]
         return Provision(
-            act_id=act_id, act_title=first["title"], short_title=first["short_title"] or first["title"],
+            act_id=act_id, act_title=act.title, short_title=act.short_title,
             section=section, text=text, chapter=first["chapter"], page_number=first["pageNumber"],
-            source_url=first["source_url"], matched_by="reference",
+            source_url=act.source_url, matched_by="reference",
         )
 
     def act_titles(self) -> dict[str, tuple[str, str]]:
         """act_id -> (official title, short title) for every Act in the corpus."""
-        cursor = self._cursor()
-        cursor.execute('''
-            SELECT d.metadata->>'act_id' AS act_id, d."title", d.metadata->>'short_title' AS short_title
-            FROM "legal_documents" d WHERE d.metadata ? 'act_id'
-        ''')
-        return {row["act_id"]: (row["title"], row["short_title"] or row["title"]) for row in cursor.fetchall()}
+        return {act.act_id: (act.title, act.short_title) for act in self.corpus_acts().values()}
 
     def list_acts(self) -> list[dict[str, Any]]:
+        corpus = self.corpus_acts()
         cursor = self._cursor()
         cursor.execute('''
-            SELECT d.metadata->>'act_id' AS act_id, d."title",
-                   d.metadata->>'short_title' AS short_title, d.metadata->>'domain' AS domain,
-                   COUNT(DISTINCT c."sectionNumber") AS section_count,
-                   (SELECT COUNT(DISTINCT l."caseId") FROM "court_case_laws" l
-                    WHERE l."actId" = d.metadata->>'act_id') AS case_count
-            FROM "legal_documents" d
-            LEFT JOIN "legal_chunks" c ON c."documentId" = d."id"
-            WHERE d.metadata ? 'act_id'
-            GROUP BY d."id"
-            ORDER BY d.metadata->>'short_title'
+            SELECT c."documentId", COUNT(DISTINCT upper(c."sectionNumber")) AS section_count
+            FROM "legal_chunks" c GROUP BY c."documentId"
         ''')
-        acts = [dict(row) for row in cursor.fetchall()]
-        known = {act["act_id"] for act in acts}
-        # Acts not yet in the corpus but with seeded Act-level case law.
+        sections_by_doc = {row["documentId"]: row["section_count"] for row in cursor.fetchall()}
         cursor.execute('''
             SELECT l."actId" AS act_id, COUNT(DISTINCT l."caseId") AS case_count
             FROM "court_case_laws" l GROUP BY l."actId"
         ''')
-        for row in cursor.fetchall():
-            if row["act_id"] not in known:
-                acts.append({"act_id": row["act_id"], "title": act_official_title(row["act_id"]),
-                             "short_title": act_display_name(row["act_id"]),
-                             "domain": None, "section_count": 0, "case_count": row["case_count"]})
+        cases_by_act = {row["act_id"]: row["case_count"] for row in cursor.fetchall()}
+        acts = [{
+            "act_id": act.act_id, "title": act.title, "short_title": act.short_title, "domain": act.domain,
+            "section_count": sum(sections_by_doc.get(doc_id, 0) for doc_id in act.document_ids),
+            "case_count": cases_by_act.get(act.act_id, 0),
+        } for act in sorted(corpus.values(), key=lambda item: item.short_title)]
+        # Acts not yet in the corpus but with seeded Act-level case law.
+        for act_id, count in cases_by_act.items():
+            if act_id not in corpus:
+                acts.append({"act_id": act_id, "title": act_official_title(act_id),
+                             "short_title": act_display_name(act_id),
+                             "domain": None, "section_count": 0, "case_count": count})
         return acts
 
     def list_sections(self, act_id: str) -> list[dict[str, Any]]:
+        act = self.corpus_acts().get(act_id)
+        if act is None:
+            return []
         cursor = self._cursor()
         cursor.execute('''
             WITH sections AS (
               SELECT DISTINCT ON (upper(c."sectionNumber"))
                      upper(c."sectionNumber") AS section, c."chunkIndex", left(c."content", 220) AS preview
-              FROM "legal_chunks" c JOIN "legal_documents" d ON d."id" = c."documentId"
-              WHERE d.metadata->>'act_id' = %s AND c."sectionNumber" IS NOT NULL
+              FROM "legal_chunks" c
+              WHERE c."documentId" = ANY(%s) AND c."sectionNumber" IS NOT NULL
               ORDER BY upper(c."sectionNumber"), c."chunkIndex"
             )
             SELECT s.section, s.preview,
@@ -248,19 +300,22 @@ class CaseLawStore:
             FROM sections s
             LEFT JOIN "research_law_lookups" lk ON lk."lawKey" = %s || ':' || s.section
             ORDER BY s."chunkIndex"
-        ''', (act_id, act_id, act_id))
+        ''', (list(act.document_ids), act_id, act_id))
         return [dict(row) for row in cursor.fetchall()]
 
     def sections_for_seeding(self, act_id: str) -> list[tuple[str, str]]:
         """(section, opening text) pairs for every section of an Act in the corpus."""
+        act = self.corpus_acts().get(act_id)
+        if act is None:
+            return []
         cursor = self._cursor()
         cursor.execute('''
             SELECT DISTINCT ON (upper(c."sectionNumber")) upper(c."sectionNumber") AS section,
                    left(c."content", 900) AS text, c."chunkIndex"
-            FROM "legal_chunks" c JOIN "legal_documents" d ON d."id" = c."documentId"
-            WHERE d.metadata->>'act_id' = %s AND c."sectionNumber" IS NOT NULL
+            FROM "legal_chunks" c
+            WHERE c."documentId" = ANY(%s) AND c."sectionNumber" IS NOT NULL
             ORDER BY upper(c."sectionNumber"), c."chunkIndex"
-        ''', (act_id,))
+        ''', (list(act.document_ids),))
         rows = sorted(cursor.fetchall(), key=lambda row: row["chunkIndex"])
         return [(row["section"], row["text"]) for row in rows]
 

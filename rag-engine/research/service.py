@@ -135,7 +135,7 @@ class ResearchService:
         provisions: list[Provision] = []
         seen = set(exclude)
         for result in response.results:
-            act_id = (result.metadata or {}).get("act_id")
+            act_id = (result.metadata or {}).get("act_id") or self.store.act_for_document(result.document_id)
             if not act_id:
                 continue
             section = (result.section_number or "").upper() or None
@@ -146,7 +146,7 @@ class ResearchService:
             full = self.store.statute_section(act_id, section) if section else None
             provisions.append(replace(full, matched_by="semantic", similarity=result.similarity) if full else Provision(
                 act_id=act_id, act_title=result.document_title,
-                short_title=str((result.metadata or {}).get("short_title") or result.document_title),
+                short_title=self.store.act_titles().get(act_id, (None, result.document_title))[1],
                 section=section, text=clean_statute_text(result.content), chapter=result.chapter,
                 page_number=result.page_number, source_url=result.source_url,
                 similarity=result.similarity,
