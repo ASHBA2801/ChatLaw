@@ -28,6 +28,7 @@ export default function AnswerPlaybackControls({
   onStop,
 }: AnswerPlaybackControlsProps) {
   const isActive = activeMessageId === messageId;
+  const isLoading = isActive && status === "loading";
   const isSpeaking = isActive && status === "speaking";
   const isPaused = isActive && status === "paused";
 
@@ -39,7 +40,7 @@ export default function AnswerPlaybackControls({
 
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2" aria-label="Answer playback controls">
-      {!isSpeaking && !isPaused && (
+      {!isSpeaking && !isPaused && !isLoading && (
         <button
           type="button"
           onClick={() => onPlay(messageId, text)}
@@ -50,6 +51,16 @@ export default function AnswerPlaybackControls({
           <PlayIcon className="h-3.5 w-3.5" />
           Listen
         </button>
+      )}
+      {isLoading && (
+        <>
+          <span className="text-xs font-medium text-[var(--ink-muted)]" aria-live="polite">
+            Preparing voice…
+          </span>
+          <button type="button" onClick={onStop} className="btn-secondary btn-sm" aria-label="Cancel">
+            Cancel
+          </button>
+        </>
       )}
       {isSpeaking && (
         <>

@@ -5,6 +5,7 @@ import { normalizeTextForSpeech } from "./speechNormalizer";
 import { playSynthesizedAudio, synthesizeSpeechAudio, type AudioPlayHandle } from "./synthesize";
 
 export interface SpeechOutputCallbacks {
+  onLoading?: () => void;
   onStart: () => void;
   onEnd: () => void;
   onPause: () => void;
@@ -52,6 +53,10 @@ export class SpeechOutputSession {
   private startTimeout: ReturnType<typeof setTimeout> | null = null;
   private audioHandle: AudioPlayHandle | null = null;
   private audioCleanup: (() => void) | null = null;
+  // Bumped on every speak()/stop(); stale async work compares against it and bails out,
+  // so only the most recent request can ever produce sound.
+  private generation = 0;
+  private abort: AbortController | null = null;
 
   constructor(
     private readonly callbacks: SpeechOutputCallbacks,
@@ -81,12 +86,14 @@ export class SpeechOutputSession {
 
     this.stop();
     this.stopping = false;
+    const generation = this.generation;
     this.lastText = trimmed;
     this.lastLang = resolveSpeechLocale(lang).locale;
 
     // First, try server-side neural TTS if enabled and in browser environment
     if (this.enableNeuralTts && typeof window !== "undefined" && typeof fetch === "function") {
-      void this.attemptNeuralTts(trimmed, this.lastLang);
+      this.callbacks.onLoading?.();
+      void this.attemptNeuralTts(trimmed, this.lastLang, generation);
       return;
     }
 
@@ -94,11 +101,14 @@ export class SpeechOutputSession {
     this.speakViaSpeechSynthesis(trimmed);
   }
 
-  private async attemptNeuralTts(text: string, lang: SpeechLanguageCode): Promise<void> {
+  private async attemptNeuralTts(text: string, lang: SpeechLanguageCode, generation: number): Promise<void> {
     const normalized = normalizeTextForSpeech(text);
+    const abort = new AbortController();
+    this.abort = abort;
+    const isStale = () => this.disposed || this.stopping || generation !== this.generation;
     try {
-      const result = await synthesizeSpeechAudio(normalized, lang);
-      if (this.disposed || this.stopping) {
+      const result = await synthesizeSpeechAudio(normalized, lang, undefined, abort.signal);
+      if (isStale()) {
         result.cleanup();
         return;
       }
@@ -108,17 +118,18 @@ export class SpeechOutputSession {
 
       this.audioHandle = playSynthesizedAudio(result.audioUrl, {
         onStart: () => {
-          if (this.disposed || this.stopping) return;
+          if (isStale()) return;
           this.callbacks.onStart();
         },
         onEnded: () => {
-          if (this.disposed || this.stopping) return;
+          if (isStale()) return;
           this.audioCleanup?.();
           this.audioCleanup = null;
           this.audioHandle = null;
           this.callbacks.onEnd();
         },
         onError: () => {
+          if (isStale()) return;
           // If playback failed, fallback to browser SpeechSynthesis
           this.audioCleanup?.();
           this.audioCleanup = null;
@@ -131,7 +142,7 @@ export class SpeechOutputSession {
       });
     } catch {
       // Neural TTS endpoint unavailable or failed -> seamless fallback to SpeechSynthesis
-      if (this.disposed || this.stopping) return;
+      if (isStale()) return;
       this.speakViaSpeechSynthesis(text);
     }
   }
@@ -266,6 +277,9 @@ export class SpeechOutputSession {
   stop(): void {
     if (this.disposed) return;
     this.stopping = true;
+    this.generation += 1;
+    this.abort?.abort();
+    this.abort = null;
     this.clearStartTimeout();
     this.queue = [];
     this.utterance = null;

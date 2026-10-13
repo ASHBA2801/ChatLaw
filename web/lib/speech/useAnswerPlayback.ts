@@ -6,7 +6,7 @@ import { SpeechOutputSession } from "./SpeechOutputSession";
 import { prepareTextForSpeech } from "./speechText";
 import type { SpeechLanguageCode } from "./types";
 
-export type AnswerPlaybackStatus = "idle" | "speaking" | "paused" | "unsupported" | "error";
+export type AnswerPlaybackStatus = "idle" | "loading" | "speaking" | "paused" | "unsupported" | "error";
 
 export interface UseAnswerPlaybackResult {
   status: AnswerPlaybackStatus;
@@ -30,11 +30,17 @@ export function useAnswerPlayback(): UseAnswerPlaybackResult {
   const [error, setError] = useState<string | null>(null);
   const sessionRef = useRef<SpeechOutputSession | null>(null);
   const activeIdRef = useRef<string | null>(null);
+  const statusRef = useRef<AnswerPlaybackStatus>("idle");
+
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   const supported = typeof window !== "undefined" && Boolean(window.speechSynthesis);
 
   useEffect(() => {
     sessionRef.current = new SpeechOutputSession({
+      onLoading: () => setStatus("loading"),
       onStart: () => setStatus("speaking"),
       onEnd: () => {
         setStatus("idle");
@@ -73,6 +79,10 @@ export function useAnswerPlayback(): UseAnswerPlaybackResult {
     if (!supported) {
       setStatus("unsupported");
       setError("Voice playback isn't available in this browser.");
+      return;
+    }
+    // One voice at a time: ignore repeat clicks on the answer already loading/speaking.
+    if (activeIdRef.current === messageId && (statusRef.current === "loading" || statusRef.current === "speaking")) {
       return;
     }
     const spoken = prepareTextForSpeech(text);

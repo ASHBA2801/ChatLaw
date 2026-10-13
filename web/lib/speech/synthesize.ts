@@ -24,6 +24,25 @@ export interface PlaySpeechOptions {
   onAutoplayBlocked?: () => void;
 }
 
+const AUDIO_CACHE_LIMIT = 8;
+const audioCache = new Map<string, { blob: Blob; voice: string }>();
+
+function resultFromBlob(blob: Blob, voice: string): SynthesizedAudioResult {
+  const audioUrl = URL.createObjectURL(blob);
+  return {
+    audioUrl,
+    blob,
+    voice,
+    cleanup: () => {
+      try {
+        URL.revokeObjectURL(audioUrl);
+      } catch {
+        // ignore
+      }
+    },
+  };
+}
+
 /**
  * Request neural speech audio for the provided text and language.
  */
@@ -31,14 +50,20 @@ export async function synthesizeSpeechAudio(
   text: string,
   language: string = "en",
   voice?: string,
+  signal?: AbortSignal,
 ): Promise<SynthesizedAudioResult> {
   const trimmed = text.trim();
   if (!trimmed) {
     throw new Error("Cannot synthesize empty text.");
   }
 
+  const cacheKey = `${language}|${voice ?? ""}|${trimmed}`;
+  const cached = audioCache.get(cacheKey);
+  if (cached) return resultFromBlob(cached.blob, cached.voice);
+
   const response = await fetch("/api/voice/tts", {
     method: "POST",
+    signal,
     headers: {
       "Content-Type": "application/json",
     },
@@ -62,20 +87,12 @@ export async function synthesizeSpeechAudio(
 
   const blob = await response.blob();
   const voiceHeader = response.headers.get("x-chatlaw-voice") || "";
-  const audioUrl = URL.createObjectURL(blob);
-
-  return {
-    audioUrl,
-    blob,
-    voice: voiceHeader,
-    cleanup: () => {
-      try {
-        URL.revokeObjectURL(audioUrl);
-      } catch {
-        // ignore
-      }
-    },
-  };
+  audioCache.set(cacheKey, { blob, voice: voiceHeader });
+  if (audioCache.size > AUDIO_CACHE_LIMIT) {
+    const oldest = audioCache.keys().next().value;
+    if (oldest !== undefined) audioCache.delete(oldest);
+  }
+  return resultFromBlob(blob, voiceHeader);
 }
 
 /**
@@ -120,6 +137,9 @@ export function playSynthesizedAudio(
       await audio.play();
     },
     stop: () => {
+      audio.onplay = null;
+      audio.onended = null;
+      audio.onerror = null;
       audio.pause();
       audio.currentTime = 0;
     },
