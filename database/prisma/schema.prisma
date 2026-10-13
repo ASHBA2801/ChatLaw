@@ -369,6 +369,7 @@ model CourtCase {
   updatedAt       DateTime @updatedAt
 
   chunks          CourtCaseChunk[]
+  laws            CourtCaseLaw[]
 
   @@index([courtLevel])
   @@index([jurisdiction])
@@ -398,3 +399,66 @@ model CourtCaseChunk {
   @@map("court_case_chunks")
 }
 
+
+// ---------------------------------------------------------------------------
+// court_case_laws — which Act/section a stored judgment is authority for.
+// lawKey is "<ACT_ID>:<SECTION>" (e.g. "BNS2023:103") or "<ACT_ID>" for an
+// Act as a whole, matching legal_documents.metadata->>'act_id'.
+// ---------------------------------------------------------------------------
+model CourtCaseLaw {
+  id            String   @id @default(cuid())
+  caseId        String
+  lawKey        String
+  actId         String
+  sectionNumber String?
+  isLandmark    Boolean  @default(false)
+  relevanceNote String?
+  origin        String   // "CURATED" | "SEED" | "DISCOVERED"
+  createdAt     DateTime @default(now())
+
+  courtCase CourtCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, lawKey])
+  @@index([lawKey])
+  @@index([actId, isLandmark])
+  @@map("court_case_laws")
+}
+
+// ---------------------------------------------------------------------------
+// research_law_lookups — when official case discovery last ran for a law key,
+// so repeat research on the same law is served from the database.
+// ---------------------------------------------------------------------------
+model ResearchLawLookup {
+  lawKey           String    @id
+  actId            String
+  sectionNumber    String?
+  status           String    // "FOUND" | "NONE_FOUND" | "FAILED"
+  mode             String    // "LANDMARK" (seeded) | "QUERY" (user research)
+  caseCount        Int       @default(0)
+  proposedCount    Int       @default(0)
+  hitCount         Int       @default(0)
+  lastDiscoveredAt DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([actId])
+  @@map("research_law_lookups")
+}
+
+// ---------------------------------------------------------------------------
+// research_queries — cached articulation and case results per research query
+// ---------------------------------------------------------------------------
+model ResearchQuery {
+  id           String    @id @default(cuid())
+  queryKey     String    @unique
+  query        String
+  lawKeys      Json
+  caseIds      Json
+  articulation Json?
+  hitCount     Int       @default(1)
+  discoveredAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("research_queries")
+}

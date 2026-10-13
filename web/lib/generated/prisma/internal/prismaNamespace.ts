@@ -413,7 +413,10 @@ export const ModelName = {
   UserDocument: 'UserDocument',
   UserDocumentVersion: 'UserDocumentVersion',
   CourtCase: 'CourtCase',
-  CourtCaseChunk: 'CourtCaseChunk'
+  CourtCaseChunk: 'CourtCaseChunk',
+  CourtCaseLaw: 'CourtCaseLaw',
+  ResearchLawLookup: 'ResearchLawLookup',
+  ResearchQuery: 'ResearchQuery'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -429,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "legalDocument" | "legalChunk" | "legalSource" | "conversation" | "message" | "user" | "case" | "caseDocument" | "caseTimelineEvent" | "caseImportantDate" | "account" | "session" | "verificationToken" | "userDocument" | "userDocumentVersion" | "courtCase" | "courtCaseChunk"
+    modelProps: "legalDocument" | "legalChunk" | "legalSource" | "conversation" | "message" | "user" | "case" | "caseDocument" | "caseTimelineEvent" | "caseImportantDate" | "account" | "session" | "verificationToken" | "userDocument" | "userDocumentVersion" | "courtCase" | "courtCaseChunk" | "courtCaseLaw" | "researchLawLookup" | "researchQuery"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1691,6 +1694,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CourtCaseLaw: {
+      payload: Prisma.$CourtCaseLawPayload<ExtArgs>
+      fields: Prisma.CourtCaseLawFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CourtCaseLawFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CourtCaseLawFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>
+        }
+        findFirst: {
+          args: Prisma.CourtCaseLawFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CourtCaseLawFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>
+        }
+        findMany: {
+          args: Prisma.CourtCaseLawFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>[]
+        }
+        create: {
+          args: Prisma.CourtCaseLawCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>
+        }
+        createMany: {
+          args: Prisma.CourtCaseLawCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CourtCaseLawCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>[]
+        }
+        delete: {
+          args: Prisma.CourtCaseLawDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>
+        }
+        update: {
+          args: Prisma.CourtCaseLawUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>
+        }
+        deleteMany: {
+          args: Prisma.CourtCaseLawDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CourtCaseLawUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CourtCaseLawUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>[]
+        }
+        upsert: {
+          args: Prisma.CourtCaseLawUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CourtCaseLawPayload>
+        }
+        aggregate: {
+          args: Prisma.CourtCaseLawAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCourtCaseLaw>
+        }
+        groupBy: {
+          args: Prisma.CourtCaseLawGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CourtCaseLawGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CourtCaseLawCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CourtCaseLawCountAggregateOutputType> | number
+        }
+      }
+    }
+    ResearchLawLookup: {
+      payload: Prisma.$ResearchLawLookupPayload<ExtArgs>
+      fields: Prisma.ResearchLawLookupFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ResearchLawLookupFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ResearchLawLookupFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>
+        }
+        findFirst: {
+          args: Prisma.ResearchLawLookupFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ResearchLawLookupFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>
+        }
+        findMany: {
+          args: Prisma.ResearchLawLookupFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>[]
+        }
+        create: {
+          args: Prisma.ResearchLawLookupCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>
+        }
+        createMany: {
+          args: Prisma.ResearchLawLookupCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ResearchLawLookupCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>[]
+        }
+        delete: {
+          args: Prisma.ResearchLawLookupDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>
+        }
+        update: {
+          args: Prisma.ResearchLawLookupUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>
+        }
+        deleteMany: {
+          args: Prisma.ResearchLawLookupDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ResearchLawLookupUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ResearchLawLookupUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>[]
+        }
+        upsert: {
+          args: Prisma.ResearchLawLookupUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchLawLookupPayload>
+        }
+        aggregate: {
+          args: Prisma.ResearchLawLookupAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateResearchLawLookup>
+        }
+        groupBy: {
+          args: Prisma.ResearchLawLookupGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResearchLawLookupGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ResearchLawLookupCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResearchLawLookupCountAggregateOutputType> | number
+        }
+      }
+    }
+    ResearchQuery: {
+      payload: Prisma.$ResearchQueryPayload<ExtArgs>
+      fields: Prisma.ResearchQueryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ResearchQueryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ResearchQueryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>
+        }
+        findFirst: {
+          args: Prisma.ResearchQueryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ResearchQueryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>
+        }
+        findMany: {
+          args: Prisma.ResearchQueryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>[]
+        }
+        create: {
+          args: Prisma.ResearchQueryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>
+        }
+        createMany: {
+          args: Prisma.ResearchQueryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ResearchQueryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>[]
+        }
+        delete: {
+          args: Prisma.ResearchQueryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>
+        }
+        update: {
+          args: Prisma.ResearchQueryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>
+        }
+        deleteMany: {
+          args: Prisma.ResearchQueryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ResearchQueryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ResearchQueryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>[]
+        }
+        upsert: {
+          args: Prisma.ResearchQueryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ResearchQueryPayload>
+        }
+        aggregate: {
+          args: Prisma.ResearchQueryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateResearchQuery>
+        }
+        groupBy: {
+          args: Prisma.ResearchQueryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResearchQueryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ResearchQueryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ResearchQueryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2011,6 +2236,54 @@ export const CourtCaseChunkScalarFieldEnum = {
 export type CourtCaseChunkScalarFieldEnum = (typeof CourtCaseChunkScalarFieldEnum)[keyof typeof CourtCaseChunkScalarFieldEnum]
 
 
+export const CourtCaseLawScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  lawKey: 'lawKey',
+  actId: 'actId',
+  sectionNumber: 'sectionNumber',
+  isLandmark: 'isLandmark',
+  relevanceNote: 'relevanceNote',
+  origin: 'origin',
+  createdAt: 'createdAt'
+} as const
+
+export type CourtCaseLawScalarFieldEnum = (typeof CourtCaseLawScalarFieldEnum)[keyof typeof CourtCaseLawScalarFieldEnum]
+
+
+export const ResearchLawLookupScalarFieldEnum = {
+  lawKey: 'lawKey',
+  actId: 'actId',
+  sectionNumber: 'sectionNumber',
+  status: 'status',
+  mode: 'mode',
+  caseCount: 'caseCount',
+  proposedCount: 'proposedCount',
+  hitCount: 'hitCount',
+  lastDiscoveredAt: 'lastDiscoveredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ResearchLawLookupScalarFieldEnum = (typeof ResearchLawLookupScalarFieldEnum)[keyof typeof ResearchLawLookupScalarFieldEnum]
+
+
+export const ResearchQueryScalarFieldEnum = {
+  id: 'id',
+  queryKey: 'queryKey',
+  query: 'query',
+  lawKeys: 'lawKeys',
+  caseIds: 'caseIds',
+  articulation: 'articulation',
+  hitCount: 'hitCount',
+  discoveredAt: 'discoveredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ResearchQueryScalarFieldEnum = (typeof ResearchQueryScalarFieldEnum)[keyof typeof ResearchQueryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2309,6 +2582,9 @@ export type GlobalOmitConfig = {
   userDocumentVersion?: Prisma.UserDocumentVersionOmit
   courtCase?: Prisma.CourtCaseOmit
   courtCaseChunk?: Prisma.CourtCaseChunkOmit
+  courtCaseLaw?: Prisma.CourtCaseLawOmit
+  researchLawLookup?: Prisma.ResearchLawLookupOmit
+  researchQuery?: Prisma.ResearchQueryOmit
 }
 
 /* Types for Logging */

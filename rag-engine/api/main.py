@@ -12,7 +12,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .routes import chat, search, conversations, documents, extract, summarize, voice
+from .routes import chat, search, conversations, documents, extract, research, summarize, voice
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
@@ -78,6 +78,10 @@ async def production_guards(request: Request, call_next):
             "/api/documents/revise",
             "/api/documents/selection-edit",
             "/api/voice/tts",
+            "/api/research/law",
+            "/api/research/articulate",
+            "/api/research/cases",
+            "/api/research/judgment-summary",
         } or request.url.path.endswith("/messages"):
             now = time.monotonic()
             bucket = _rate_limit[_client_key(request)]
@@ -95,6 +99,7 @@ app.include_router(documents.router)
 app.include_router(extract.router)
 app.include_router(summarize.router)
 app.include_router(voice.router)
+app.include_router(research.router)
 
 
 @app.get("/", tags=["health"])

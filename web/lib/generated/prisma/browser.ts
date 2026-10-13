@@ -102,3 +102,18 @@ export type CourtCase = Prisma.CourtCaseModel
  * 
  */
 export type CourtCaseChunk = Prisma.CourtCaseChunkModel
+/**
+ * Model CourtCaseLaw
+ * 
+ */
+export type CourtCaseLaw = Prisma.CourtCaseLawModel
+/**
+ * Model ResearchLawLookup
+ * 
+ */
+export type ResearchLawLookup = Prisma.ResearchLawLookupModel
+/**
+ * Model ResearchQuery
+ * 
+ */
+export type ResearchQuery = Prisma.ResearchQueryModel

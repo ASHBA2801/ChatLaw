@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
+// Research case discovery searches and verifies official court sources.
+export const maxDuration = 180;
 
 const ALLOWED_ROUTES = new Set([
   "api/chat",
@@ -11,9 +13,25 @@ const ALLOWED_ROUTES = new Set([
   "api/voice/stt",
 ]);
 
+const RESEARCH_ROUTES = new Set([
+  "api/research/law",
+  "api/research/articulate",
+  "api/research/cases",
+  "api/research/judgment-summary",
+  "api/research/acts",
+  "api/research/law-cases",
+]);
+
+function isResearchRoute(path: string[]): boolean {
+  const normalized = path.join("/");
+  return RESEARCH_ROUTES.has(normalized) ||
+    (path.length === 5 && normalized.startsWith("api/research/acts/") && path[4] === "sections");
+}
+
 function isAllowed(path: string[]): boolean {
   const normalized = path.join("/");
   return ALLOWED_ROUTES.has(normalized) ||
+    isResearchRoute(path) ||
     (path[0] === "api" && path[1] === "conversations" && path.length <= 4);
 }
 
@@ -109,7 +127,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       headers,
       body: body ? (body instanceof Uint8Array ? Buffer.from(body) : body) : undefined,
       cache: "no-store",
-      signal: AbortSignal.timeout(90_000),
+      signal: AbortSignal.timeout(isResearchRoute(path) ? 175_000 : 90_000),
     });
     const responseHeaders = new Headers();
     const responseContentType = response.headers.get("content-type");

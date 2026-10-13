@@ -67,7 +67,10 @@ export const ModelName = {
   UserDocument: 'UserDocument',
   UserDocumentVersion: 'UserDocumentVersion',
   CourtCase: 'CourtCase',
-  CourtCaseChunk: 'CourtCaseChunk'
+  CourtCaseChunk: 'CourtCaseChunk',
+  CourtCaseLaw: 'CourtCaseLaw',
+  ResearchLawLookup: 'ResearchLawLookup',
+  ResearchQuery: 'ResearchQuery'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -365,6 +368,54 @@ export const CourtCaseChunkScalarFieldEnum = {
 } as const
 
 export type CourtCaseChunkScalarFieldEnum = (typeof CourtCaseChunkScalarFieldEnum)[keyof typeof CourtCaseChunkScalarFieldEnum]
+
+
+export const CourtCaseLawScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  lawKey: 'lawKey',
+  actId: 'actId',
+  sectionNumber: 'sectionNumber',
+  isLandmark: 'isLandmark',
+  relevanceNote: 'relevanceNote',
+  origin: 'origin',
+  createdAt: 'createdAt'
+} as const
+
+export type CourtCaseLawScalarFieldEnum = (typeof CourtCaseLawScalarFieldEnum)[keyof typeof CourtCaseLawScalarFieldEnum]
+
+
+export const ResearchLawLookupScalarFieldEnum = {
+  lawKey: 'lawKey',
+  actId: 'actId',
+  sectionNumber: 'sectionNumber',
+  status: 'status',
+  mode: 'mode',
+  caseCount: 'caseCount',
+  proposedCount: 'proposedCount',
+  hitCount: 'hitCount',
+  lastDiscoveredAt: 'lastDiscoveredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ResearchLawLookupScalarFieldEnum = (typeof ResearchLawLookupScalarFieldEnum)[keyof typeof ResearchLawLookupScalarFieldEnum]
+
+
+export const ResearchQueryScalarFieldEnum = {
+  id: 'id',
+  queryKey: 'queryKey',
+  query: 'query',
+  lawKeys: 'lawKeys',
+  caseIds: 'caseIds',
+  articulation: 'articulation',
+  hitCount: 'hitCount',
+  discoveredAt: 'discoveredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ResearchQueryScalarFieldEnum = (typeof ResearchQueryScalarFieldEnum)[keyof typeof ResearchQueryScalarFieldEnum]
 
 
 export const SortOrder = {

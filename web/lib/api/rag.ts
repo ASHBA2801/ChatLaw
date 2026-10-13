@@ -221,9 +221,13 @@ export async function askLegalQuestion(
   }
 }
 
-async function conversationRequest<T>(path: string, init?: RequestInit): Promise<T> {
+export async function ragRequest<T>(
+  path: string,
+  init?: RequestInit,
+  timeoutMs: number = REQUEST_TIMEOUT_MS,
+): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(`${getApiUrl()}${path}`, {
@@ -255,18 +259,18 @@ async function conversationRequest<T>(path: string, init?: RequestInit): Promise
   }
 }
 
-export const createConversation = () => conversationRequest<{ id: string; created_at: string; updated_at: string }>("/api/conversations", { method: "POST" });
-export const listConversations = () => conversationRequest<{ conversations: ConversationSummary[] }>("/api/conversations");
-export const getConversation = (id: string) => conversationRequest<Conversation>(`/api/conversations/${encodeURIComponent(id)}`);
-export const deleteConversation = (id: string) => conversationRequest<{ deleted: boolean }>(`/api/conversations/${encodeURIComponent(id)}`, { method: "DELETE" });
-export const sendConversationMessage = (id: string, request: ChatRequest) => conversationRequest<ConversationChatResponse>(`/api/conversations/${encodeURIComponent(id)}/messages`, { method: "POST", body: JSON.stringify(request) });
+export const createConversation = () => ragRequest<{ id: string; created_at: string; updated_at: string }>("/api/conversations", { method: "POST" });
+export const listConversations = () => ragRequest<{ conversations: ConversationSummary[] }>("/api/conversations");
+export const getConversation = (id: string) => ragRequest<Conversation>(`/api/conversations/${encodeURIComponent(id)}`);
+export const deleteConversation = (id: string) => ragRequest<{ deleted: boolean }>(`/api/conversations/${encodeURIComponent(id)}`, { method: "DELETE" });
+export const sendConversationMessage = (id: string, request: ChatRequest) => ragRequest<ConversationChatResponse>(`/api/conversations/${encodeURIComponent(id)}/messages`, { method: "POST", body: JSON.stringify(request) });
 
 export function searchLegalSources(request: {
   query: string;
   top_k?: number;
   min_similarity?: number;
 }): Promise<SearchResponse> {
-  return conversationRequest<SearchResponse>("/api/search", {
+  return ragRequest<SearchResponse>("/api/search", {
     method: "POST",
     body: JSON.stringify(request),
   });

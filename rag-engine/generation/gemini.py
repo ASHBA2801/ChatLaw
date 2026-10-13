@@ -47,12 +47,16 @@ class GeminiGenerator:
             build_prompt(question, context, history, language=language, simplicity=simplicity)
         )
 
-    def generate_text(self, prompt: str, *, temperature: float = 0.0) -> GenerationResult:
+    def generate_text(self, prompt: str, *, temperature: float = 0.0,
+                      thinking_level: str | None = None) -> GenerationResult:
         started = time.perf_counter()
+        config: dict = {"temperature": temperature}
+        if thinking_level and self.model.startswith("gemini-3"):
+            config["thinking_config"] = self._types.ThinkingConfig(thinking_level=thinking_level)
         response = self._client.models.generate_content(
             model=self.model,
             contents=prompt,
-            config=self._types.GenerateContentConfig(temperature=temperature),
+            config=self._types.GenerateContentConfig(**config),
         )
         answer = getattr(response, "text", None)
         if not answer or not answer.strip():

@@ -11,8 +11,9 @@ export default async function ResearchPage({
       <div className="mb-6">
         <h1 className="text-3xl font-semibold tracking-tight">Research</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-muted)]">
-          Search statute passages from the ChatLaw corpus and a curated set of landmark cases with verified citations.
-          Case results are not exhaustive and are never invented.
+          Look up any section in the ChatLaw statute corpus, get it explained, and find Supreme Court, High Court and
+          District Court judgments that link to an official court copy. Case results are not exhaustive and are never
+          shown without a verified source.
         </p>
       </div>
       <ResearchWorkspace initialQuery={q ?? ""} />

@@ -347,6 +347,7 @@ export type CourtCaseWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"CourtCase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CourtCase"> | Date | string
   chunks?: Prisma.CourtCaseChunkListRelationFilter
+  laws?: Prisma.CourtCaseLawListRelationFilter
 }
 
 export type CourtCaseOrderByWithRelationInput = {
@@ -379,6 +380,7 @@ export type CourtCaseOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   chunks?: Prisma.CourtCaseChunkOrderByRelationAggregateInput
+  laws?: Prisma.CourtCaseLawOrderByRelationAggregateInput
 }
 
 export type CourtCaseWhereUniqueInput = Prisma.AtLeast<{
@@ -414,6 +416,7 @@ export type CourtCaseWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"CourtCase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CourtCase"> | Date | string
   chunks?: Prisma.CourtCaseChunkListRelationFilter
+  laws?: Prisma.CourtCaseLawListRelationFilter
 }, "id" | "contentHash">
 
 export type CourtCaseOrderByWithAggregationInput = {
@@ -514,6 +517,7 @@ export type CourtCaseCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.CourtCaseChunkCreateNestedManyWithoutCourtCaseInput
+  laws?: Prisma.CourtCaseLawCreateNestedManyWithoutCourtCaseInput
 }
 
 export type CourtCaseUncheckedCreateInput = {
@@ -546,6 +550,7 @@ export type CourtCaseUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.CourtCaseChunkUncheckedCreateNestedManyWithoutCourtCaseInput
+  laws?: Prisma.CourtCaseLawUncheckedCreateNestedManyWithoutCourtCaseInput
 }
 
 export type CourtCaseUpdateInput = {
@@ -578,6 +583,7 @@ export type CourtCaseUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.CourtCaseChunkUpdateManyWithoutCourtCaseNestedInput
+  laws?: Prisma.CourtCaseLawUpdateManyWithoutCourtCaseNestedInput
 }
 
 export type CourtCaseUncheckedUpdateInput = {
@@ -610,6 +616,7 @@ export type CourtCaseUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.CourtCaseChunkUncheckedUpdateManyWithoutCourtCaseNestedInput
+  laws?: Prisma.CourtCaseLawUncheckedUpdateManyWithoutCourtCaseNestedInput
 }
 
 export type CourtCaseCreateManyInput = {
@@ -807,6 +814,20 @@ export type CourtCaseUpdateOneRequiredWithoutChunksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CourtCaseUpdateToOneWithWhereWithoutChunksInput, Prisma.CourtCaseUpdateWithoutChunksInput>, Prisma.CourtCaseUncheckedUpdateWithoutChunksInput>
 }
 
+export type CourtCaseCreateNestedOneWithoutLawsInput = {
+  create?: Prisma.XOR<Prisma.CourtCaseCreateWithoutLawsInput, Prisma.CourtCaseUncheckedCreateWithoutLawsInput>
+  connectOrCreate?: Prisma.CourtCaseCreateOrConnectWithoutLawsInput
+  connect?: Prisma.CourtCaseWhereUniqueInput
+}
+
+export type CourtCaseUpdateOneRequiredWithoutLawsNestedInput = {
+  create?: Prisma.XOR<Prisma.CourtCaseCreateWithoutLawsInput, Prisma.CourtCaseUncheckedCreateWithoutLawsInput>
+  connectOrCreate?: Prisma.CourtCaseCreateOrConnectWithoutLawsInput
+  upsert?: Prisma.CourtCaseUpsertWithoutLawsInput
+  connect?: Prisma.CourtCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CourtCaseUpdateToOneWithWhereWithoutLawsInput, Prisma.CourtCaseUpdateWithoutLawsInput>, Prisma.CourtCaseUncheckedUpdateWithoutLawsInput>
+}
+
 export type CourtCaseCreateWithoutChunksInput = {
   id: string
   title: string
@@ -836,6 +857,7 @@ export type CourtCaseCreateWithoutChunksInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  laws?: Prisma.CourtCaseLawCreateNestedManyWithoutCourtCaseInput
 }
 
 export type CourtCaseUncheckedCreateWithoutChunksInput = {
@@ -867,6 +889,7 @@ export type CourtCaseUncheckedCreateWithoutChunksInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  laws?: Prisma.CourtCaseLawUncheckedCreateNestedManyWithoutCourtCaseInput
 }
 
 export type CourtCaseCreateOrConnectWithoutChunksInput = {
@@ -914,6 +937,7 @@ export type CourtCaseUpdateWithoutChunksInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  laws?: Prisma.CourtCaseLawUpdateManyWithoutCourtCaseNestedInput
 }
 
 export type CourtCaseUncheckedUpdateWithoutChunksInput = {
@@ -945,6 +969,151 @@ export type CourtCaseUncheckedUpdateWithoutChunksInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  laws?: Prisma.CourtCaseLawUncheckedUpdateManyWithoutCourtCaseNestedInput
+}
+
+export type CourtCaseCreateWithoutLawsInput = {
+  id: string
+  title: string
+  court: string
+  courtLevel: string
+  jurisdiction: string
+  caseNumber: string
+  caseType: string
+  judgmentDate: Date | string
+  bench?: string | null
+  judgeNames: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  petitioner?: string | null
+  respondent?: string | null
+  citation?: string | null
+  officialSource?: boolean
+  sourceAuthority: string
+  sourceUrl: string
+  sourceType?: string
+  acts: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sections: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  legalTopics: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  primaryIssue: string
+  factsSummary: string
+  holding: string
+  disposition?: string | null
+  contentHash: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  chunks?: Prisma.CourtCaseChunkCreateNestedManyWithoutCourtCaseInput
+}
+
+export type CourtCaseUncheckedCreateWithoutLawsInput = {
+  id: string
+  title: string
+  court: string
+  courtLevel: string
+  jurisdiction: string
+  caseNumber: string
+  caseType: string
+  judgmentDate: Date | string
+  bench?: string | null
+  judgeNames: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  petitioner?: string | null
+  respondent?: string | null
+  citation?: string | null
+  officialSource?: boolean
+  sourceAuthority: string
+  sourceUrl: string
+  sourceType?: string
+  acts: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sections: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  legalTopics: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  primaryIssue: string
+  factsSummary: string
+  holding: string
+  disposition?: string | null
+  contentHash: string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  chunks?: Prisma.CourtCaseChunkUncheckedCreateNestedManyWithoutCourtCaseInput
+}
+
+export type CourtCaseCreateOrConnectWithoutLawsInput = {
+  where: Prisma.CourtCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.CourtCaseCreateWithoutLawsInput, Prisma.CourtCaseUncheckedCreateWithoutLawsInput>
+}
+
+export type CourtCaseUpsertWithoutLawsInput = {
+  update: Prisma.XOR<Prisma.CourtCaseUpdateWithoutLawsInput, Prisma.CourtCaseUncheckedUpdateWithoutLawsInput>
+  create: Prisma.XOR<Prisma.CourtCaseCreateWithoutLawsInput, Prisma.CourtCaseUncheckedCreateWithoutLawsInput>
+  where?: Prisma.CourtCaseWhereInput
+}
+
+export type CourtCaseUpdateToOneWithWhereWithoutLawsInput = {
+  where?: Prisma.CourtCaseWhereInput
+  data: Prisma.XOR<Prisma.CourtCaseUpdateWithoutLawsInput, Prisma.CourtCaseUncheckedUpdateWithoutLawsInput>
+}
+
+export type CourtCaseUpdateWithoutLawsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  court?: Prisma.StringFieldUpdateOperationsInput | string
+  courtLevel?: Prisma.StringFieldUpdateOperationsInput | string
+  jurisdiction?: Prisma.StringFieldUpdateOperationsInput | string
+  caseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  caseType?: Prisma.StringFieldUpdateOperationsInput | string
+  judgmentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bench?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  judgeNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  petitioner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  respondent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialSource?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceAuthority?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  acts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sections?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  legalTopics?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  primaryIssue?: Prisma.StringFieldUpdateOperationsInput | string
+  factsSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  holding?: Prisma.StringFieldUpdateOperationsInput | string
+  disposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chunks?: Prisma.CourtCaseChunkUpdateManyWithoutCourtCaseNestedInput
+}
+
+export type CourtCaseUncheckedUpdateWithoutLawsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  court?: Prisma.StringFieldUpdateOperationsInput | string
+  courtLevel?: Prisma.StringFieldUpdateOperationsInput | string
+  jurisdiction?: Prisma.StringFieldUpdateOperationsInput | string
+  caseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  caseType?: Prisma.StringFieldUpdateOperationsInput | string
+  judgmentDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bench?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  judgeNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  petitioner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  respondent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  citation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialSource?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceAuthority?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  acts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  sections?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  legalTopics?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  primaryIssue?: Prisma.StringFieldUpdateOperationsInput | string
+  factsSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  holding?: Prisma.StringFieldUpdateOperationsInput | string
+  disposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.StringFieldUpdateOperationsInput | string
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chunks?: Prisma.CourtCaseChunkUncheckedUpdateManyWithoutCourtCaseNestedInput
 }
 
 
@@ -954,10 +1123,12 @@ export type CourtCaseUncheckedUpdateWithoutChunksInput = {
 
 export type CourtCaseCountOutputType = {
   chunks: number
+  laws: number
 }
 
 export type CourtCaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chunks?: boolean | CourtCaseCountOutputTypeCountChunksArgs
+  laws?: boolean | CourtCaseCountOutputTypeCountLawsArgs
 }
 
 /**
@@ -975,6 +1146,13 @@ export type CourtCaseCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
  */
 export type CourtCaseCountOutputTypeCountChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CourtCaseChunkWhereInput
+}
+
+/**
+ * CourtCaseCountOutputType without action
+ */
+export type CourtCaseCountOutputTypeCountLawsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CourtCaseLawWhereInput
 }
 
 
@@ -1008,6 +1186,7 @@ export type CourtCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   updatedAt?: boolean
   chunks?: boolean | Prisma.CourtCase$chunksArgs<ExtArgs>
+  laws?: boolean | Prisma.CourtCase$lawsArgs<ExtArgs>
   _count?: boolean | Prisma.CourtCaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["courtCase"]>
 
@@ -1107,6 +1286,7 @@ export type CourtCaseSelectScalar = {
 export type CourtCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "court" | "courtLevel" | "jurisdiction" | "caseNumber" | "caseType" | "judgmentDate" | "bench" | "judgeNames" | "petitioner" | "respondent" | "citation" | "officialSource" | "sourceAuthority" | "sourceUrl" | "sourceType" | "acts" | "sections" | "legalTopics" | "primaryIssue" | "factsSummary" | "holding" | "disposition" | "contentHash" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["courtCase"]>
 export type CourtCaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chunks?: boolean | Prisma.CourtCase$chunksArgs<ExtArgs>
+  laws?: boolean | Prisma.CourtCase$lawsArgs<ExtArgs>
   _count?: boolean | Prisma.CourtCaseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CourtCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1116,6 +1296,7 @@ export type $CourtCasePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "CourtCase"
   objects: {
     chunks: Prisma.$CourtCaseChunkPayload<ExtArgs>[]
+    laws: Prisma.$CourtCaseLawPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1541,6 +1722,7 @@ readonly fields: CourtCaseFieldRefs;
 export interface Prisma__CourtCaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   chunks<T extends Prisma.CourtCase$chunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CourtCase$chunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CourtCaseChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  laws<T extends Prisma.CourtCase$lawsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CourtCase$lawsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CourtCaseLawPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2012,6 +2194,30 @@ export type CourtCase$chunksArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.CourtCaseChunkScalarFieldEnum | Prisma.CourtCaseChunkScalarFieldEnum[]
+}
+
+/**
+ * CourtCase.laws
+ */
+export type CourtCase$lawsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CourtCaseLaw
+   */
+  select?: Prisma.CourtCaseLawSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CourtCaseLaw
+   */
+  omit?: Prisma.CourtCaseLawOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CourtCaseLawInclude<ExtArgs> | null
+  where?: Prisma.CourtCaseLawWhereInput
+  orderBy?: Prisma.CourtCaseLawOrderByWithRelationInput | Prisma.CourtCaseLawOrderByWithRelationInput[]
+  cursor?: Prisma.CourtCaseLawWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CourtCaseLawScalarFieldEnum | Prisma.CourtCaseLawScalarFieldEnum[]
 }
 
 /**
