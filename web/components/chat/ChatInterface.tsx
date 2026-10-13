@@ -594,7 +594,13 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
   const composer = (
     <form
       onSubmit={handleSubmit}
-      className="w-full rounded-3xl border border-[var(--line-strong)] bg-[var(--surface)] shadow-[var(--shadow-soft)] focus-within:border-[var(--accent)]"
+      onMouseDown={(event) => {
+        // Clicking any empty part of the rounded composer focuses the text area.
+        if ((event.target as HTMLElement).closest("button, a, input, select, textarea, [role='listbox'], [role='menu']")) return;
+        event.preventDefault();
+        inputRef.current?.focus();
+      }}
+      className="w-full cursor-text rounded-3xl border border-[var(--line-strong)] bg-[var(--surface)] shadow-[var(--shadow-soft)] focus-within:border-[var(--accent)]"
     >
       <label className="sr-only" htmlFor="chatlaw-message">
         Message input
@@ -608,7 +614,7 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
         rows={1}
         disabled={isLoading || loadingConversation || speech.isListening}
         placeholder={messages.length === 0 ? "Describe your situation in your own words..." : "Ask a follow-up..."}
-        className="block max-h-52 min-h-14 w-full resize-none bg-transparent px-5 pb-1 pt-4 text-[15px] leading-6 outline-none placeholder:text-[var(--ink-muted)] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        className="block max-h-52 min-h-14 w-full resize-none rounded-t-3xl bg-transparent px-5 pb-1 pt-4 text-[15px] leading-6 outline-none placeholder:text-[var(--ink-muted)] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       />
       <div className="flex items-center gap-1 px-2.5 pb-2.5 pt-1">
         <div className="min-w-0 flex-1">
