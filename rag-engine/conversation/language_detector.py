@@ -21,6 +21,8 @@ SCRIPT_RANGES: dict[str, re.Pattern[str]] = {
     "gu": re.compile(r"[\u0A80-\u0AFF]"),  # Gujarati
     "pa": re.compile(r"[\u0A00-\u0A7F]"),  # Gurmukhi (Punjabi)
     "ur": re.compile(r"[\u0600-\u06FF]"),  # Perso-Arabic (Urdu)
+    "or": re.compile(r"[\u0B00-\u0B7F]"),  # Odia
+    "sat": re.compile(r"[\u1C50-\u1C7F]"),  # Ol Chiki (Santali)
     "en": re.compile(r"[a-zA-Z]"),         # Latin (English)
 }
 
@@ -129,7 +131,7 @@ def detect_language(
     for lang, regex in SCRIPT_RANGES.items():
         counts[lang] = len(regex.findall(trimmed))
 
-    indic_scripts = ["ta", "hi", "te", "kn", "ml", "bn", "gu", "pa", "ur"]
+    indic_scripts = ["ta", "hi", "te", "kn", "ml", "bn", "gu", "pa", "ur", "or", "sat"]
     total_indic = 0
     dominant_indic = "en"
     max_indic_count = 0
@@ -205,3 +207,26 @@ def detect_language(
         "is_code_switched": False,
         "directive_applied": False,
     }
+
+
+def resolve_response_language(
+    text: str,
+    selected_language: str | None = None,
+    prior_language: str | None = None,
+    input_type: str = "text",
+) -> str:
+    """Pick the answer language from the user's message.
+
+    The language of the message always wins. The UI-selected language is only
+    a fallback when the message gives no usable signal (empty, numeric-only or
+    otherwise low confidence) and the user did not pick "auto".
+    """
+    from conversation.languages import normalize_language
+
+    selected = normalize_language(selected_language, allow_auto=True)
+    det = detect_language(text, input_type=input_type, prior_language=prior_language)
+    if det["directive_applied"] or det["confidence"] >= 0.75:
+        return normalize_language(det["detected_language"])
+    if selected != "auto":
+        return selected
+    return normalize_language(det["detected_language"])

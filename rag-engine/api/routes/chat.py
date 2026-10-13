@@ -15,7 +15,6 @@ from api.models import (
 from api.service import RagService
 from conversation.document_drafting import drafting_state_from_metadata, process_document_turn
 from conversation.interview import InterviewManager, active_interview_from_metadata
-from conversation.languages import normalize_language
 from .search import get_service
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -35,11 +34,10 @@ def _interview_payload(state: dict) -> InterviewState:
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> ChatResponse:
     started = time.perf_counter()
-    from conversation.language_detector import detect_language
+    from conversation.language_detector import resolve_response_language
     from conversation.speech_cleaner import clean_speech_text
 
     prior_lang = None
-    raw_lang = normalize_language(request.language, allow_auto=True)
     try:
         prior = None
         draft_prior = None
@@ -57,13 +55,9 @@ def chat(request: ChatRequest, service: RagService = Depends(get_service)) -> Ch
                     if m.get("language") and not prior_lang:
                         prior_lang = m["language"]
 
-        det = detect_language(request.message, input_type="text", prior_language=prior_lang)
-        if det["directive_applied"]:
-            language = det["detected_language"]
-        elif raw_lang != "auto" and raw_lang != "en":
-            language = raw_lang
-        else:
-            language = det["detected_language"]
+        language = resolve_response_language(
+            request.message, request.language, prior_lang
+        )
 
         draft = process_document_turn(request.message, draft_prior, language=language)
         if draft.action in {"clarify", "ready", "unsupported"}:

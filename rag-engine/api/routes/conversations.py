@@ -19,7 +19,6 @@ from api.models import (
 from api.routes.search import get_service
 from conversation.document_drafting import drafting_state_from_metadata, process_document_turn
 from conversation.interview import InterviewManager, active_interview_from_metadata
-from conversation.languages import normalize_language
 from retrieval.vector_search import connect_from_environment
 
 router = APIRouter(prefix="/api/conversations", tags=["conversations"])
@@ -120,10 +119,9 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
     started = time.perf_counter()
     service = get_service()
     store = ConversationStore(service.connection)
-    from conversation.language_detector import detect_language
+    from conversation.language_detector import resolve_response_language
     from conversation.speech_cleaner import clean_speech_text
 
-    raw_lang = normalize_language(request.language, allow_auto=True)
     try:
         if not store.exists(conversation_id):
             raise HTTPException(status_code=404, detail="Conversation not found")
@@ -136,13 +134,9 @@ def send_message(conversation_id: str, request: ConversationMessageRequest):
             if m.get("language") and not prior_lang:
                 prior_lang = m["language"]
 
-        det = detect_language(request.message, input_type="text", prior_language=prior_lang)
-        if det["directive_applied"]:
-            language = det["detected_language"]
-        elif raw_lang != "auto" and raw_lang != "en":
-            language = raw_lang
-        else:
-            language = det["detected_language"]
+        language = resolve_response_language(
+            request.message, request.language, prior_lang
+        )
 
         last_meta = store.last_assistant_metadata(conversation_id)
         draft_prior = drafting_state_from_metadata(last_meta)

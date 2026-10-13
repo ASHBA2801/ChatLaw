@@ -53,7 +53,10 @@ def build_prompt(
         f"TARGET LANGUAGE\n"
         f"Respond entirely in {name} ({bcp47}). "
         f"Mixed-language user input is OK; the answer must be in {name}. "
-        f"Do not answer in English unless the target language is English.\n"
+        f"Do not answer in English unless the target language is English. "
+        f"Write the way a native {name} speaker naturally talks, in the {name} script, "
+        f"not a word-for-word translation of English. Keep Act names, section numbers and "
+        f"[SOURCE n] markers unchanged.\n"
         f"{simplicity_note}"
     )
     return (

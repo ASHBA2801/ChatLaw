@@ -78,3 +78,31 @@ def test_language_switch():
 
     res_ta = detect_language("இதை இன்னும் எளிமையாக விளக்குங்கள்", prior_language="en")
     assert res_ta["detected_language"] == "ta"
+
+
+def test_message_language_overrides_selected_language():
+    from conversation.language_detector import resolve_response_language
+
+    hindi = "मेरे किरायेदार ने तीन महीने से किराया नहीं दिया है।"
+    tamil = "என் நிலத்தை என் சகோதரர் ஆக்கிரமித்துள்ளார்."
+    english = "What are my rights if my landlord refuses to return my deposit?"
+    assert resolve_response_language(hindi, "ta") == "hi"
+    assert resolve_response_language(tamil, "hi") == "ta"
+    assert resolve_response_language(tamil, "en") == "ta"
+    assert resolve_response_language(english, "ta") == "en"
+    assert resolve_response_language(english, "auto") == "en"
+
+
+def test_selected_language_is_fallback_for_neutral_input():
+    from conversation.language_detector import resolve_response_language
+
+    assert resolve_response_language("₹18,000", "ta") == "ta"
+    assert resolve_response_language("", "hi") == "hi"
+    assert resolve_response_language("", "auto") == "en"
+
+
+def test_odia_and_prompt_language_instruction():
+    from generation.prompt import build_prompt
+
+    assert detect_language("ମୋ ଜମି ମୋ ଭାଇ ଦଖଲ କରିଛନ୍ତି")["detected_language"] == "or"
+    assert "Hindi" in build_prompt("q", "ctx", language="hi")
