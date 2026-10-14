@@ -102,7 +102,7 @@ export function useSpeechInput({
   }, []);
 
   const resolvedStatus: SpeechInputStatus = !supported ? "unsupported" : status;
-  const isListening = resolvedStatus === "recording" || resolvedStatus === "processing";
+  const isListening = resolvedStatus === "starting" || resolvedStatus === "recording" || resolvedStatus === "processing";
 
   const clearError = useCallback(() => setError(null), []);
 
@@ -156,6 +156,7 @@ export function useSpeechInput({
         },
       });
       recorderRef.current = recorder;
+      setStatus("starting");
       void recorder.start();
       return;
     }
@@ -190,6 +191,13 @@ export function useSpeechInput({
 
   const stop = useCallback(() => {
     const recorder = recorderRef.current;
+    if (recorder?.starting) {
+      // Stopped before the microphone opened: nothing was recorded, so just reset.
+      recorder.cancel();
+      recorderRef.current = null;
+      setStatus("idle");
+      return;
+    }
     if (recorder) {
       recorderRef.current = null;
       void finishServerRecording(recorder);

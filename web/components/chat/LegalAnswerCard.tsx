@@ -35,6 +35,7 @@ import CaseIntelligencePanel from "@/components/case-intelligence/CaseIntelligen
 import type { UseAnswerPlaybackResult } from "@/lib/speech/useAnswerPlayback";
 
 import { isSafeExternalUrl } from "@/lib/urls/safeUrl";
+import { stripRenderedCitationLabels } from "@/lib/chat/citationText";
 
 
 
@@ -60,7 +61,7 @@ function CitationReference({
 
       onClick={() => onOpen(citation)}
 
-      className="mx-0.5 inline-flex min-h-6 items-center rounded-md bg-[var(--accent-soft)] px-1.5 align-baseline text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent-mid)]"
+      className="ml-1 inline-flex min-h-6 items-center rounded-md bg-[var(--accent-soft)] px-1.5 align-baseline text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent-mid)]"
 
       title={citation.document || "Source"}
 
@@ -208,13 +209,15 @@ function MarkdownBody({
 
 
 
+  const text = useMemo(() => stripRenderedCitationLabels(answer, citations), [answer, citations]);
+
   return (
 
     <div className="space-y-3 text-[15px] leading-7 [&_a]:font-medium [&_a]:text-[var(--accent)] [&_a]:underline [&_a]:underline-offset-2 [&_li]:ml-5 [&_li]:list-disc [&_ol>li]:list-decimal [&_strong]:font-semibold">
 
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
 
-        {answer}
+        {text}
 
       </ReactMarkdown>
 

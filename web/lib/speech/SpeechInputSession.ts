@@ -1,5 +1,5 @@
 import { mapSpeechError } from "./errors";
-import { getSpeechRecognitionConstructor, resolveSpeechLocale } from "./support";
+import { getSpeechRecognitionConstructor, isMobileDevice, resolveSpeechLocale } from "./support";
 import type {
   SpeechInputStatus,
   SpeechLanguageCode,
@@ -25,7 +25,10 @@ export class SpeechInputSession {
   private recognition: SpeechRecognitionLike | null = null;
   private intentionalStop = false;
   private sawResult = false;
+  private started = false;
   private disposed = false;
+  /** Recognizers we aborted; their late end/error events must not report anything. */
+  private readonly aborted = new WeakSet<SpeechRecognitionLike>();
 
   constructor(
     private readonly language: SpeechLanguageCode,
@@ -46,15 +49,18 @@ export class SpeechInputSession {
     this.stopInternal(true);
     this.intentionalStop = false;
     this.sawResult = false;
+    this.started = false;
 
     const recognition = new Ctor();
-    recognition.continuous = true;
+    // Android Chrome's continuous mode re-sends earlier results, duplicating words.
+    recognition.continuous = !isMobileDevice(this.win);
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
     recognition.lang = resolveSpeechLocale(this.language).locale;
 
     recognition.onstart = () => {
       if (this.disposed) return;
+      this.started = true;
       this.callbacks.onStatus("recording");
     };
 
@@ -69,7 +75,7 @@ export class SpeechInputSession {
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
-      if (this.disposed) return;
+      if (this.disposed || this.aborted.has(recognition)) return;
       if (event.error === "aborted" && this.intentionalStop) {
         return;
       }
@@ -78,7 +84,7 @@ export class SpeechInputSession {
     };
 
     recognition.onend = () => {
-      if (this.disposed) return;
+      if (this.disposed || this.aborted.has(recognition)) return;
       this.recognition = null;
       if (this.intentionalStop) {
         this.callbacks.onStatus("processing");
@@ -97,6 +103,8 @@ export class SpeechInputSession {
     };
 
     this.recognition = recognition;
+    // Recognition can take a second to open the mic on phones; show that it is coming.
+    this.callbacks.onStatus("starting");
     try {
       recognition.start();
     } catch {
@@ -110,6 +118,11 @@ export class SpeechInputSession {
     this.intentionalStop = true;
     if (!this.recognition) {
       this.callbacks.onStatus("idle");
+      return;
+    }
+    if (!this.started) {
+      // Stopped before the microphone opened; nothing to transcribe.
+      this.cancel();
       return;
     }
     this.callbacks.onStatus("processing");
@@ -138,6 +151,7 @@ export class SpeechInputSession {
     if (!this.recognition) return;
     const active = this.recognition;
     this.recognition = null;
+    if (abort) this.aborted.add(active);
     try {
       if (abort) active.abort();
       else active.stop();

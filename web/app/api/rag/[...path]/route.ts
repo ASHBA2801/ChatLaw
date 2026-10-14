@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth/session";
+import { fetchRagWithWake } from "@/lib/rag/fetchWithWake";
 
 export const dynamic = "force-dynamic";
 // Research case discovery searches and verifies official court sources.
@@ -122,7 +123,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       }
     }
 
-    const response = await fetch(target, {
+    const response = await fetchRagWithWake(target, {
       method: request.method,
       headers,
       body: body ? (body instanceof Uint8Array ? Buffer.from(body) : body) : undefined,

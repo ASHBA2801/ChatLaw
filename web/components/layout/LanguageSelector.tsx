@@ -118,13 +118,13 @@ export default function LanguageSelector({
         aria-controls={open ? panelId : undefined}
         aria-label={`Language: ${formatLanguageLabel(languageOption)}`}
         onClick={() => setOpen((value) => !value)}
-        className={`inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium text-[var(--foreground)] ${triggerStyle} ${compact ? "max-w-[11rem]" : ""}`}
+        className={`inline-flex min-h-10 items-center rounded-lg text-sm font-medium text-[var(--foreground)] ${triggerStyle} ${compact ? "max-w-[7.5rem] gap-1.5 px-2 sm:max-w-[11rem] sm:gap-2 sm:px-3" : "gap-2 px-3"}`}
       >
         <GlobeIcon className="h-4 w-4 shrink-0 text-[var(--ink-muted)]" />
         <span className="truncate" lang={languageOption.bcp47}>
           {compact ? languageOption.nativeName : formatLanguageLabel(languageOption)}
         </span>
-        <ChevronDownIcon className={`h-4 w-4 shrink-0 text-[var(--ink-muted)] transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDownIcon className={`h-4 w-4 shrink-0 text-[var(--ink-muted)] transition-transform ${open ? "rotate-180" : ""} ${compact ? "hidden sm:block" : ""}`} />
       </button>
 
       {open ? (

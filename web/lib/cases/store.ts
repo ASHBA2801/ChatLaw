@@ -15,7 +15,7 @@ export async function listOwnedCases(userId: string) {
   return prisma.case.findMany({
     where: { userId },
     orderBy: { updatedAt: "desc" },
-    include: { _count: { select: { documents: { where: { deletedAt: null } }, timeline: true } } },
+    include: { _count: { select: { documents: { where: { deletedAt: null } }, timeline: true, filings: true } } },
   });
 }
 
@@ -29,7 +29,7 @@ export async function createOwnedCase(userId: string, input: Record<string, unkn
   const title = clean(input.title, 200);
   if (!title) throw new CaseAccessError(422, "A case title is required");
   return prisma.$transaction(async (tx) => {
-    const item = await tx.case.create({ data: { userId, title, description: clean(input.description), category: clean(input.category, 160), subCategory: clean(input.subCategory, 160), jurisdiction: clean(input.jurisdiction, 160), city: clean(input.city, 120), state: clean(input.state, 120), country: clean(input.country, 120) } });
+    const item = await tx.case.create({ data: { userId, title, description: clean(input.description), category: clean(input.category, 160), subCategory: clean(input.subCategory, 160), jurisdiction: clean(input.jurisdiction, 160), city: clean(input.city, 120), state: clean(input.state, 120), country: clean(input.country, 120), locality: clean(input.locality, 160), district: clean(input.district, 160), pincode: clean(input.pincode, 12) } });
     await tx.caseTimelineEvent.create({ data: { caseId: item.id, type: "CASE_CREATED", title: "Case created" } });
     return item;
   });

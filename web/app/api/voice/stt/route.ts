@@ -4,6 +4,19 @@ export const dynamic = "force-dynamic";
 
 const GEMINI_STT_MODEL = process.env.GEMINI_STT_MODEL || "gemini-2.5-flash";
 const MAX_AUDIO_BYTES = 16 * 1024 * 1024; // 16 MB
+// A stalled upstream call would leave the phone stuck on "Transcribing…".
+const STT_TIMEOUT_MS = 45_000;
+// Gemini answers 429/5xx when briefly overloaded; one quick retry turns most of those into a transcript.
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+
+async function callGemini(url: string, body: string): Promise<Response> {
+  const signal = AbortSignal.timeout(STT_TIMEOUT_MS);
+  const send = () => fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body, signal });
+  const first = await send();
+  if (!RETRYABLE_STATUS.has(first.status)) return first;
+  await new Promise((resolve) => setTimeout(resolve, 800));
+  return send();
+}
 
 const LANGUAGE_NAME_MAP: Record<string, string> = {
   ta: "Tamil",
@@ -93,12 +106,7 @@ Return strictly a JSON object with this exact schema:
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_STT_MODEL}:generateContent?key=${apiKey}`;
 
-    const response = await fetch(geminiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await callGemini(geminiUrl, JSON.stringify({
         contents: [
           {
             parts: [
@@ -118,8 +126,7 @@ Return strictly a JSON object with this exact schema:
           responseMimeType: "application/json",
           temperature: 0.0,
         },
-      }),
-    });
+      }));
 
     if (!response.ok) {
       const errText = await response.text();
@@ -166,6 +173,12 @@ Return strictly a JSON object with this exact schema:
       confidence: typeof parsed.confidence === "number" ? parsed.confidence : 0.95,
     });
   } catch (error) {
+    if (error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError")) {
+      return NextResponse.json(
+        { error: "Transcription took too long. Please try again." },
+        { status: 504 },
+      );
+    }
     console.error("[STT] Unhandled error:", error);
     return NextResponse.json(
       { error: "Failed to process audio recording." },

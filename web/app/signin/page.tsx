@@ -52,7 +52,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
             Informational assistance only — not a substitute for a lawyer or court.
           </p>
         </div>
-        <Link href="/" className="mt-6 self-center text-sm text-[var(--ink-muted)] hover:text-[var(--foreground)]">
+        <Link href="/" className="mt-4 inline-flex min-h-11 items-center self-center px-2 text-sm text-[var(--ink-muted)] hover:text-[var(--foreground)]">
           ← Back to home
         </Link>
       </div>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { normalizeTextForSpeech } from "@/lib/speech/speechNormalizer";
+import { fetchRagWithWake } from "@/lib/rag/fetchWithWake";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const ttsUrl = `${baseUrl}/api/voice/tts`;
-    const response = await fetch(ttsUrl, {
+    const response = await fetchRagWithWake(ttsUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

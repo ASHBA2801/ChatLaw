@@ -141,3 +141,23 @@ export type ResearchLawLookup = Prisma.ResearchLawLookupModel
  * 
  */
 export type ResearchQuery = Prisma.ResearchQueryModel
+/**
+ * Model CaseFiling
+ * 
+ */
+export type CaseFiling = Prisma.CaseFilingModel
+/**
+ * Model AuthorityContact
+ * 
+ */
+export type AuthorityContact = Prisma.AuthorityContactModel
+/**
+ * Model DraftingTemplate
+ * 
+ */
+export type DraftingTemplate = Prisma.DraftingTemplateModel
+/**
+ * Model DraftingTemplateChunk
+ * 
+ */
+export type DraftingTemplateChunk = Prisma.DraftingTemplateChunkModel

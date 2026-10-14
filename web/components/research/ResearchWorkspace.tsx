@@ -170,7 +170,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
         {(
           [
             ["research", "Research a question"],
-            ["browse", "Browse Acts and landmark cases"],
+            ["browse", "Browse Acts"],
           ] as const
         ).map(([value, label]) => (
           <button
@@ -207,7 +207,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                 id="research-query"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="e.g. Section 85 BNS, IPC 302, or tenant security deposit not returned"
+                placeholder="e.g. Section 85 BNS or IPC 302"
                 className="min-h-11 flex-1 rounded-sm border border-[var(--line)] bg-[var(--background)] px-4 text-sm outline-none focus:border-[var(--accent)]"
               />
               <button type="submit" disabled={lawLoading || query.trim().length < 2} className="btn-primary disabled:opacity-50">
@@ -220,7 +220,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
               {COURT_LEVELS.map(({ value, label }) => (
                 <label
                   key={value}
-                  className={`inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-medium ${courtLevels.includes(value) ? "border-[var(--accent-mid)] bg-[var(--accent-soft)] text-[var(--accent)]" : "border-[var(--line)] text-[var(--ink-muted)]"}`}
+                  className={`inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 text-[13px] font-medium ${courtLevels.includes(value) ? "border-[var(--accent-mid)] bg-[var(--accent-soft)] text-[var(--accent)]" : "border-[var(--line)] text-[var(--ink-muted)]"}`}
                 >
                   <input type="checkbox" className="sr-only" checked={courtLevels.includes(value)} onChange={() => toggleCourt(value)} />
                   {label}
@@ -246,7 +246,7 @@ export default function ResearchWorkspace({ initialQuery }: { initialQuery: stri
                       setQuery(example);
                       void runResearch(example);
                     }}
-                    className="rounded-full border border-[var(--line)] bg-[var(--background)] px-3 py-1.5 text-xs font-medium hover:border-[var(--accent-mid)] hover:text-[var(--accent)]"
+                    className="min-h-10 rounded-full border border-[var(--line)] bg-[var(--background)] px-3.5 py-2 text-left text-[13px] font-medium leading-5 hover:border-[var(--accent-mid)] hover:text-[var(--accent)]"
                   >
                     {example}
                   </button>

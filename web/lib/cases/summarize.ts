@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db/client";
 import { auditCaseAction } from "./audit";
 import { getOwnedCaseDocument } from "./documents";
 import { CaseAccessError } from "./errors";
+import { fetchRagWithWake } from "@/lib/rag/fetchWithWake";
 
 const MAX_SUMMARY_CHARS = 20_000;
 
@@ -19,7 +20,7 @@ export async function summarizeOwnedCaseDocument(userId: string, caseId: string,
     throw new CaseAccessError(503, "Document summary is not configured.");
   }
   auditCaseAction("summary_requested", { userId, caseId, documentId });
-  const response = await fetch(`${baseUrl}/api/summarize/document`, {
+  const response = await fetchRagWithWake(`${baseUrl}/api/summarize/document`, {
     method: "POST",
     headers: {
       Accept: "application/json",

@@ -5,6 +5,7 @@ import { auditCaseAction } from "./audit";
 import { loadAuthorizedCaseContext, type CaseContextExcerpt } from "./context";
 import { CaseAccessError } from "./errors";
 import { getOwnedCase } from "./store";
+import { fetchRagWithWake } from "@/lib/rag/fetchWithWake";
 
 type RagChatPayload = {
   answer: string;
@@ -26,7 +27,7 @@ async function ragRequest(path: string, body: unknown, method = "POST") {
   if (!baseUrl || !secret) {
     throw new CaseAccessError(503, "Legal research is not configured.");
   }
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await fetchRagWithWake(`${baseUrl}${path}`, {
     method,
     headers: {
       Accept: "application/json",

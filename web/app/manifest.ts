@@ -9,9 +9,15 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#f6f7f9",
     theme_color: "#2455d4",
+    id: "/chat",
+    scope: "/",
+    orientation: "portrait",
     icons: [
-      { src: "/icons/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
-      { src: "/icons/icon-512.svg", sizes: "512x512", type: "image/svg+xml" },
+      // PNGs: Android uses these for the home screen and splash screen; SVG alone is not reliable.
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      { src: "/icons/icon-512.svg", sizes: "any", type: "image/svg+xml" },
     ],
     categories: ["education", "productivity"],
     shortcuts: [

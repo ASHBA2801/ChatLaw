@@ -12,8 +12,11 @@ export default function NewCaseForm() {
     title: "",
     description: "",
     category: "",
+    locality: "",
     city: "",
+    district: "",
     state: "",
+    pincode: "",
     country: "India",
   });
   const [error, setError] = useState("");
@@ -44,7 +47,7 @@ export default function NewCaseForm() {
   return (
     <form onSubmit={submit} className="mt-8 space-y-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-soft)] p-5 sm:p-6">
       <p className="text-sm text-[var(--ink-muted)]">
-        Start with a clear title and optional location. You can upload documents and ask grounded questions after the case is created.
+        Describe what happened in your own words. The facts and the location are used to draft complaints and petitions and to find the nearest police station, office or court.
       </p>
       <label className="block text-sm font-medium">
         Case title
@@ -58,11 +61,12 @@ export default function NewCaseForm() {
         />
       </label>
       <label className="block text-sm font-medium">
-        Description
+        What happened
+        <span className="mt-0.5 block text-xs font-normal text-[var(--ink-muted)]">Dates, places, who was involved, what they did, any money lost or injury, and whom you have already approached.</span>
         <textarea
           value={form.description}
           onChange={(event) => update("description", event.target.value)}
-          rows={4}
+          rows={7}
           className="mt-1 w-full rounded-sm border border-[var(--line)] bg-[var(--surface)] px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)]"
           maxLength={4000}
         />
@@ -70,10 +74,12 @@ export default function NewCaseForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         {(
           [
-            ["category", "Category"],
-            ["city", "City"],
+            ["category", "Category (optional)"],
+            ["locality", "Area / locality"],
+            ["city", "City / town"],
+            ["district", "District"],
             ["state", "State"],
-            ["country", "Country"],
+            ["pincode", "PIN code"],
           ] as const
         ).map(([key, label]) => (
           <label key={key} className="block text-sm font-medium">

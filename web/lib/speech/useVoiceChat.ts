@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from "react";
 import { mapSpeechError } from "./errors";
-import { DEFAULT_SPEECH_LANGUAGE, isBraveBrowser, isSpeechRecognitionSupported } from "./support";
+import { DEFAULT_SPEECH_LANGUAGE, isBraveBrowser, isMobileDevice, isSpeechRecognitionSupported } from "./support";
 import { AudioRecorderSession, isAudioRecordingSupported } from "./audioRecorder";
 import { SpeechInputSession } from "./SpeechInputSession";
 import { SpeechOutputSession } from "./SpeechOutputSession";
@@ -48,6 +48,8 @@ export interface UseVoiceChatResult {
   autoplayBlocked: boolean;
   unlockAutoplay: () => void;
   audioLevel: number;
+  /** False while the microphone is still opening after the user tapped to talk. */
+  micReady: boolean;
   error: string | null;
   interimText: string;
   draftText: string;
@@ -105,6 +107,8 @@ export function useVoiceChat({
   const [continuousMode, setContinuousMode] = useState(initialContinuousMode);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
+  /** False between tapping the mic and the microphone actually capturing. */
+  const [micReady, setMicReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [interimText, setInterimText] = useState("");
   const [draftText, setDraftText] = useState("");
@@ -343,11 +347,19 @@ export function useVoiceChat({
     draftRef.current = "";
     transcriptRef.current = "";
     processingRef.current = false;
+    setMicReady(false);
+
+    const useRecorder = isAudioRecordingSupported();
+    // Phones hand the microphone to one capture at a time; running browser
+    // recognition alongside the recorder there makes one of them fail or hear nothing.
+    const useLiveRecognition = isSpeechRecognitionSupported() && !isBraveBrowser()
+      && !(useRecorder && isMobileDevice());
 
     // 1. Initialize audio recorder for server-side multilingual transcription
-    if (isAudioRecordingSupported()) {
+    if (useRecorder) {
       const recorder = new AudioRecorderSession({
         onStart: () => {
+          setMicReady(true);
           transitionVoiceState(stateRef, "listening", setState);
         },
         onLevel: (level) => {
@@ -362,11 +374,12 @@ export function useVoiceChat({
       void recorder.start();
     }
 
-    // 2. Concurrently run browser SpeechRecognition if supported and not Brave for live interim text
-    if (isSpeechRecognitionSupported() && !isBraveBrowser()) {
+    // 2. Concurrently run browser SpeechRecognition (desktop) for live interim text
+    if (useLiveRecognition) {
       const session = new SpeechInputSession(languageRef.current, {
         onStatus: (status) => {
           if (status === "recording") {
+            setMicReady(true);
             transitionVoiceState(stateRef, "listening", setState);
           } else if (status === "processing") {
             transitionVoiceState(stateRef, "transcribing", setState);
@@ -406,6 +419,17 @@ export function useVoiceChat({
   }, [beginListening, stopSpeakingInternal]);
 
   const stopListening = useCallback(async () => {
+    if (audioRecorderRef.current?.starting) {
+      // Tapped stop before the microphone opened: nothing was recorded.
+      inputSessionRef.current?.cancel();
+      inputSessionRef.current = null;
+      audioRecorderRef.current.cancel();
+      audioRecorderRef.current = null;
+      setMicReady(false);
+      forceVoiceState(stateRef, "idle", setState);
+      return;
+    }
+    setMicReady(false);
     transitionVoiceState(stateRef, "transcribing", setState);
     inputSessionRef.current?.stop();
 
@@ -502,7 +526,8 @@ export function useVoiceChat({
 
   return {
     state,
-    stateLabel: voiceStateLabel(state),
+    stateLabel: state === "listening" && !micReady ? "Starting microphone…" : voiceStateLabel(state),
+    micReady,
     supported: recognitionSupported,
     ttsSupported,
     language,

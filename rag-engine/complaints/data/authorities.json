@@ -1,0 +1,105 @@
+{
+  "verified_on": "2026-10-14",
+  "note": "Each entry was checked on the official page in source_url. Emails are listed only when that page shows them.",
+  "national": [
+    {
+      "kind": "cbi",
+      "name": "Central Bureau of Investigation (Head Office)",
+      "designation": "Director, Central Bureau of Investigation",
+      "address": "Plot No. 5-B, 6th Floor, CGO Complex, Lodhi Road, New Delhi - 110003",
+      "emails": [],
+      "website": "https://cbi.gov.in/",
+      "portal_url": "https://cbi.gov.in/cbi-network",
+      "notes": "The CBI publishes no general complaint email. Signed complaints are lodged at a branch (every State has at least one, headed by a Superintendent of Police) in person, by post or by fax.",
+      "source_url": "https://cbi.gov.in/"
+    },
+    {
+      "kind": "pmo",
+      "name": "Prime Minister's Office — CPGRAMS",
+      "designation": "Prime Minister's Office (Public Wing)",
+      "address": "South Block, Raisina Hill, New Delhi - 110011",
+      "emails": [],
+      "website": "https://pgportal.gov.in/",
+      "portal_url": "https://pgportal.gov.in/",
+      "notes": "Lodge on CPGRAMS (choose Prime Minister's Office). The portal states: \"Any Grievance sent by email will not be attended to / entertained.\"",
+      "source_url": "https://pgportal.gov.in/"
+    },
+    {
+      "kind": "women_commission",
+      "name": "National Commission for Women — Complaint Cell",
+      "designation": "Chairperson, National Commission for Women",
+      "address": "New Delhi",
+      "phone": "14490",
+      "emails": [
+        {"address": "complaintcell-ncw@nic.in", "label": "Complaint Cell", "source_url": "https://www.ncw.gov.in/national-commission-for-women-contact-us/"},
+        {"address": "chairperson-ncw@nic.in", "label": "Chairperson", "source_url": "https://www.ncw.gov.in/national-commission-for-women-contact-us/"}
+      ],
+      "website": "https://www.ncw.gov.in/",
+      "portal_url": "https://ncwapps.nic.in/onlinecomplaintsv2/frmPubRegistration.aspx",
+      "source_url": "https://www.ncw.gov.in/national-commission-for-women-contact-us/"
+    },
+    {
+      "kind": "human_rights",
+      "name": "National Human Rights Commission",
+      "designation": "Registrar (Law), National Human Rights Commission",
+      "address": "Manav Adhikar Bhavan, C-Block, GPO Complex, INA, New Delhi - 110023",
+      "phone": "14433 (toll free), 011-24651330",
+      "emails": [
+        {"address": "cr.nhrc@nic.in", "label": "Shown on the NHRC home page", "source_url": "https://nhrc.nic.in/"}
+      ],
+      "website": "https://nhrc.nic.in/",
+      "portal_url": "https://www.hrcnet.nic.in/HRCNet/public/webcomplaint.aspx",
+      "notes": "Online complaints on HRCNet are preferred.",
+      "source_url": "https://nhrc.nic.in/"
+    },
+    {
+      "kind": "cyber_crime",
+      "name": "National Cyber Crime Reporting Portal",
+      "designation": "Indian Cyber Crime Coordination Centre (I4C), Ministry of Home Affairs",
+      "phone": "1930 (financial cyber fraud helpline)",
+      "emails": [],
+      "website": "https://cybercrime.gov.in/",
+      "portal_url": "https://cybercrime.gov.in/",
+      "notes": "Report online and call 1930 immediately if money was lost.",
+      "source_url": "https://cybercrime.gov.in/"
+    },
+    {
+      "kind": "supreme_court",
+      "name": "Supreme Court of India",
+      "designation": "Registry, Supreme Court of India",
+      "address": "Tilak Marg, New Delhi - 110001",
+      "emails": [],
+      "website": "https://www.sci.gov.in/",
+      "portal_url": "https://efiling.sci.gov.in/",
+      "notes": "Petitions are filed through an Advocate-on-Record, in person or on the e-filing portal.",
+      "source_url": "https://www.sci.gov.in/"
+    }
+  ],
+  "state": [
+    {
+      "kind": "vigilance",
+      "state": "tamil nadu",
+      "name": "Directorate of Vigilance and Anti-Corruption (DVAC), Tamil Nadu",
+      "designation": "Director, DVAC",
+      "address": "DVAC Headquarters, No. 293, MKN Road, Alandur, Chennai - 600016",
+      "phone": "+91-44-22321090 / 22321085 / 22310989 / 22342142; Fax +91-44-22321005",
+      "emails": [
+        {"address": "dvac@nic.in", "label": "Complaints", "source_url": "https://dvac.tn.gov.in/contactus.html"}
+      ],
+      "website": "https://dvac.tn.gov.in/",
+      "notes": "Every district has a DVAC detachment headed by a Deputy Superintendent of Police where a written complaint can be lodged; complaints can be sent by post, fax, email or in person.",
+      "source_url": "https://dvac.tn.gov.in/contactus.html"
+    },
+    {"kind": "high_court", "state": "tamil nadu", "name": "Madras High Court", "address": "High Court Buildings, Chennai", "emails": [], "website": "https://www.hcmadras.tn.gov.in/", "source_url": "https://www.hcmadras.tn.gov.in/"},
+    {"kind": "high_court", "state": "puducherry", "name": "Madras High Court", "address": "High Court Buildings, Chennai", "emails": [], "website": "https://www.hcmadras.tn.gov.in/", "source_url": "https://www.hcmadras.tn.gov.in/"},
+    {"kind": "high_court", "state": "maharashtra", "name": "Bombay High Court", "address": "Fort, Mumbai", "emails": [], "website": "https://bombayhighcourt.nic.in/", "source_url": "https://bombayhighcourt.nic.in/"},
+    {"kind": "high_court", "state": "goa", "name": "Bombay High Court (Goa Bench)", "address": "Panaji, Goa", "emails": [], "website": "https://bombayhighcourt.nic.in/", "source_url": "https://bombayhighcourt.nic.in/"},
+    {"kind": "high_court", "state": "delhi", "name": "High Court of Delhi", "address": "Sher Shah Road, New Delhi", "emails": [], "website": "https://delhihighcourt.nic.in/", "source_url": "https://delhihighcourt.nic.in/"},
+    {"kind": "high_court", "state": "karnataka", "name": "High Court of Karnataka", "address": "Bengaluru", "emails": [], "website": "https://karnatakajudiciary.kar.nic.in/", "source_url": "https://karnatakajudiciary.kar.nic.in/"},
+    {"kind": "high_court", "state": "kerala", "name": "High Court of Kerala", "address": "Kochi", "emails": [], "website": "https://hckerala.gov.in/", "source_url": "https://hckerala.gov.in/"},
+    {"kind": "high_court", "state": "lakshadweep", "name": "High Court of Kerala", "address": "Kochi", "emails": [], "website": "https://hckerala.gov.in/", "source_url": "https://hckerala.gov.in/"},
+    {"kind": "high_court", "state": "west bengal", "name": "Calcutta High Court", "address": "Kolkata", "emails": [], "website": "https://www.calcuttahighcourt.gov.in/", "source_url": "https://www.calcuttahighcourt.gov.in/"},
+    {"kind": "high_court", "state": "gujarat", "name": "High Court of Gujarat", "address": "Ahmedabad", "emails": [], "website": "https://gujarathighcourt.nic.in/", "source_url": "https://gujarathighcourt.nic.in/"},
+    {"kind": "high_court", "state": "telangana", "name": "High Court for the State of Telangana", "address": "Hyderabad", "emails": [], "website": "https://tshc.gov.in/", "source_url": "https://tshc.gov.in/"}
+  ]
+}

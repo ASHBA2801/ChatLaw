@@ -63,14 +63,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* The text-wrap-style longhands only change where lines break. The text-wrap
+   shorthand would also force wrapping, and as unlayered CSS it beats Tailwind's
+   `truncate`, so single-line titles wrapped onto two lines on phones. */
 h1,
 h2,
 h3 {
-  text-wrap: balance;
+  text-wrap-style: balance;
 }
 
 p {
-  text-wrap: pretty;
+  text-wrap-style: pretty;
 }
 
 button,
@@ -305,5 +308,36 @@ select {
   .document-workspace [role="tablist"],
   .document-workspace .print\:hidden {
     display: none !important;
+  }
+}
+
+/* Filing documents (Cases → complaints and petitions): print only the document sheet. */
+.filing-sheet {
+  font-family: var(--font-doc), var(--font-ui);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  body:has(.filing-print-root) * {
+    visibility: hidden;
+  }
+
+  body:has(.filing-print-root) .filing-print-root,
+  body:has(.filing-print-root) .filing-print-root * {
+    visibility: visible;
+  }
+
+  .filing-print-root {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    font-size: 12pt;
+    line-height: 1.5;
   }
 }

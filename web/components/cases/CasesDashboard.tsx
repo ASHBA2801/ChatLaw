@@ -11,7 +11,7 @@ type CaseRow = {
   state: string | null;
   status: string;
   updatedAt: Date | string;
-  _count: { documents: number; timeline: number };
+  _count: { documents: number; timeline: number; filings?: number };
 };
 
 const STATUSES = ["ALL", "ACTIVE", "ON_HOLD", "RESOLVED", "ARCHIVED"] as const;
@@ -111,7 +111,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--ink-muted)]">
             {cases.length
               ? "Try a different search or filter."
-              : "Create a private workspace for a legal matter, upload PDFs, track dates, and ask grounded questions."}
+              : "Create a private workspace for a legal matter: draft a police complaint or court petition, find where to send it, upload PDFs and track dates."}
           </p>
           {!cases.length ? (
             <Link
@@ -157,6 +157,7 @@ export default function CasesDashboard({ cases }: { cases: CaseRow[] }) {
                 </p>
                 <p className="mt-2 text-xs text-[var(--ink-muted)]">
                   {item._count.documents} document{item._count.documents === 1 ? "" : "s"} ·{" "}
+                  {item._count.filings ? `${item._count.filings} complaint${item._count.filings === 1 ? "" : "s"} drafted · ` : ""}
                   {relativeUpdate(item.updatedAt)}
                 </p>
                 <Link

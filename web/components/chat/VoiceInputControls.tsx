@@ -23,6 +23,8 @@ export interface VoiceInputControlsProps {
 
 function statusLabel(status: SpeechInputStatus): string {
   switch (status) {
+    case "starting":
+      return "Starting mic…";
     case "recording":
       return "Recording…";
     case "processing":
@@ -38,6 +40,7 @@ function statusLabel(status: SpeechInputStatus): string {
 
 function buttonLabel(status: SpeechInputStatus, supported: boolean): string {
   if (!supported || status === "unsupported") return "Voice input unavailable";
+  if (status === "starting") return "Cancel voice input";
   if (status === "recording") return "Stop voice input";
   if (status === "processing") return "Transcribing voice input";
   return "Start voice input";
@@ -58,14 +61,17 @@ export default function VoiceInputControls({
   onCancel,
   onClearError,
 }: VoiceInputControlsProps) {
+  const isStarting = status === "starting";
   const isRecording = status === "recording";
   const isProcessing = status === "processing";
+  // Starting looks like recording at once, so a tap never seems ignored while the mic opens.
+  const isActive = isStarting || isRecording;
   const languages = getEnabledSpeechLanguages();
   const composer = variant === "composer";
 
   function handleMicClick() {
     if (!supported || status === "unsupported") return;
-    if (isRecording) {
+    if (isActive) {
       onStop();
       return;
     }
@@ -83,22 +89,26 @@ export default function VoiceInputControls({
           disabled={disabled || !supported || status === "unsupported" || isProcessing}
           className={`inline-flex items-center justify-center text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] disabled:cursor-not-allowed disabled:opacity-50 ${
             composer
-              ? `h-10 w-10 rounded-full ${
-                  isRecording
+              ? `h-11 w-11 rounded-full ${
+                  isActive
                     ? "bg-[var(--warn-bg)] text-[var(--warn)]"
                     : "text-[var(--ink-muted)] hover:bg-[var(--fill)] hover:text-[var(--foreground)]"
                 }`
               : `min-h-11 min-w-11 rounded-sm border ${
-                  isRecording
+                  isActive
                     ? "border-[var(--warn)] bg-[var(--warn-bg)] text-[var(--warn)]"
                     : "border-[var(--line)] text-[var(--foreground)] hover:border-[var(--accent)]"
                 }`
           }`}
           aria-label={buttonLabel(status, supported)}
-          aria-pressed={isRecording}
+          aria-pressed={isActive}
           title={buttonLabel(status, supported)}
         >
-          {isRecording ? <StopIcon className="h-5 w-5" /> : <MicIcon className="h-5 w-5" />}
+          {isActive ? (
+            <StopIcon className={`h-5 w-5 ${isStarting ? "animate-pulse" : ""}`} />
+          ) : (
+            <MicIcon className="h-5 w-5" />
+          )}
         </button>
 
         {composer ? null : (
@@ -110,7 +120,7 @@ export default function VoiceInputControls({
             id={languageSelectId}
             value={language}
             onChange={(event) => onLanguageChange(event.target.value as SpeechLanguageCode)}
-            disabled={disabled || isRecording || isProcessing || !supported}
+            disabled={disabled || isActive || isProcessing || !supported}
             className="hidden h-11 max-w-[9.5rem] rounded-sm border border-[var(--line)] bg-[var(--surface)] px-2 text-xs text-[var(--ink-muted)] sm:block"
             aria-label="Voice input language"
           >
@@ -123,7 +133,7 @@ export default function VoiceInputControls({
           </>
         )}
 
-        {(isRecording || isProcessing) && (
+        {(isActive || isProcessing) && (
           <button
             type="button"
             onClick={onCancel}

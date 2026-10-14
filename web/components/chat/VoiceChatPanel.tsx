@@ -366,7 +366,7 @@ export default function VoiceChatPanel({
       role="alert"
     >
       <p>{error}</p>
-      <button type="button" onClick={onClearError} className="shrink-0 font-semibold underline underline-offset-2">
+      <button type="button" onClick={onClearError} className="-my-2 inline-flex min-h-10 shrink-0 items-center px-2 font-semibold underline underline-offset-2">
         Retry
       </button>
     </div>

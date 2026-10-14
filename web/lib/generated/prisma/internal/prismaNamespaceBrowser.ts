@@ -70,7 +70,11 @@ export const ModelName = {
   CourtCaseChunk: 'CourtCaseChunk',
   CourtCaseLaw: 'CourtCaseLaw',
   ResearchLawLookup: 'ResearchLawLookup',
-  ResearchQuery: 'ResearchQuery'
+  ResearchQuery: 'ResearchQuery',
+  CaseFiling: 'CaseFiling',
+  AuthorityContact: 'AuthorityContact',
+  DraftingTemplate: 'DraftingTemplate',
+  DraftingTemplateChunk: 'DraftingTemplateChunk'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -190,6 +194,12 @@ export const CaseScalarFieldEnum = {
   city: 'city',
   state: 'state',
   country: 'country',
+  district: 'district',
+  locality: 'locality',
+  pincode: 'pincode',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  filingProfile: 'filingProfile',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -416,6 +426,81 @@ export const ResearchQueryScalarFieldEnum = {
 } as const
 
 export type ResearchQueryScalarFieldEnum = (typeof ResearchQueryScalarFieldEnum)[keyof typeof ResearchQueryScalarFieldEnum]
+
+
+export const CaseFilingScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  userId: 'userId',
+  kind: 'kind',
+  forum: 'forum',
+  title: 'title',
+  subject: 'subject',
+  addressee: 'addressee',
+  body: 'body',
+  recipients: 'recipients',
+  cc: 'cc',
+  sections: 'sections',
+  citations: 'citations',
+  warnings: 'warnings',
+  placeholders: 'placeholders',
+  filing: 'filing',
+  emailBody: 'emailBody',
+  language: 'language',
+  status: 'status',
+  generation: 'generation',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CaseFilingScalarFieldEnum = (typeof CaseFilingScalarFieldEnum)[keyof typeof CaseFilingScalarFieldEnum]
+
+
+export const AuthorityContactScalarFieldEnum = {
+  lookupKey: 'lookupKey',
+  kind: 'kind',
+  state: 'state',
+  district: 'district',
+  locality: 'locality',
+  status: 'status',
+  offices: 'offices',
+  checkedAt: 'checkedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthorityContactScalarFieldEnum = (typeof AuthorityContactScalarFieldEnum)[keyof typeof AuthorityContactScalarFieldEnum]
+
+
+export const DraftingTemplateScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  kind: 'kind',
+  forum: 'forum',
+  title: 'title',
+  documentType: 'documentType',
+  courtSubject: 'courtSubject',
+  sources: 'sources',
+  content: 'content',
+  contentHash: 'contentHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DraftingTemplateScalarFieldEnum = (typeof DraftingTemplateScalarFieldEnum)[keyof typeof DraftingTemplateScalarFieldEnum]
+
+
+export const DraftingTemplateChunkScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  chunkIndex: 'chunkIndex',
+  heading: 'heading',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type DraftingTemplateChunkScalarFieldEnum = (typeof DraftingTemplateChunkScalarFieldEnum)[keyof typeof DraftingTemplateChunkScalarFieldEnum]
 
 
 export const SortOrder = {

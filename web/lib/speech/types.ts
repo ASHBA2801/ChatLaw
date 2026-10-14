@@ -3,6 +3,8 @@
 export type SpeechInputStatus =
   | "idle"
   | "unsupported"
+  /** Tapped, waiting for the microphone to open. */
+  | "starting"
   | "recording"
   | "processing"
   | "error";

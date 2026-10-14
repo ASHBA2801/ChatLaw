@@ -212,6 +212,7 @@ export type UserWhereInput = {
   cases?: Prisma.CaseListRelationFilter
   caseDocuments?: Prisma.CaseDocumentListRelationFilter
   conversations?: Prisma.ConversationListRelationFilter
+  caseFilings?: Prisma.CaseFilingListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -229,6 +230,7 @@ export type UserOrderByWithRelationInput = {
   cases?: Prisma.CaseOrderByRelationAggregateInput
   caseDocuments?: Prisma.CaseDocumentOrderByRelationAggregateInput
   conversations?: Prisma.ConversationOrderByRelationAggregateInput
+  caseFilings?: Prisma.CaseFilingOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -249,6 +251,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   cases?: Prisma.CaseListRelationFilter
   caseDocuments?: Prisma.CaseDocumentListRelationFilter
   conversations?: Prisma.ConversationListRelationFilter
+  caseFilings?: Prisma.CaseFilingListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -294,6 +297,7 @@ export type UserCreateInput = {
   cases?: Prisma.CaseCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -311,6 +315,7 @@ export type UserUncheckedCreateInput = {
   cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -328,6 +333,7 @@ export type UserUpdateInput = {
   cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -345,6 +351,7 @@ export type UserUncheckedUpdateInput = {
   cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -509,6 +516,20 @@ export type UserUpdateOneRequiredWithoutDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDocumentsInput, Prisma.UserUpdateWithoutDocumentsInput>, Prisma.UserUncheckedUpdateWithoutDocumentsInput>
 }
 
+export type UserCreateNestedOneWithoutCaseFilingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCaseFilingsInput, Prisma.UserUncheckedCreateWithoutCaseFilingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCaseFilingsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCaseFilingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCaseFilingsInput, Prisma.UserUncheckedCreateWithoutCaseFilingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCaseFilingsInput
+  upsert?: Prisma.UserUpsertWithoutCaseFilingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCaseFilingsInput, Prisma.UserUpdateWithoutCaseFilingsInput>, Prisma.UserUncheckedUpdateWithoutCaseFilingsInput>
+}
+
 export type UserCreateWithoutConversationsInput = {
   id?: string
   name?: string | null
@@ -523,6 +544,7 @@ export type UserCreateWithoutConversationsInput = {
   documents?: Prisma.UserDocumentCreateNestedManyWithoutUserInput
   cases?: Prisma.CaseCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsInput = {
@@ -539,6 +561,7 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   documents?: Prisma.UserDocumentUncheckedCreateNestedManyWithoutUserInput
   cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsInput = {
@@ -571,6 +594,7 @@ export type UserUpdateWithoutConversationsInput = {
   documents?: Prisma.UserDocumentUpdateManyWithoutUserNestedInput
   cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsInput = {
@@ -587,6 +611,7 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   documents?: Prisma.UserDocumentUncheckedUpdateManyWithoutUserNestedInput
   cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCasesInput = {
@@ -603,6 +628,7 @@ export type UserCreateWithoutCasesInput = {
   documents?: Prisma.UserDocumentCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCasesInput = {
@@ -619,6 +645,7 @@ export type UserUncheckedCreateWithoutCasesInput = {
   documents?: Prisma.UserDocumentUncheckedCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCasesInput = {
@@ -651,6 +678,7 @@ export type UserUpdateWithoutCasesInput = {
   documents?: Prisma.UserDocumentUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCasesInput = {
@@ -667,6 +695,7 @@ export type UserUncheckedUpdateWithoutCasesInput = {
   documents?: Prisma.UserDocumentUncheckedUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCaseDocumentsInput = {
@@ -683,6 +712,7 @@ export type UserCreateWithoutCaseDocumentsInput = {
   documents?: Prisma.UserDocumentCreateNestedManyWithoutUserInput
   cases?: Prisma.CaseCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCaseDocumentsInput = {
@@ -699,6 +729,7 @@ export type UserUncheckedCreateWithoutCaseDocumentsInput = {
   documents?: Prisma.UserDocumentUncheckedCreateNestedManyWithoutUserInput
   cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCaseDocumentsInput = {
@@ -731,6 +762,7 @@ export type UserUpdateWithoutCaseDocumentsInput = {
   documents?: Prisma.UserDocumentUpdateManyWithoutUserNestedInput
   cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCaseDocumentsInput = {
@@ -747,6 +779,7 @@ export type UserUncheckedUpdateWithoutCaseDocumentsInput = {
   documents?: Prisma.UserDocumentUncheckedUpdateManyWithoutUserNestedInput
   cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -763,6 +796,7 @@ export type UserCreateWithoutAccountsInput = {
   cases?: Prisma.CaseCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -779,6 +813,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -811,6 +846,7 @@ export type UserUpdateWithoutAccountsInput = {
   cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -827,6 +863,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -843,6 +880,7 @@ export type UserCreateWithoutSessionsInput = {
   cases?: Prisma.CaseCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -859,6 +897,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -891,6 +930,7 @@ export type UserUpdateWithoutSessionsInput = {
   cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -907,6 +947,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentsInput = {
@@ -923,6 +964,7 @@ export type UserCreateWithoutDocumentsInput = {
   cases?: Prisma.CaseCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -939,6 +981,7 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
   cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
   caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  caseFilings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -971,6 +1014,7 @@ export type UserUpdateWithoutDocumentsInput = {
   cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -984,6 +1028,91 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
+  caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  caseFilings?: Prisma.CaseFilingUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCaseFilingsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  preferredLanguage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  documents?: Prisma.UserDocumentCreateNestedManyWithoutUserInput
+  cases?: Prisma.CaseCreateNestedManyWithoutUserInput
+  caseDocuments?: Prisma.CaseDocumentCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCaseFilingsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  preferredLanguage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.UserDocumentUncheckedCreateNestedManyWithoutUserInput
+  cases?: Prisma.CaseUncheckedCreateNestedManyWithoutUserInput
+  caseDocuments?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCaseFilingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCaseFilingsInput, Prisma.UserUncheckedCreateWithoutCaseFilingsInput>
+}
+
+export type UserUpsertWithoutCaseFilingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCaseFilingsInput, Prisma.UserUncheckedUpdateWithoutCaseFilingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCaseFilingsInput, Prisma.UserUncheckedCreateWithoutCaseFilingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCaseFilingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCaseFilingsInput, Prisma.UserUncheckedUpdateWithoutCaseFilingsInput>
+}
+
+export type UserUpdateWithoutCaseFilingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferredLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  documents?: Prisma.UserDocumentUpdateManyWithoutUserNestedInput
+  cases?: Prisma.CaseUpdateManyWithoutUserNestedInput
+  caseDocuments?: Prisma.CaseDocumentUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCaseFilingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferredLanguage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.UserDocumentUncheckedUpdateManyWithoutUserNestedInput
   cases?: Prisma.CaseUncheckedUpdateManyWithoutUserNestedInput
   caseDocuments?: Prisma.CaseDocumentUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
@@ -1001,6 +1130,7 @@ export type UserCountOutputType = {
   cases: number
   caseDocuments: number
   conversations: number
+  caseFilings: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1010,6 +1140,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   cases?: boolean | UserCountOutputTypeCountCasesArgs
   caseDocuments?: boolean | UserCountOutputTypeCountCaseDocumentsArgs
   conversations?: boolean | UserCountOutputTypeCountConversationsArgs
+  caseFilings?: boolean | UserCountOutputTypeCountCaseFilingsArgs
 }
 
 /**
@@ -1064,6 +1195,13 @@ export type UserCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ConversationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCaseFilingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CaseFilingWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1080,6 +1218,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   cases?: boolean | Prisma.User$casesArgs<ExtArgs>
   caseDocuments?: boolean | Prisma.User$caseDocumentsArgs<ExtArgs>
   conversations?: boolean | Prisma.User$conversationsArgs<ExtArgs>
+  caseFilings?: boolean | Prisma.User$caseFilingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1124,6 +1263,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   cases?: boolean | Prisma.User$casesArgs<ExtArgs>
   caseDocuments?: boolean | Prisma.User$caseDocumentsArgs<ExtArgs>
   conversations?: boolean | Prisma.User$conversationsArgs<ExtArgs>
+  caseFilings?: boolean | Prisma.User$caseFilingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1138,6 +1278,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     cases: Prisma.$CasePayload<ExtArgs>[]
     caseDocuments: Prisma.$CaseDocumentPayload<ExtArgs>[]
     conversations: Prisma.$ConversationPayload<ExtArgs>[]
+    caseFilings: Prisma.$CaseFilingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1548,6 +1689,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   cases<T extends Prisma.User$casesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$casesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   caseDocuments<T extends Prisma.User$caseDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$caseDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversations<T extends Prisma.User$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  caseFilings<T extends Prisma.User$caseFilingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$caseFilingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseFilingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2119,6 +2261,30 @@ export type User$conversationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ConversationScalarFieldEnum | Prisma.ConversationScalarFieldEnum[]
+}
+
+/**
+ * User.caseFilings
+ */
+export type User$caseFilingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CaseFiling
+   */
+  select?: Prisma.CaseFilingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CaseFiling
+   */
+  omit?: Prisma.CaseFilingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaseFilingInclude<ExtArgs> | null
+  where?: Prisma.CaseFilingWhereInput
+  orderBy?: Prisma.CaseFilingOrderByWithRelationInput | Prisma.CaseFilingOrderByWithRelationInput[]
+  cursor?: Prisma.CaseFilingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CaseFilingScalarFieldEnum | Prisma.CaseFilingScalarFieldEnum[]
 }
 
 /**

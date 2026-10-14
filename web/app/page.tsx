@@ -18,7 +18,7 @@ const STARTER_QUESTIONS = [
   "My landlord is refusing to return my deposit.",
   "What is the punishment for theft?",
   "When can police arrest without a warrant?",
-  "Explain Section 303 of the Bharatiya Nyaya Sanhita.",
+  "Explain Section 303 of the BNS.",
 ] as const;
 
 const STEPS = [
@@ -125,7 +125,7 @@ export default function Home() {
               type="text"
               maxLength={2000}
               autoComplete="off"
-              placeholder="Describe your situation in your own words…"
+              placeholder="Describe your situation…"
               className="min-w-0 flex-1 bg-transparent py-3 text-base outline-none placeholder:text-[var(--ink-muted)]"
             />
             <button
@@ -319,9 +319,13 @@ export default function Home() {
               Informational assistance only — not a substitute for a lawyer or court.
             </p>
           </div>
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <nav aria-label="Footer" className="-mx-2 flex flex-wrap gap-x-2 text-sm">
             {[...TOP_LINKS, { href: "/signin", label: "Sign in" }].map((link) => (
-              <Link key={link.href} href={link.href} className="text-[var(--ink-muted)] hover:text-[var(--foreground)]">
+              <Link
+                key={link.href}
+                href={link.href}
+                className="inline-flex min-h-11 items-center rounded-lg px-2 text-[var(--ink-muted)] hover:text-[var(--foreground)]"
+              >
                 {link.label}
               </Link>
             ))}

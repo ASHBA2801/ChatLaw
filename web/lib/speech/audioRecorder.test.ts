@@ -127,6 +127,27 @@ describe("audioRecorder - Recording lifecycle & errors", () => {
     );
   });
 
+  it("releases the microphone without recording when stopped while it is still opening", async () => {
+    let grant: (stream: unknown) => void = () => undefined;
+    mockWin.navigator.mediaDevices.getUserMedia = vi.fn(
+      () => new Promise((resolve) => { grant = resolve; }),
+    ) as unknown as MediaDevices["getUserMedia"];
+    const onStart = vi.fn();
+    const onError = vi.fn();
+    const session = new AudioRecorderSession({ onStart, onError }, 60_000, mockWin);
+
+    const starting = session.start();
+    expect(session.starting).toBe(true);
+    expect(await session.stop()).toBeNull();
+
+    grant(mockStream);
+    await starting;
+    expect(onStart).not.toHaveBeenCalled();
+    expect(onError).not.toHaveBeenCalled();
+    expect(session.active).toBe(false);
+    expect(mockTrack.stop).toHaveBeenCalled();
+  });
+
   it("cancels recording and releases hardware stream immediately", async () => {
     const session = new AudioRecorderSession({}, 60_000, mockWin);
     await session.start();

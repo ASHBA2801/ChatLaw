@@ -416,7 +416,11 @@ export const ModelName = {
   CourtCaseChunk: 'CourtCaseChunk',
   CourtCaseLaw: 'CourtCaseLaw',
   ResearchLawLookup: 'ResearchLawLookup',
-  ResearchQuery: 'ResearchQuery'
+  ResearchQuery: 'ResearchQuery',
+  CaseFiling: 'CaseFiling',
+  AuthorityContact: 'AuthorityContact',
+  DraftingTemplate: 'DraftingTemplate',
+  DraftingTemplateChunk: 'DraftingTemplateChunk'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -432,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "legalDocument" | "legalChunk" | "legalSource" | "conversation" | "message" | "user" | "case" | "caseDocument" | "caseTimelineEvent" | "caseImportantDate" | "account" | "session" | "verificationToken" | "userDocument" | "userDocumentVersion" | "courtCase" | "courtCaseChunk" | "courtCaseLaw" | "researchLawLookup" | "researchQuery"
+    modelProps: "legalDocument" | "legalChunk" | "legalSource" | "conversation" | "message" | "user" | "case" | "caseDocument" | "caseTimelineEvent" | "caseImportantDate" | "account" | "session" | "verificationToken" | "userDocument" | "userDocumentVersion" | "courtCase" | "courtCaseChunk" | "courtCaseLaw" | "researchLawLookup" | "researchQuery" | "caseFiling" | "authorityContact" | "draftingTemplate" | "draftingTemplateChunk"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1916,6 +1920,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CaseFiling: {
+      payload: Prisma.$CaseFilingPayload<ExtArgs>
+      fields: Prisma.CaseFilingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CaseFilingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CaseFilingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>
+        }
+        findFirst: {
+          args: Prisma.CaseFilingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CaseFilingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>
+        }
+        findMany: {
+          args: Prisma.CaseFilingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>[]
+        }
+        create: {
+          args: Prisma.CaseFilingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>
+        }
+        createMany: {
+          args: Prisma.CaseFilingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CaseFilingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>[]
+        }
+        delete: {
+          args: Prisma.CaseFilingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>
+        }
+        update: {
+          args: Prisma.CaseFilingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>
+        }
+        deleteMany: {
+          args: Prisma.CaseFilingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CaseFilingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CaseFilingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>[]
+        }
+        upsert: {
+          args: Prisma.CaseFilingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CaseFilingPayload>
+        }
+        aggregate: {
+          args: Prisma.CaseFilingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCaseFiling>
+        }
+        groupBy: {
+          args: Prisma.CaseFilingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CaseFilingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CaseFilingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CaseFilingCountAggregateOutputType> | number
+        }
+      }
+    }
+    AuthorityContact: {
+      payload: Prisma.$AuthorityContactPayload<ExtArgs>
+      fields: Prisma.AuthorityContactFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthorityContactFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthorityContactFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>
+        }
+        findFirst: {
+          args: Prisma.AuthorityContactFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthorityContactFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>
+        }
+        findMany: {
+          args: Prisma.AuthorityContactFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>[]
+        }
+        create: {
+          args: Prisma.AuthorityContactCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>
+        }
+        createMany: {
+          args: Prisma.AuthorityContactCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthorityContactCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>[]
+        }
+        delete: {
+          args: Prisma.AuthorityContactDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>
+        }
+        update: {
+          args: Prisma.AuthorityContactUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthorityContactDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthorityContactUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthorityContactUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthorityContactUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorityContactPayload>
+        }
+        aggregate: {
+          args: Prisma.AuthorityContactAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthorityContact>
+        }
+        groupBy: {
+          args: Prisma.AuthorityContactGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthorityContactGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthorityContactCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthorityContactCountAggregateOutputType> | number
+        }
+      }
+    }
+    DraftingTemplate: {
+      payload: Prisma.$DraftingTemplatePayload<ExtArgs>
+      fields: Prisma.DraftingTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DraftingTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DraftingTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.DraftingTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DraftingTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.DraftingTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.DraftingTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.DraftingTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DraftingTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.DraftingTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>
+        }
+        update: {
+          args: Prisma.DraftingTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.DraftingTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DraftingTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DraftingTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.DraftingTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.DraftingTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDraftingTemplate>
+        }
+        groupBy: {
+          args: Prisma.DraftingTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DraftingTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DraftingTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DraftingTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
+    DraftingTemplateChunk: {
+      payload: Prisma.$DraftingTemplateChunkPayload<ExtArgs>
+      fields: Prisma.DraftingTemplateChunkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DraftingTemplateChunkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DraftingTemplateChunkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>
+        }
+        findFirst: {
+          args: Prisma.DraftingTemplateChunkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DraftingTemplateChunkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>
+        }
+        findMany: {
+          args: Prisma.DraftingTemplateChunkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>[]
+        }
+        create: {
+          args: Prisma.DraftingTemplateChunkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>
+        }
+        createMany: {
+          args: Prisma.DraftingTemplateChunkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DraftingTemplateChunkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>[]
+        }
+        delete: {
+          args: Prisma.DraftingTemplateChunkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>
+        }
+        update: {
+          args: Prisma.DraftingTemplateChunkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>
+        }
+        deleteMany: {
+          args: Prisma.DraftingTemplateChunkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DraftingTemplateChunkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DraftingTemplateChunkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>[]
+        }
+        upsert: {
+          args: Prisma.DraftingTemplateChunkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DraftingTemplateChunkPayload>
+        }
+        aggregate: {
+          args: Prisma.DraftingTemplateChunkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDraftingTemplateChunk>
+        }
+        groupBy: {
+          args: Prisma.DraftingTemplateChunkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DraftingTemplateChunkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DraftingTemplateChunkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DraftingTemplateChunkCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2056,6 +2356,12 @@ export const CaseScalarFieldEnum = {
   city: 'city',
   state: 'state',
   country: 'country',
+  district: 'district',
+  locality: 'locality',
+  pincode: 'pincode',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  filingProfile: 'filingProfile',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -2282,6 +2588,81 @@ export const ResearchQueryScalarFieldEnum = {
 } as const
 
 export type ResearchQueryScalarFieldEnum = (typeof ResearchQueryScalarFieldEnum)[keyof typeof ResearchQueryScalarFieldEnum]
+
+
+export const CaseFilingScalarFieldEnum = {
+  id: 'id',
+  caseId: 'caseId',
+  userId: 'userId',
+  kind: 'kind',
+  forum: 'forum',
+  title: 'title',
+  subject: 'subject',
+  addressee: 'addressee',
+  body: 'body',
+  recipients: 'recipients',
+  cc: 'cc',
+  sections: 'sections',
+  citations: 'citations',
+  warnings: 'warnings',
+  placeholders: 'placeholders',
+  filing: 'filing',
+  emailBody: 'emailBody',
+  language: 'language',
+  status: 'status',
+  generation: 'generation',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CaseFilingScalarFieldEnum = (typeof CaseFilingScalarFieldEnum)[keyof typeof CaseFilingScalarFieldEnum]
+
+
+export const AuthorityContactScalarFieldEnum = {
+  lookupKey: 'lookupKey',
+  kind: 'kind',
+  state: 'state',
+  district: 'district',
+  locality: 'locality',
+  status: 'status',
+  offices: 'offices',
+  checkedAt: 'checkedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthorityContactScalarFieldEnum = (typeof AuthorityContactScalarFieldEnum)[keyof typeof AuthorityContactScalarFieldEnum]
+
+
+export const DraftingTemplateScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  kind: 'kind',
+  forum: 'forum',
+  title: 'title',
+  documentType: 'documentType',
+  courtSubject: 'courtSubject',
+  sources: 'sources',
+  content: 'content',
+  contentHash: 'contentHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DraftingTemplateScalarFieldEnum = (typeof DraftingTemplateScalarFieldEnum)[keyof typeof DraftingTemplateScalarFieldEnum]
+
+
+export const DraftingTemplateChunkScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  chunkIndex: 'chunkIndex',
+  heading: 'heading',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type DraftingTemplateChunkScalarFieldEnum = (typeof DraftingTemplateChunkScalarFieldEnum)[keyof typeof DraftingTemplateChunkScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2585,6 +2966,10 @@ export type GlobalOmitConfig = {
   courtCaseLaw?: Prisma.CourtCaseLawOmit
   researchLawLookup?: Prisma.ResearchLawLookupOmit
   researchQuery?: Prisma.ResearchQueryOmit
+  caseFiling?: Prisma.CaseFilingOmit
+  authorityContact?: Prisma.AuthorityContactOmit
+  draftingTemplate?: Prisma.DraftingTemplateOmit
+  draftingTemplateChunk?: Prisma.DraftingTemplateChunkOmit
 }
 
 /* Types for Logging */

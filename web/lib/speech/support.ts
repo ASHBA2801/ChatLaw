@@ -50,6 +50,8 @@ export const SPEECH_LANGUAGE_OPTIONS: SpeechLanguageOption[] = [
 export const DEFAULT_SPEECH_LANGUAGE = "en-IN";
 
 export function chatLanguageToSpeechCode(chatCode: string): string {
+  // "en-US" is listed first, but ChatLaw's English speakers are in India.
+  if (chatCode === "en") return DEFAULT_SPEECH_LANGUAGE;
   const match = SPEECH_LANGUAGE_OPTIONS.find((option) => option.chatLanguageCode === chatCode);
   return match?.code ?? DEFAULT_SPEECH_LANGUAGE;
 }
@@ -97,6 +99,22 @@ export function isBraveBrowser(
   const nav = win.navigator as Navigator & { brave?: { isBrave?: () => Promise<boolean> } };
   if (nav.brave && typeof nav.brave.isBrave === "function") return true;
   return /\bBrave\b/i.test(nav.userAgent);
+}
+
+/**
+ * Phones and tablets. Their audio stack gives the microphone to one capture at a
+ * time, and Android Chrome's continuous recognition repeats earlier results.
+ */
+export function isMobileDevice(
+  win: Window | undefined = typeof window !== "undefined" ? window : undefined,
+): boolean {
+  const nav = win?.navigator as (Navigator & { userAgentData?: { mobile?: boolean } }) | undefined;
+  if (!nav) return false;
+  if (typeof nav.userAgentData?.mobile === "boolean") return nav.userAgentData.mobile;
+  const userAgent = nav.userAgent ?? "";
+  // iPadOS reports a desktop Safari UA, so also check for touch on a Mac.
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent)
+    || (/Macintosh/.test(userAgent) && (nav.maxTouchPoints ?? 0) > 1);
 }
 
 export function getSpeechRecognitionConstructor(

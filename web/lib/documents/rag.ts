@@ -1,4 +1,5 @@
 import "server-only";
+import { fetchRagWithWake } from "@/lib/rag/fetchWithWake";
 
 export class RagDocumentError extends Error {
   readonly status: number;
@@ -18,7 +19,7 @@ async function ragRequest(path: string, body: unknown) {
   if (!baseUrl || !secret) {
     throw new RagDocumentError("RAG service is not configured", 503);
   }
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await fetchRagWithWake(`${baseUrl}${path}`, {
     method: "POST",
     headers: {
       Accept: "application/json",

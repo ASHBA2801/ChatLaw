@@ -20,8 +20,20 @@ export type CaseModel = runtime.Types.Result.DefaultSelection<Prisma.$CasePayloa
 
 export type AggregateCase = {
   _count: CaseCountAggregateOutputType | null
+  _avg: CaseAvgAggregateOutputType | null
+  _sum: CaseSumAggregateOutputType | null
   _min: CaseMinAggregateOutputType | null
   _max: CaseMaxAggregateOutputType | null
+}
+
+export type CaseAvgAggregateOutputType = {
+  latitude: number | null
+  longitude: number | null
+}
+
+export type CaseSumAggregateOutputType = {
+  latitude: number | null
+  longitude: number | null
 }
 
 export type CaseMinAggregateOutputType = {
@@ -35,6 +47,11 @@ export type CaseMinAggregateOutputType = {
   city: string | null
   state: string | null
   country: string | null
+  district: string | null
+  locality: string | null
+  pincode: string | null
+  latitude: number | null
+  longitude: number | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,6 +69,11 @@ export type CaseMaxAggregateOutputType = {
   city: string | null
   state: string | null
   country: string | null
+  district: string | null
+  locality: string | null
+  pincode: string | null
+  latitude: number | null
+  longitude: number | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -69,6 +91,12 @@ export type CaseCountAggregateOutputType = {
   city: number
   state: number
   country: number
+  district: number
+  locality: number
+  pincode: number
+  latitude: number
+  longitude: number
+  filingProfile: number
   status: number
   createdAt: number
   updatedAt: number
@@ -76,6 +104,16 @@ export type CaseCountAggregateOutputType = {
   _all: number
 }
 
+
+export type CaseAvgAggregateInputType = {
+  latitude?: true
+  longitude?: true
+}
+
+export type CaseSumAggregateInputType = {
+  latitude?: true
+  longitude?: true
+}
 
 export type CaseMinAggregateInputType = {
   id?: true
@@ -88,6 +126,11 @@ export type CaseMinAggregateInputType = {
   city?: true
   state?: true
   country?: true
+  district?: true
+  locality?: true
+  pincode?: true
+  latitude?: true
+  longitude?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -105,6 +148,11 @@ export type CaseMaxAggregateInputType = {
   city?: true
   state?: true
   country?: true
+  district?: true
+  locality?: true
+  pincode?: true
+  latitude?: true
+  longitude?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -122,6 +170,12 @@ export type CaseCountAggregateInputType = {
   city?: true
   state?: true
   country?: true
+  district?: true
+  locality?: true
+  pincode?: true
+  latitude?: true
+  longitude?: true
+  filingProfile?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -167,6 +221,18 @@ export type CaseAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CaseAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CaseSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CaseMinAggregateInputType
@@ -197,6 +263,8 @@ export type CaseGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: CaseCountAggregateInputType | true
+  _avg?: CaseAvgAggregateInputType
+  _sum?: CaseSumAggregateInputType
   _min?: CaseMinAggregateInputType
   _max?: CaseMaxAggregateInputType
 }
@@ -212,11 +280,19 @@ export type CaseGroupByOutputType = {
   city: string | null
   state: string | null
   country: string | null
+  district: string | null
+  locality: string | null
+  pincode: string | null
+  latitude: number | null
+  longitude: number | null
+  filingProfile: runtime.JsonValue | null
   status: string
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
   _count: CaseCountAggregateOutputType | null
+  _avg: CaseAvgAggregateOutputType | null
+  _sum: CaseSumAggregateOutputType | null
   _min: CaseMinAggregateOutputType | null
   _max: CaseMaxAggregateOutputType | null
 }
@@ -250,6 +326,12 @@ export type CaseWhereInput = {
   city?: Prisma.StringNullableFilter<"Case"> | string | null
   state?: Prisma.StringNullableFilter<"Case"> | string | null
   country?: Prisma.StringNullableFilter<"Case"> | string | null
+  district?: Prisma.StringNullableFilter<"Case"> | string | null
+  locality?: Prisma.StringNullableFilter<"Case"> | string | null
+  pincode?: Prisma.StringNullableFilter<"Case"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"Case"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"Case"> | number | null
+  filingProfile?: Prisma.JsonNullableFilter<"Case">
   status?: Prisma.StringFilter<"Case"> | string
   createdAt?: Prisma.DateTimeFilter<"Case"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Case"> | Date | string
@@ -259,6 +341,7 @@ export type CaseWhereInput = {
   timeline?: Prisma.CaseTimelineEventListRelationFilter
   importantDates?: Prisma.CaseImportantDateListRelationFilter
   conversations?: Prisma.ConversationListRelationFilter
+  filings?: Prisma.CaseFilingListRelationFilter
 }
 
 export type CaseOrderByWithRelationInput = {
@@ -272,6 +355,12 @@ export type CaseOrderByWithRelationInput = {
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   state?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
+  district?: Prisma.SortOrderInput | Prisma.SortOrder
+  locality?: Prisma.SortOrderInput | Prisma.SortOrder
+  pincode?: Prisma.SortOrderInput | Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  filingProfile?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -281,6 +370,7 @@ export type CaseOrderByWithRelationInput = {
   timeline?: Prisma.CaseTimelineEventOrderByRelationAggregateInput
   importantDates?: Prisma.CaseImportantDateOrderByRelationAggregateInput
   conversations?: Prisma.ConversationOrderByRelationAggregateInput
+  filings?: Prisma.CaseFilingOrderByRelationAggregateInput
 }
 
 export type CaseWhereUniqueInput = Prisma.AtLeast<{
@@ -297,6 +387,12 @@ export type CaseWhereUniqueInput = Prisma.AtLeast<{
   city?: Prisma.StringNullableFilter<"Case"> | string | null
   state?: Prisma.StringNullableFilter<"Case"> | string | null
   country?: Prisma.StringNullableFilter<"Case"> | string | null
+  district?: Prisma.StringNullableFilter<"Case"> | string | null
+  locality?: Prisma.StringNullableFilter<"Case"> | string | null
+  pincode?: Prisma.StringNullableFilter<"Case"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"Case"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"Case"> | number | null
+  filingProfile?: Prisma.JsonNullableFilter<"Case">
   status?: Prisma.StringFilter<"Case"> | string
   createdAt?: Prisma.DateTimeFilter<"Case"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Case"> | Date | string
@@ -306,6 +402,7 @@ export type CaseWhereUniqueInput = Prisma.AtLeast<{
   timeline?: Prisma.CaseTimelineEventListRelationFilter
   importantDates?: Prisma.CaseImportantDateListRelationFilter
   conversations?: Prisma.ConversationListRelationFilter
+  filings?: Prisma.CaseFilingListRelationFilter
 }, "id">
 
 export type CaseOrderByWithAggregationInput = {
@@ -319,13 +416,21 @@ export type CaseOrderByWithAggregationInput = {
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   state?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
+  district?: Prisma.SortOrderInput | Prisma.SortOrder
+  locality?: Prisma.SortOrderInput | Prisma.SortOrder
+  pincode?: Prisma.SortOrderInput | Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  filingProfile?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CaseCountOrderByAggregateInput
+  _avg?: Prisma.CaseAvgOrderByAggregateInput
   _max?: Prisma.CaseMaxOrderByAggregateInput
   _min?: Prisma.CaseMinOrderByAggregateInput
+  _sum?: Prisma.CaseSumOrderByAggregateInput
 }
 
 export type CaseScalarWhereWithAggregatesInput = {
@@ -342,6 +447,12 @@ export type CaseScalarWhereWithAggregatesInput = {
   city?: Prisma.StringNullableWithAggregatesFilter<"Case"> | string | null
   state?: Prisma.StringNullableWithAggregatesFilter<"Case"> | string | null
   country?: Prisma.StringNullableWithAggregatesFilter<"Case"> | string | null
+  district?: Prisma.StringNullableWithAggregatesFilter<"Case"> | string | null
+  locality?: Prisma.StringNullableWithAggregatesFilter<"Case"> | string | null
+  pincode?: Prisma.StringNullableWithAggregatesFilter<"Case"> | string | null
+  latitude?: Prisma.FloatNullableWithAggregatesFilter<"Case"> | number | null
+  longitude?: Prisma.FloatNullableWithAggregatesFilter<"Case"> | number | null
+  filingProfile?: Prisma.JsonNullableWithAggregatesFilter<"Case">
   status?: Prisma.StringWithAggregatesFilter<"Case"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Case"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Case"> | Date | string
@@ -358,6 +469,12 @@ export type CaseCreateInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -367,6 +484,7 @@ export type CaseCreateInput = {
   timeline?: Prisma.CaseTimelineEventCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUncheckedCreateInput = {
@@ -380,6 +498,12 @@ export type CaseUncheckedCreateInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -388,6 +512,7 @@ export type CaseUncheckedCreateInput = {
   timeline?: Prisma.CaseTimelineEventUncheckedCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateUncheckedCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUpdateInput = {
@@ -400,6 +525,12 @@ export type CaseUpdateInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -409,6 +540,7 @@ export type CaseUpdateInput = {
   timeline?: Prisma.CaseTimelineEventUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateInput = {
@@ -422,6 +554,12 @@ export type CaseUncheckedUpdateInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -430,6 +568,7 @@ export type CaseUncheckedUpdateInput = {
   timeline?: Prisma.CaseTimelineEventUncheckedUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUncheckedUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUncheckedUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseCreateManyInput = {
@@ -443,6 +582,12 @@ export type CaseCreateManyInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -459,6 +604,12 @@ export type CaseUpdateManyMutationInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,6 +627,12 @@ export type CaseUncheckedUpdateManyInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -508,10 +665,21 @@ export type CaseCountOrderByAggregateInput = {
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  locality?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  filingProfile?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+}
+
+export type CaseAvgOrderByAggregateInput = {
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type CaseMaxOrderByAggregateInput = {
@@ -525,6 +693,11 @@ export type CaseMaxOrderByAggregateInput = {
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  locality?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -542,10 +715,20 @@ export type CaseMinOrderByAggregateInput = {
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  locality?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
+}
+
+export type CaseSumOrderByAggregateInput = {
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type CaseScalarRelationFilter = {
@@ -611,6 +794,14 @@ export type CaseUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.CaseScalarWhereInput | Prisma.CaseScalarWhereInput[]
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type CaseCreateNestedOneWithoutDocumentsInput = {
   create?: Prisma.XOR<Prisma.CaseCreateWithoutDocumentsInput, Prisma.CaseUncheckedCreateWithoutDocumentsInput>
   connectOrCreate?: Prisma.CaseCreateOrConnectWithoutDocumentsInput
@@ -653,6 +844,20 @@ export type CaseUpdateOneRequiredWithoutImportantDatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CaseUpdateToOneWithWhereWithoutImportantDatesInput, Prisma.CaseUpdateWithoutImportantDatesInput>, Prisma.CaseUncheckedUpdateWithoutImportantDatesInput>
 }
 
+export type CaseCreateNestedOneWithoutFilingsInput = {
+  create?: Prisma.XOR<Prisma.CaseCreateWithoutFilingsInput, Prisma.CaseUncheckedCreateWithoutFilingsInput>
+  connectOrCreate?: Prisma.CaseCreateOrConnectWithoutFilingsInput
+  connect?: Prisma.CaseWhereUniqueInput
+}
+
+export type CaseUpdateOneRequiredWithoutFilingsNestedInput = {
+  create?: Prisma.XOR<Prisma.CaseCreateWithoutFilingsInput, Prisma.CaseUncheckedCreateWithoutFilingsInput>
+  connectOrCreate?: Prisma.CaseCreateOrConnectWithoutFilingsInput
+  upsert?: Prisma.CaseUpsertWithoutFilingsInput
+  connect?: Prisma.CaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CaseUpdateToOneWithWhereWithoutFilingsInput, Prisma.CaseUpdateWithoutFilingsInput>, Prisma.CaseUncheckedUpdateWithoutFilingsInput>
+}
+
 export type CaseCreateWithoutConversationsInput = {
   id?: string
   title: string
@@ -663,6 +868,12 @@ export type CaseCreateWithoutConversationsInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -671,6 +882,7 @@ export type CaseCreateWithoutConversationsInput = {
   documents?: Prisma.CaseDocumentCreateNestedManyWithoutCaseInput
   timeline?: Prisma.CaseTimelineEventCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUncheckedCreateWithoutConversationsInput = {
@@ -684,6 +896,12 @@ export type CaseUncheckedCreateWithoutConversationsInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -691,6 +909,7 @@ export type CaseUncheckedCreateWithoutConversationsInput = {
   documents?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutCaseInput
   timeline?: Prisma.CaseTimelineEventUncheckedCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateUncheckedCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutCaseInput
 }
 
 export type CaseCreateOrConnectWithoutConversationsInput = {
@@ -719,6 +938,12 @@ export type CaseUpdateWithoutConversationsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -727,6 +952,7 @@ export type CaseUpdateWithoutConversationsInput = {
   documents?: Prisma.CaseDocumentUpdateManyWithoutCaseNestedInput
   timeline?: Prisma.CaseTimelineEventUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateWithoutConversationsInput = {
@@ -740,6 +966,12 @@ export type CaseUncheckedUpdateWithoutConversationsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -747,6 +979,7 @@ export type CaseUncheckedUpdateWithoutConversationsInput = {
   documents?: Prisma.CaseDocumentUncheckedUpdateManyWithoutCaseNestedInput
   timeline?: Prisma.CaseTimelineEventUncheckedUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUncheckedUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUncheckedUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseCreateWithoutUserInput = {
@@ -759,6 +992,12 @@ export type CaseCreateWithoutUserInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -767,6 +1006,7 @@ export type CaseCreateWithoutUserInput = {
   timeline?: Prisma.CaseTimelineEventCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUncheckedCreateWithoutUserInput = {
@@ -779,6 +1019,12 @@ export type CaseUncheckedCreateWithoutUserInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -787,6 +1033,7 @@ export type CaseUncheckedCreateWithoutUserInput = {
   timeline?: Prisma.CaseTimelineEventUncheckedCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateUncheckedCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutCaseInput
 }
 
 export type CaseCreateOrConnectWithoutUserInput = {
@@ -829,6 +1076,12 @@ export type CaseScalarWhereInput = {
   city?: Prisma.StringNullableFilter<"Case"> | string | null
   state?: Prisma.StringNullableFilter<"Case"> | string | null
   country?: Prisma.StringNullableFilter<"Case"> | string | null
+  district?: Prisma.StringNullableFilter<"Case"> | string | null
+  locality?: Prisma.StringNullableFilter<"Case"> | string | null
+  pincode?: Prisma.StringNullableFilter<"Case"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"Case"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"Case"> | number | null
+  filingProfile?: Prisma.JsonNullableFilter<"Case">
   status?: Prisma.StringFilter<"Case"> | string
   createdAt?: Prisma.DateTimeFilter<"Case"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Case"> | Date | string
@@ -845,6 +1098,12 @@ export type CaseCreateWithoutDocumentsInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -853,6 +1112,7 @@ export type CaseCreateWithoutDocumentsInput = {
   timeline?: Prisma.CaseTimelineEventCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUncheckedCreateWithoutDocumentsInput = {
@@ -866,6 +1126,12 @@ export type CaseUncheckedCreateWithoutDocumentsInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -873,6 +1139,7 @@ export type CaseUncheckedCreateWithoutDocumentsInput = {
   timeline?: Prisma.CaseTimelineEventUncheckedCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateUncheckedCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutCaseInput
 }
 
 export type CaseCreateOrConnectWithoutDocumentsInput = {
@@ -901,6 +1168,12 @@ export type CaseUpdateWithoutDocumentsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -909,6 +1182,7 @@ export type CaseUpdateWithoutDocumentsInput = {
   timeline?: Prisma.CaseTimelineEventUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateWithoutDocumentsInput = {
@@ -922,6 +1196,12 @@ export type CaseUncheckedUpdateWithoutDocumentsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -929,6 +1209,7 @@ export type CaseUncheckedUpdateWithoutDocumentsInput = {
   timeline?: Prisma.CaseTimelineEventUncheckedUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUncheckedUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUncheckedUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseCreateWithoutTimelineInput = {
@@ -941,6 +1222,12 @@ export type CaseCreateWithoutTimelineInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -949,6 +1236,7 @@ export type CaseCreateWithoutTimelineInput = {
   documents?: Prisma.CaseDocumentCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUncheckedCreateWithoutTimelineInput = {
@@ -962,6 +1250,12 @@ export type CaseUncheckedCreateWithoutTimelineInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -969,6 +1263,7 @@ export type CaseUncheckedCreateWithoutTimelineInput = {
   documents?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutCaseInput
   importantDates?: Prisma.CaseImportantDateUncheckedCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutCaseInput
 }
 
 export type CaseCreateOrConnectWithoutTimelineInput = {
@@ -997,6 +1292,12 @@ export type CaseUpdateWithoutTimelineInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1005,6 +1306,7 @@ export type CaseUpdateWithoutTimelineInput = {
   documents?: Prisma.CaseDocumentUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateWithoutTimelineInput = {
@@ -1018,6 +1320,12 @@ export type CaseUncheckedUpdateWithoutTimelineInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1025,6 +1333,7 @@ export type CaseUncheckedUpdateWithoutTimelineInput = {
   documents?: Prisma.CaseDocumentUncheckedUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUncheckedUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUncheckedUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseCreateWithoutImportantDatesInput = {
@@ -1037,6 +1346,12 @@ export type CaseCreateWithoutImportantDatesInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1045,6 +1360,7 @@ export type CaseCreateWithoutImportantDatesInput = {
   documents?: Prisma.CaseDocumentCreateNestedManyWithoutCaseInput
   timeline?: Prisma.CaseTimelineEventCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingCreateNestedManyWithoutCaseInput
 }
 
 export type CaseUncheckedCreateWithoutImportantDatesInput = {
@@ -1058,6 +1374,12 @@ export type CaseUncheckedCreateWithoutImportantDatesInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1065,6 +1387,7 @@ export type CaseUncheckedCreateWithoutImportantDatesInput = {
   documents?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutCaseInput
   timeline?: Prisma.CaseTimelineEventUncheckedCreateNestedManyWithoutCaseInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutCaseInput
+  filings?: Prisma.CaseFilingUncheckedCreateNestedManyWithoutCaseInput
 }
 
 export type CaseCreateOrConnectWithoutImportantDatesInput = {
@@ -1093,6 +1416,12 @@ export type CaseUpdateWithoutImportantDatesInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1101,6 +1430,7 @@ export type CaseUpdateWithoutImportantDatesInput = {
   documents?: Prisma.CaseDocumentUpdateManyWithoutCaseNestedInput
   timeline?: Prisma.CaseTimelineEventUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateWithoutImportantDatesInput = {
@@ -1114,12 +1444,143 @@ export type CaseUncheckedUpdateWithoutImportantDatesInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   documents?: Prisma.CaseDocumentUncheckedUpdateManyWithoutCaseNestedInput
   timeline?: Prisma.CaseTimelineEventUncheckedUpdateManyWithoutCaseNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUncheckedUpdateManyWithoutCaseNestedInput
+}
+
+export type CaseCreateWithoutFilingsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  category?: string | null
+  subCategory?: string | null
+  jurisdiction?: string | null
+  city?: string | null
+  state?: string | null
+  country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  user: Prisma.UserCreateNestedOneWithoutCasesInput
+  documents?: Prisma.CaseDocumentCreateNestedManyWithoutCaseInput
+  timeline?: Prisma.CaseTimelineEventCreateNestedManyWithoutCaseInput
+  importantDates?: Prisma.CaseImportantDateCreateNestedManyWithoutCaseInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutCaseInput
+}
+
+export type CaseUncheckedCreateWithoutFilingsInput = {
+  id?: string
+  userId: string
+  title: string
+  description?: string | null
+  category?: string | null
+  subCategory?: string | null
+  jurisdiction?: string | null
+  city?: string | null
+  state?: string | null
+  country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  archivedAt?: Date | string | null
+  documents?: Prisma.CaseDocumentUncheckedCreateNestedManyWithoutCaseInput
+  timeline?: Prisma.CaseTimelineEventUncheckedCreateNestedManyWithoutCaseInput
+  importantDates?: Prisma.CaseImportantDateUncheckedCreateNestedManyWithoutCaseInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutCaseInput
+}
+
+export type CaseCreateOrConnectWithoutFilingsInput = {
+  where: Prisma.CaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.CaseCreateWithoutFilingsInput, Prisma.CaseUncheckedCreateWithoutFilingsInput>
+}
+
+export type CaseUpsertWithoutFilingsInput = {
+  update: Prisma.XOR<Prisma.CaseUpdateWithoutFilingsInput, Prisma.CaseUncheckedUpdateWithoutFilingsInput>
+  create: Prisma.XOR<Prisma.CaseCreateWithoutFilingsInput, Prisma.CaseUncheckedCreateWithoutFilingsInput>
+  where?: Prisma.CaseWhereInput
+}
+
+export type CaseUpdateToOneWithWhereWithoutFilingsInput = {
+  where?: Prisma.CaseWhereInput
+  data: Prisma.XOR<Prisma.CaseUpdateWithoutFilingsInput, Prisma.CaseUncheckedUpdateWithoutFilingsInput>
+}
+
+export type CaseUpdateWithoutFilingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jurisdiction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutCasesNestedInput
+  documents?: Prisma.CaseDocumentUpdateManyWithoutCaseNestedInput
+  timeline?: Prisma.CaseTimelineEventUpdateManyWithoutCaseNestedInput
+  importantDates?: Prisma.CaseImportantDateUpdateManyWithoutCaseNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutCaseNestedInput
+}
+
+export type CaseUncheckedUpdateWithoutFilingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jurisdiction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  documents?: Prisma.CaseDocumentUncheckedUpdateManyWithoutCaseNestedInput
+  timeline?: Prisma.CaseTimelineEventUncheckedUpdateManyWithoutCaseNestedInput
+  importantDates?: Prisma.CaseImportantDateUncheckedUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutCaseNestedInput
 }
 
@@ -1133,6 +1594,12 @@ export type CaseCreateManyUserInput = {
   city?: string | null
   state?: string | null
   country?: string | null
+  district?: string | null
+  locality?: string | null
+  pincode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1149,6 +1616,12 @@ export type CaseUpdateWithoutUserInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1157,6 +1630,7 @@ export type CaseUpdateWithoutUserInput = {
   timeline?: Prisma.CaseTimelineEventUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateWithoutUserInput = {
@@ -1169,6 +1643,12 @@ export type CaseUncheckedUpdateWithoutUserInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1177,6 +1657,7 @@ export type CaseUncheckedUpdateWithoutUserInput = {
   timeline?: Prisma.CaseTimelineEventUncheckedUpdateManyWithoutCaseNestedInput
   importantDates?: Prisma.CaseImportantDateUncheckedUpdateManyWithoutCaseNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutCaseNestedInput
+  filings?: Prisma.CaseFilingUncheckedUpdateManyWithoutCaseNestedInput
 }
 
 export type CaseUncheckedUpdateManyWithoutUserInput = {
@@ -1189,6 +1670,12 @@ export type CaseUncheckedUpdateManyWithoutUserInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  filingProfile?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1205,6 +1692,7 @@ export type CaseCountOutputType = {
   timeline: number
   importantDates: number
   conversations: number
+  filings: number
 }
 
 export type CaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1212,6 +1700,7 @@ export type CaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   timeline?: boolean | CaseCountOutputTypeCountTimelineArgs
   importantDates?: boolean | CaseCountOutputTypeCountImportantDatesArgs
   conversations?: boolean | CaseCountOutputTypeCountConversationsArgs
+  filings?: boolean | CaseCountOutputTypeCountFilingsArgs
 }
 
 /**
@@ -1252,6 +1741,13 @@ export type CaseCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ConversationWhereInput
 }
 
+/**
+ * CaseCountOutputType without action
+ */
+export type CaseCountOutputTypeCountFilingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CaseFilingWhereInput
+}
+
 
 export type CaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1264,6 +1760,12 @@ export type CaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   city?: boolean
   state?: boolean
   country?: boolean
+  district?: boolean
+  locality?: boolean
+  pincode?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  filingProfile?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1273,6 +1775,7 @@ export type CaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   timeline?: boolean | Prisma.Case$timelineArgs<ExtArgs>
   importantDates?: boolean | Prisma.Case$importantDatesArgs<ExtArgs>
   conversations?: boolean | Prisma.Case$conversationsArgs<ExtArgs>
+  filings?: boolean | Prisma.Case$filingsArgs<ExtArgs>
   _count?: boolean | Prisma.CaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["case"]>
 
@@ -1287,6 +1790,12 @@ export type CaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   city?: boolean
   state?: boolean
   country?: boolean
+  district?: boolean
+  locality?: boolean
+  pincode?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  filingProfile?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1305,6 +1814,12 @@ export type CaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   city?: boolean
   state?: boolean
   country?: boolean
+  district?: boolean
+  locality?: boolean
+  pincode?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  filingProfile?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1323,19 +1838,26 @@ export type CaseSelectScalar = {
   city?: boolean
   state?: boolean
   country?: boolean
+  district?: boolean
+  locality?: boolean
+  pincode?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  filingProfile?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   archivedAt?: boolean
 }
 
-export type CaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "category" | "subCategory" | "jurisdiction" | "city" | "state" | "country" | "status" | "createdAt" | "updatedAt" | "archivedAt", ExtArgs["result"]["case"]>
+export type CaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "category" | "subCategory" | "jurisdiction" | "city" | "state" | "country" | "district" | "locality" | "pincode" | "latitude" | "longitude" | "filingProfile" | "status" | "createdAt" | "updatedAt" | "archivedAt", ExtArgs["result"]["case"]>
 export type CaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   documents?: boolean | Prisma.Case$documentsArgs<ExtArgs>
   timeline?: boolean | Prisma.Case$timelineArgs<ExtArgs>
   importantDates?: boolean | Prisma.Case$importantDatesArgs<ExtArgs>
   conversations?: boolean | Prisma.Case$conversationsArgs<ExtArgs>
+  filings?: boolean | Prisma.Case$filingsArgs<ExtArgs>
   _count?: boolean | Prisma.CaseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1353,6 +1875,7 @@ export type $CasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     timeline: Prisma.$CaseTimelineEventPayload<ExtArgs>[]
     importantDates: Prisma.$CaseImportantDatePayload<ExtArgs>[]
     conversations: Prisma.$ConversationPayload<ExtArgs>[]
+    filings: Prisma.$CaseFilingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1365,6 +1888,12 @@ export type $CasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     city: string | null
     state: string | null
     country: string | null
+    district: string | null
+    locality: string | null
+    pincode: string | null
+    latitude: number | null
+    longitude: number | null
+    filingProfile: runtime.JsonValue | null
     status: string
     createdAt: Date
     updatedAt: Date
@@ -1768,6 +2297,7 @@ export interface Prisma__CaseClient<T, Null = never, ExtArgs extends runtime.Typ
   timeline<T extends Prisma.Case$timelineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Case$timelineArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseTimelineEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   importantDates<T extends Prisma.Case$importantDatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Case$importantDatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseImportantDatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversations<T extends Prisma.Case$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Case$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  filings<T extends Prisma.Case$filingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Case$filingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseFilingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1807,6 +2337,12 @@ export interface CaseFieldRefs {
   readonly city: Prisma.FieldRef<"Case", 'String'>
   readonly state: Prisma.FieldRef<"Case", 'String'>
   readonly country: Prisma.FieldRef<"Case", 'String'>
+  readonly district: Prisma.FieldRef<"Case", 'String'>
+  readonly locality: Prisma.FieldRef<"Case", 'String'>
+  readonly pincode: Prisma.FieldRef<"Case", 'String'>
+  readonly latitude: Prisma.FieldRef<"Case", 'Float'>
+  readonly longitude: Prisma.FieldRef<"Case", 'Float'>
+  readonly filingProfile: Prisma.FieldRef<"Case", 'Json'>
   readonly status: Prisma.FieldRef<"Case", 'String'>
   readonly createdAt: Prisma.FieldRef<"Case", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Case", 'DateTime'>
@@ -2305,6 +2841,30 @@ export type Case$conversationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ConversationScalarFieldEnum | Prisma.ConversationScalarFieldEnum[]
+}
+
+/**
+ * Case.filings
+ */
+export type Case$filingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CaseFiling
+   */
+  select?: Prisma.CaseFilingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CaseFiling
+   */
+  omit?: Prisma.CaseFilingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CaseFilingInclude<ExtArgs> | null
+  where?: Prisma.CaseFilingWhereInput
+  orderBy?: Prisma.CaseFilingOrderByWithRelationInput | Prisma.CaseFilingOrderByWithRelationInput[]
+  cursor?: Prisma.CaseFilingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CaseFilingScalarFieldEnum | Prisma.CaseFilingScalarFieldEnum[]
 }
 
 /**

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
+  askLegalQuestion,
   createConversation,
   deleteConversation,
   getConversation,
@@ -77,6 +78,8 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** Signed-out visitors can still ask questions; their chat just is not saved. */
+  const [guest, setGuest] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [history, setHistory] = useState<ConversationSummary[]>([]);
   const [loadingConversation, setLoadingConversation] = useState(true);
@@ -150,6 +153,11 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
       }
     })
       .catch((requestError: unknown) => {
+        if (requestError instanceof RagApiError && requestError.status === 401) {
+          // Conversation history needs an account; answer questions without saving them.
+          setGuest(true);
+          return;
+        }
         setError(requestError instanceof RagApiError ? requestError.message : "Unable to load conversation history.");
       })
       .finally(() => {
@@ -196,7 +204,7 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
       if (!trimmed || isLoadingRef.current) {
         throw new Error("Enter a question before sending.");
       }
-      if (!caseId && !conversationId) {
+      if (!caseId && !conversationId && !guest) {
         throw new Error("Your conversation is still loading. Please try again.");
       }
 
@@ -234,6 +242,8 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
             window.localStorage.setItem(`chatlaw-case-conversation:${caseId}`, payload.conversation_id);
           }
           response = payload;
+        } else if (guest) {
+          response = await askLegalQuestion({ message: trimmed, language, top_k: 8, min_similarity: 0.6 });
         } else {
           response = await sendConversationMessage(conversationId!, {
             message: trimmed,
@@ -318,12 +328,12 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
         setIsLoading(false);
       }
     },
-    [caseId, conversationId, language, router],
+    [caseId, conversationId, guest, language, router],
   );
 
   const voiceChat = useVoiceChat({
     conversationId,
-    allowWithoutConversation: Boolean(caseId),
+    allowWithoutConversation: Boolean(caseId) || guest,
     language: speechLang,
     disabled: loadingConversation || isLoading || chatMode !== "voice",
     sendMessage: sendChatMessage,
@@ -335,8 +345,8 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
     speech.cancel();
     voiceChat.reset();
     closeSidebar?.();
-    if (caseId) {
-      window.localStorage.removeItem(`chatlaw-case-conversation:${caseId}`);
+    if (caseId || guest) {
+      if (caseId) window.localStorage.removeItem(`chatlaw-case-conversation:${caseId}`);
       setConversationId(null);
       setMessages([]);
       setError(null);
@@ -547,8 +557,15 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
                 ? "Case chats stay on this matter."
                 : sidebarSearch
                   ? "No chats match your search."
-                  : "Your chats will appear here."}
+                  : guest
+                    ? "Chats aren't saved while you're signed out."
+                    : "Your chats will appear here."}
             </p>
+            {guest && !caseId ? (
+              <Link href="/signin" className="btn-secondary btn-sm mt-3 inline-flex">
+                Sign in to save chats
+              </Link>
+            ) : null}
           </div>
         ) : (
           groupedHistory.map((group) => (
@@ -677,7 +694,7 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
       {sidebar?.slot ? createPortal(historyPanel, sidebar.slot) : null}
 
       <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[var(--surface)]">
-        <header className="flex h-14 shrink-0 items-center gap-2 px-2 sm:px-4">
+        <header className="flex h-[calc(3.5rem+env(safe-area-inset-top))] shrink-0 items-center gap-2 px-2 pt-[env(safe-area-inset-top)] sm:px-4">
           {caseId ? (
             <Link href={`/cases/${caseId}`} className="btn-secondary btn-sm shrink-0 !px-3">
               <ChevronLeftIcon className="h-4 w-4" />
@@ -729,9 +746,18 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
                 What legal question can I help with?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-[15px] leading-7 text-[var(--ink-muted)]">
-                ChatLaw currently answers from the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita, and
-                Bharatiya Sakshya Adhiniyam. Ask a section or offence from those codes.
+                Ask about a section or describe what happened. Answers cite Indian Acts, including the BNS, BNSS,
+                BSA, consumer, contract, property, company, GST and election laws.
               </p>
+              {guest ? (
+                <p className="mx-auto mt-2 max-w-xl text-sm text-[var(--ink-muted)]">
+                  You&apos;re not signed in, so this chat won&apos;t be saved.{" "}
+                  <Link href="/signin" className="font-semibold text-[var(--accent)] hover:underline">
+                    Sign in
+                  </Link>{" "}
+                  to keep your history.
+                </p>
+              ) : null}
             </div>
           ) : null}
 
@@ -769,7 +795,7 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
           )}
 
           {chatMode === "text" ? (
-            <div className={`shrink-0 px-3 sm:px-5 ${showHero ? "pb-3 pt-6" : "pb-3 pt-1"}`}>
+            <div className={`shrink-0 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 ${showHero ? "pt-6" : "pt-1"}`}>
               <div className="mx-auto w-full max-w-3xl">
                 {error ? (
                   <div
@@ -808,7 +834,7 @@ export default function ChatInterface({ caseId, initialPrompt }: { caseId?: stri
             </div>
           ) : null}
           {chatMode === "voice" ? (
-            <div className={`shrink-0 px-3 sm:px-5 ${showVoiceStage ? "pb-3 pt-6" : "pb-3 pt-1"}`}>
+            <div className={`shrink-0 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 ${showVoiceStage ? "pt-6" : "pt-1"}`}>
               <div className="mx-auto w-full max-w-3xl">
                 {!voiceSupportedForLanguage ? (
                   <p className="mb-3 rounded-xl border border-[var(--line)] bg-[var(--background)] px-4 py-3 text-sm text-[var(--ink-muted)]">

@@ -20,6 +20,7 @@ COPY rag-engine/documents ./documents
 COPY rag-engine/extraction ./extraction
 COPY rag-engine/cases ./cases
 COPY rag-engine/research ./research
+COPY rag-engine/complaints ./complaints
 COPY rag-engine/scenario ./scenario
 COPY rag-engine/acts ./acts
 COPY rag-engine/database ./database

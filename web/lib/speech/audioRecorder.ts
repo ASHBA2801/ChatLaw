@@ -70,6 +70,10 @@ export class AudioRecorderSession {
   private animFrameId: number | null = null;
   private resolvedMimeType = "";
   private isRecording = false;
+  /** True while waiting for the microphone to open (getUserMedia can take 0.5–2 s on phones). */
+  private isStarting = false;
+  /** Set when stop/cancel arrives before the microphone finished opening. */
+  private abortedWhileStarting = false;
 
   constructor(
     private readonly callbacks: AudioRecorderCallbacks = {},
@@ -81,8 +85,12 @@ export class AudioRecorderSession {
     return this.isRecording;
   }
 
+  public get starting(): boolean {
+    return this.isStarting;
+  }
+
   public async start(): Promise<void> {
-    if (this.isRecording) return;
+    if (this.isRecording || this.isStarting) return;
 
     const currentWin = this.win ?? (typeof window !== "undefined" ? window : undefined);
     if (!currentWin) {
@@ -114,6 +122,8 @@ export class AudioRecorderSession {
       return;
     }
 
+    this.isStarting = true;
+    this.abortedWhileStarting = false;
     try {
       this.stream = await mediaDevices.getUserMedia({
         audio: {
@@ -123,9 +133,17 @@ export class AudioRecorderSession {
         },
       });
     } catch (err) {
+      const aborted = this.abortedWhileStarting;
       this.cleanup();
-      const message = this.mapMediaStreamError(err);
-      this.callbacks.onError?.(message);
+      if (!aborted) this.callbacks.onError?.(this.mapMediaStreamError(err));
+      return;
+    } finally {
+      this.isStarting = false;
+    }
+
+    if (this.abortedWhileStarting) {
+      // The user stopped before the microphone opened; release it without recording.
+      this.cleanup();
       return;
     }
 
@@ -161,13 +179,14 @@ export class AudioRecorderSession {
       this.callbacks.onError?.("An error occurred during audio recording. Please try again.");
     };
 
-    // Setup audio visualizer level analyzer if supported
-    this.setupLevelAnalyzer(currentWin);
-
     this.isRecording = true;
     this.startTime = Date.now();
     this.recorder.start(250); // collect chunks every 250ms
     this.callbacks.onStart?.();
+
+    // The level meter is cosmetic; build it after capture has started so creating
+    // an AudioContext (slow on some phones) never delays recording.
+    this.setupLevelAnalyzer(currentWin);
 
     // Auto-stop at max duration
     this.timer = setTimeout(() => {
@@ -178,6 +197,10 @@ export class AudioRecorderSession {
   }
 
   public async stop(): Promise<AudioRecordingResult | null> {
+    if (this.isStarting) {
+      this.abortedWhileStarting = true;
+      return null;
+    }
     if (!this.isRecording || !this.recorder) {
       this.cleanup();
       return null;
@@ -226,6 +249,7 @@ export class AudioRecorderSession {
   }
 
   public cancel(): void {
+    if (this.isStarting) this.abortedWhileStarting = true;
     if (this.recorder && this.recorder.state !== "inactive") {
       try {
         this.recorder.stop();

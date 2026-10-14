@@ -1,4 +1,5 @@
 import "server-only";
+import { fetchRagWithWake } from "@/lib/rag/fetchWithWake";
 
 export type ExtractedPdfPage = { page: number; text: string };
 
@@ -24,7 +25,7 @@ export async function extractPdfBytes(bytes: Buffer): Promise<ExtractedPdf> {
   if (!baseUrl || !secret) {
     throw new ExtractionError("Document extraction is not configured", 503);
   }
-  const response = await fetch(`${baseUrl}/api/extract/pdf`, {
+  const response = await fetchRagWithWake(`${baseUrl}/api/extract/pdf`, {
     method: "POST",
     headers: {
       Accept: "application/json",

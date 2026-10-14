@@ -154,6 +154,7 @@ model User {
   cases         Case[]
   caseDocuments CaseDocument[]
   conversations Conversation[]
+  caseFilings   CaseFiling[]
 
   @@map("users")
 }
@@ -169,6 +170,13 @@ model Case {
   city        String?
   state       String?
   country     String?
+  district    String?
+  locality    String?
+  pincode     String?
+  latitude    Float?
+  longitude   Float?
+  // Complainant details and the latest filing analysis used by the filing agent.
+  filingProfile Json?
   status      String    @default("ACTIVE")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -179,6 +187,7 @@ model Case {
   timeline      CaseTimelineEvent[]
   importantDates CaseImportantDate[]
   conversations Conversation[]
+  filings       CaseFiling[]
 
   @@index([userId, updatedAt])
   @@index([userId, status])
@@ -461,4 +470,101 @@ model ResearchQuery {
   updatedAt    DateTime  @updatedAt
 
   @@map("research_queries")
+}
+
+
+// ---------------------------------------------------------------------------
+// case_filings — complaints and petitions the filing agent drafted for a case.
+// kind is an office or court id from rag-engine/complaints/taxonomy.py.
+// ---------------------------------------------------------------------------
+model CaseFiling {
+  id          String   @id @default(cuid())
+  caseId      String
+  userId      String
+  kind        String
+  forum       String // "authority" | "court"
+  title       String
+  subject     String
+  addressee   String
+  body        String
+  recipients  Json // [{ name, email, ... }] chosen by the user
+  cc          Json?
+  sections    Json
+  citations   Json
+  warnings    Json
+  placeholders Json
+  filing      Json // channel, portal, caveat, notes
+  emailBody   String
+  language    String   @default("en")
+  status      String   @default("DRAFT") // DRAFT | FINAL | SENT | FILED
+  generation  Json?
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  case Case @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, createdAt])
+  @@index([userId, updatedAt])
+  @@map("case_filings")
+}
+
+// ---------------------------------------------------------------------------
+// authority_contacts — cached official contact lookups (managed by rag-engine).
+// Emails are stored only when they were found on an official page.
+// ---------------------------------------------------------------------------
+model AuthorityContact {
+  lookupKey String   @id
+  kind      String
+  state     String?
+  district  String?
+  locality  String?
+  status    String // FOUND | NONE_FOUND | FAILED
+  offices   Json
+  checkedAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kind, state, district])
+  @@map("authority_contacts")
+}
+
+// ---------------------------------------------------------------------------
+// drafting_templates — complaint / petition formats (legal_corpus/drafting_templates)
+// with section-level embeddings for the filing agent (managed by rag-engine).
+// ---------------------------------------------------------------------------
+model DraftingTemplate {
+  id           String   @id
+  slug         String   @unique
+  kind         String
+  forum        String
+  title        String
+  documentType String
+  courtSubject String?
+  sources      Json
+  content      String
+  contentHash  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  chunks DraftingTemplateChunk[]
+
+  @@index([kind])
+  @@map("drafting_templates")
+}
+
+model DraftingTemplateChunk {
+  id         String   @id
+  templateId String
+  chunkIndex Int
+  heading    String
+  content    String
+  embedding  Unsupported("vector(768)")?
+  createdAt  DateTime @default(now())
+
+  template DraftingTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+  @@map("drafting_template_chunks")
 }

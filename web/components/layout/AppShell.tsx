@@ -120,7 +120,7 @@ export default function AppShell({
         : "text-[var(--foreground)] hover:bg-[var(--line)]/50"
     }`;
   const iconButton =
-    "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--ink-muted)] hover:bg-[var(--line)]/50 hover:text-[var(--foreground)]";
+    "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[var(--ink-muted)] hover:bg-[var(--line)]/50 hover:text-[var(--foreground)]";
 
   const newChatLabel = (
     <>
@@ -251,9 +251,14 @@ export default function AppShell({
         />
       ) : null}
 
-      <div className={`flex min-w-0 flex-1 flex-col ${isChatPage ? "min-h-0 overflow-hidden" : "pb-16 lg:pb-0"}`}>
+      {/* Below lg the fixed bottom navigation covers the bottom 3.5rem, plus the home indicator. */}
+      <div
+        className={`flex min-w-0 flex-1 flex-col ${
+          isChatPage ? "min-h-0 overflow-hidden" : "pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-0"
+        }`}
+      >
         {isChatPage ? null : (
-          <header className="sticky top-0 z-30 shrink-0 border-b border-[var(--line)] bg-[var(--surface)]">
+          <header className="sticky top-0 z-30 shrink-0 border-b border-[var(--line)] bg-[var(--surface)] pt-[env(safe-area-inset-top)]">
             <div className="flex h-14 items-center justify-between gap-2 px-3 sm:px-5">
               <div className="flex min-w-0 items-center gap-2">
                 <div className="min-w-0 lg:hidden">

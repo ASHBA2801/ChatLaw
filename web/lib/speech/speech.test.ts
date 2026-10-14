@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { mapSpeechError } from "@/lib/speech/errors";
 import {
+  isMobileDevice,
   getEnabledSpeechLanguages,
   getSpeechRecognitionConstructor,
   getSpeechRecognitionUnavailableMessage,
@@ -54,6 +55,17 @@ function createMockRecognition(): SpeechRecognitionLike & {
   };
   return recognition;
 }
+
+describe("mobile detection", () => {
+  it("uses client hints, then the user agent, and tolerates a missing navigator", () => {
+    const win = (navigator: object) => ({ navigator }) as unknown as Window;
+    expect(isMobileDevice(win({ userAgentData: { mobile: true }, userAgent: "" }))).toBe(true);
+    expect(isMobileDevice(win({ userAgent: "Mozilla/5.0 (Linux; Android 14) Chrome/130 Mobile" }))).toBe(true);
+    expect(isMobileDevice(win({ userAgent: "Mozilla/5.0 (Macintosh)", maxTouchPoints: 5 }))).toBe(true);
+    expect(isMobileDevice(win({ userAgent: "Mozilla/5.0 (X11; Linux x86_64) Chrome/130" }))).toBe(false);
+    expect(isMobileDevice({} as Window)).toBe(false);
+  });
+});
 
 describe("speech support", () => {
   it("detects unsupported browsers", () => {
@@ -269,5 +281,27 @@ describe("SpeechInputSession", () => {
     session.stop();
     expect(errors[0]).toContain("Nothing was transcribed");
     expect(statuses).toContain("error");
+  });
+
+  it("shows starting until the microphone opens and stops quietly if tapped early", () => {
+    const recognition = createMockRecognition();
+    const statuses: string[] = [];
+    const errors: string[] = [];
+    const session = new SpeechInputSession(
+      "en-IN",
+      {
+        onStatus: (status) => statuses.push(status),
+        onInterim: () => undefined,
+        onFinal: () => undefined,
+        onError: (message) => errors.push(message),
+      },
+      { SpeechRecognition: vi.fn(() => recognition) } as unknown as SpeechWindow,
+    );
+
+    session.start();
+    expect(statuses).toEqual(["starting"]);
+    session.stop();
+    expect(errors).toEqual([]);
+    expect(statuses.at(-1)).toBe("idle");
   });
 });
