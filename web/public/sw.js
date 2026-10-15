@@ -4,7 +4,7 @@
 // such as /chat?_rsc=..., JS chunks, API calls) goes straight to the network:
 // answering those from a cache or with offline.html breaks the app, and cached
 // HTML from a previous deploy points at chunks that no longer exist.
-const CACHE_NAME = "chatlaw-offline-v3";
+const CACHE_NAME = "chatlaw-offline-v4";
 const OFFLINE_URL = "/offline.html";
 const PRECACHE = [OFFLINE_URL, "/icons/icon-192.png", "/icons/icon-512.png"];
 
